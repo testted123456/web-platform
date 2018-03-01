@@ -34,7 +34,7 @@
 
 <script>
 
-
+import {ElFooter, ElCol, ElInput, ElAside, ElRow, ElMain, ElContainer} from 'element-ui'
   export default {
     components: {ElFooter, ElCol, ElInput, ElAside, ElRow, ElMain, ElContainer},
     name: 'TestCaseDirNew',

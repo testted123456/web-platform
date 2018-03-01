@@ -30,9 +30,10 @@
 <script>
 
   import VueContentMenu from '@/components/common/VueContentMenu.vue'
+  import {ElContainer, ElMain,ElCol, ElFooter} from 'element-ui'
 
-export default {
-  components: {ElContainer, ElMain, ElCol,Router,VueContentMenu},
+  export default {
+  components: {ElContainer, ElMain, ElCol,VueContentMenu, ElFooter},
   name: 'ApiMain',
   data () {
     return {

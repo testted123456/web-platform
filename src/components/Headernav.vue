@@ -21,7 +21,9 @@
 </template>
 
 <script>
-export default {
+  import {ElRow} from 'element-ui'
+
+  export default {
   components: {ElRow},
   name: 'app',
   data() {

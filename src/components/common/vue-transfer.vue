@@ -60,6 +60,7 @@
 </template>
 
 <script>
+  import {ElCol, ElContainer, ElRow} from 'element-ui'
 
   export default {
     props: ['selectedApis'],

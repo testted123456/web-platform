@@ -33,6 +33,7 @@
 
 <script>
   import VueContentMenu from '@/components/common/VueContentMenu.vue';
+  import {ElCol} from 'element-ui'
 
   export default {
     components: {ElCol, VueContentMenu},

@@ -155,6 +155,7 @@
   import VueTransfer from '@/components/common/vue-transfer.vue';
   import ApiInCase from './ApiInCase.vue';
   import {moveup, movedown} from  "../../../assets/js/tableRowMove.js";
+  import {ElCol, ElInput, ElAside, ElRow, ElMain, ElContainer} from 'element-ui'
 
   export default {
     components: {ApiInCase, ElCol, ElInput, ElAside, ElRow, ElMain, ElContainer,VueTransfer},

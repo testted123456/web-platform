@@ -182,12 +182,7 @@
 </template>
 
 <script>
-  import ElContainer from "../../../../node_modules/element-ui/packages/container/src/main";
-  import ElMain from "../../../../node_modules/element-ui/packages/main/src/main";
-  import ElRow from "element-ui/packages/row/src/row";
-  import ElAside from "../../../../node_modules/element-ui/packages/aside/src/main";
-  import ElInput from "../../../../node_modules/element-ui/packages/input/src/input";
-  import ElCol from "element-ui/packages/col/src/col";
+
   import VueTransfer from '@/components/common/vue-transfer.vue';
   import ApiInCase from './ApiInCase1.vue';
   import {moveup, movedown} from  "../../../assets/js/tableRowMove.js";

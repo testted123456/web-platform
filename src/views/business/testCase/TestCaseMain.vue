@@ -32,8 +32,7 @@
 </template>
 
 <script>
-  import ElCol from "element-ui/packages/col/src/col";
-  import VueContentMenu from "../../../components/common/VueContentMenu.vue"
+  import VueContentMenu from '@/components/common/VueContentMenu.vue';
 
   export default {
     components: {ElCol, VueContentMenu},

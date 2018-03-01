@@ -6,11 +6,11 @@
                     placeholder="输入接口名称进行过滤"
                 >
                 </el-input>
-              <vue-content-menu :contextMenuData="contextMenuData"
-                                @addDir="addDir"
-                                @addItem="addApi"
-                                @refreshApi="refreshApi"
-              ></vue-content-menu>
+                <vue-content-menu :contextMenuData="contextMenuData"
+                                  @addDir="addDir"
+                                  @addItem="addApi"
+                                  @refreshApi="refreshApi"
+                ></vue-content-menu>
                 <el-tree
                     :props="props"
                     :load="loadNode"
@@ -29,15 +29,10 @@
 
 <script>
 
-  import ElCol from "element-ui/packages/col/src/col";
-  import Router from 'vue-router';
-  import ElMain from "../../../../node_modules/element-ui/packages/main/src/main";
-  import ElContainer from "../../../../node_modules/element-ui/packages/container/src/main";
-  import store from '../../../store';
-  import VueContentMenu from "../../../components/common/VueContentMenu.vue"
+  import VueContentMenu from '@/components/common/VueContentMenu.vue'
 
-  export default {
-  components: {ElContainer, ElMain, ElCol,Router, VueContentMenu},
+export default {
+  components: {ElContainer, ElMain, ElCol,Router,VueContentMenu},
   name: 'ApiMain',
   data () {
     return {

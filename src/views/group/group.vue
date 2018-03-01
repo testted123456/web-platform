@@ -27,7 +27,6 @@
 
 
 <script>
-    import ElAside from "../../../node_modules/element-ui/packages/aside/src/main";
     export default {
         components: {ElAside},
         data() {

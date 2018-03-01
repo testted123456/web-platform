@@ -306,7 +306,13 @@
 <script>
 
   import {formatJson, isJson} from "../../../assets/js/formatJson.js";
-  import {ElFooter, ElCol, ElInput, ElAside, ElRow, ElMain, ElContainer} from 'element-ui'
+  import ElContainer from 'element-ui/packages/container/src/main';
+  import ElMain from 'element-ui/packages/main/src/main';
+  import ElCol from 'element-ui/packages/col/src/col';
+  import ElRow from "element-ui/packages/row/src/row";
+  import ElAside from "element-ui/packages/aside/src/main";
+  import ElInput from "element-ui/packages/input/src/input";
+  import ElFooter from "element-ui/packages/footer/src/main";
 
   export default {
     components: {ElFooter, ElCol, ElInput, ElAside, ElRow, ElMain, ElContainer}, name: 'ApiEdit',

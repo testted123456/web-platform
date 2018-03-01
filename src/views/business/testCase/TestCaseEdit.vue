@@ -186,10 +186,15 @@
   import VueTransfer from '@/components/common/vue-transfer.vue';
   import ApiInCase from './ApiInCase1.vue';
   import {moveup, movedown} from  "../../../assets/js/tableRowMove.js";
-  import {ElCol, ElInput, ElAside, ElRow, ElMain, ElContainer} from 'element-ui'
+  import ElContainer from 'element-ui/packages/container/src/main';
+  import ElMain from 'element-ui/packages/main/src/main';
+  import ElCol from 'element-ui/packages/col/src/col';
+  import ElRow from "element-ui/packages/row/src/row";
+  import ElAside from "element-ui/packages/aside/src/main";
+  import ElInput from "element-ui/packages/input/src/input";
 
 export default {
-  components: {ApiInCase, ElCol, ElInput, ElAside, ElRow, ElMain, ElContainer,VueTransfer},
+  components: {ApiInCase, ElCol, ElInput, ElAside, ElRow, ElMain, ElContainer, VueTransfer},
 
   name: 'TestCaseEdit',
 

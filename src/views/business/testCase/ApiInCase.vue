@@ -192,7 +192,7 @@
 
 <script>
   import {formatJson, isJson} from "../../../assets/js/formatJson.js";
-  import {ElInput} from 'element-ui'
+  import ElInput from "element-ui/packages/input/src/input";
 
   export default {
     props: ['testCaseInterface'],

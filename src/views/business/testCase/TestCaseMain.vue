@@ -33,10 +33,13 @@
 
 <script>
   import VueContentMenu from '@/components/common/VueContentMenu.vue';
-  import {ElCol} from 'element-ui'
+  import ElContainer from 'element-ui/packages/container/src/main';
+  import ElMain from 'element-ui/packages/main/src/main';
+  import ElCol from 'element-ui/packages/col/src/col';
+  import ElInput from "element-ui/packages/input/src/input";
 
   export default {
-    components: {ElCol, VueContentMenu},
+    components: {ElContainer, ElCol, ElMain, ElInput, VueContentMenu},
     name: 'TestCaseMain',
     data () {
       return {

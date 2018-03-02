@@ -29,17 +29,13 @@
 
 <script>
 
-
-  import ElContainer from 'element-ui/packages/container/src/main';
-  import ElMain from 'element-ui/packages/main/src/main';
-  import ElCol from 'element-ui/packages/col/src/col';
   import Router from 'vue-router';
   import store from '@/store';
   import VueContentMenu from '@/components/common/VueContentMenu.vue';
 
   export default {
 
-  components: {ElContainer, ElMain, ElCol,Router,VueContentMenu},
+  components: {Router,VueContentMenu},
 
   name: 'ApiMain',
   data () {

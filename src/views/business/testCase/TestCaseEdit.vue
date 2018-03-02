@@ -67,7 +67,7 @@
                 </el-dialog>
             </el-col>
             <el-col :span="4">
-                <el-button type="primary" @click="dialogVisible = true">动态库查询</el-button>
+              <el-button type="primary" @click="dialogVisible = true">动态库查询</el-button>
                 <el-dialog
                     title="动态库查询"
                     :visible.sync="dialogVisible"
@@ -130,7 +130,7 @@
             align="center" width="400px">
             <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :enterable="false"	:hide-after="500" content="搜索接口" placement="top">
-                    <el-button  type="primary" size="mini"><i class="el-icon-search"></i></el-button>
+                  <el-button type="primary" size="mini"><i class="el-icon-search"></i></el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="上移" placement="top">
                     <el-button  type="primary" size="mini" @click.native.prevent="moveup(scope.$index, scope.row, apisInCase)"  ><i class="el-icon-arrow-up"></i></el-button>
@@ -144,9 +144,10 @@
                 <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="编辑接口信息" placement="top">
                     <el-button  type="primary" size="mini" @click="apiEdit(scope.row.id)"><i class="el-icon-edit"></i></el-button>
                 </el-tooltip>
-                <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除接口" placement="top">
+                <el-tooltip class="item" effect="dark" :enterable="true" :hide-after="500" content="删除接口" placement="top">
                     <el-button  type="primary" size="mini" @click="removeApi(scope.row.id)"><i class="el-icon-remove"></i></el-button>
                 </el-tooltip>
+
             </template>
           </el-table-column>
           <!--<el-table-column-->
@@ -182,19 +183,12 @@
 </template>
 
 <script>
-
-  import VueTransfer from '@/components/common/vue-transfer.vue';
-  import ApiInCase from './ApiInCase1.vue';
-  import {moveup, movedown} from  "../../../assets/js/tableRowMove.js";
-  import ElContainer from 'element-ui/packages/container/src/main';
-  import ElMain from 'element-ui/packages/main/src/main';
-  import ElCol from 'element-ui/packages/col/src/col';
-  import ElRow from "element-ui/packages/row/src/row";
-  import ElAside from "element-ui/packages/aside/src/main";
-  import ElInput from "element-ui/packages/input/src/input";
+  import VueTransfer from '@/components/common/vue-transfer.vue'
+  import ApiInCase from './ApiInCase1.vue'
+  import {moveup, movedown} from  '../../../assets/js/tableRowMove.js'
 
 export default {
-  components: {ApiInCase, ElCol, ElInput, ElAside, ElRow, ElMain, ElContainer, VueTransfer},
+  components: {ApiInCase, VueTransfer},
 
   name: 'TestCaseEdit',
 
@@ -376,4 +370,14 @@ export default {
       padding: 10px 0;
       background-color: #f9fafc;
   }
+
+  .box {
+    width: 400px;
+
+  .top {
+    text-align: center;
+  }
+
+  }
+
 </style>

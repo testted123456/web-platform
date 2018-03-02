@@ -11,6 +11,7 @@ Vue.config.productionTip = false
 
 Vue.use(ElementUI)
 Vue.use(VueResource)
+
 Vue.prototype.cookieManager = Cookie
 Vue.prototype.ApiCopyId = 0;
 new Vue({

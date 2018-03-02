@@ -60,11 +60,10 @@
 </template>
 
 <script>
-  import {ElCol, ElContainer, ElRow} from 'element-ui'
 
   export default {
     props: ['selectedApis'],
-    components: {ElCol, ElContainer, ElRow}, name: 'VueTransfer',
+    name: 'VueTransfer',
     data(){
         return {
           defaultProps:{

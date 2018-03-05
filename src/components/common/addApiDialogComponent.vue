@@ -26,7 +26,7 @@
             @row-click="rowClick"
             ref="singleTable"
             highlight-current-row
-            :data="selectedApis"
+            :data="tempApis"
             style="width: 100%; margin-top: 2px">
             <el-table-column
               prop="name"
@@ -45,8 +45,8 @@
               label="操作">
               <template slot-scope="scope">
                 <el-button
-                  @click.native.prevent="deleteRow(scope.$index, selectedApis)"
-                  type="text"
+                  @click.native.prevent="deleteRow(scope.$index, tempApis)"
+                  type="primary"
                   size="small">
                   移除
                 </el-button>
@@ -63,17 +63,21 @@
 
   export default {
     props: ['selectedApis'],
-    name: 'VueTransfer',
+    components: {},
+    name: 'addApiDialogComponent',
     data(){
         return {
           defaultProps:{
             label: 'name',
             isLeaf: 'type',
             children: 'children'
-          }
+          },
+            tempApis:[]
         }
     },
-
+    created(){
+      this.tempApis = this.selectedApis.concat()
+    },
     methods: {
       handleNodeClick(data, node, instance) {
 //          console.log('xxx');
@@ -87,7 +91,7 @@
             //先注释 用本地数据
 //          this.$http.get("http://192.168.32.105:8082/inter/api/getApiTreeByPId?pId=" + node.data.id).then(function (res) {
 //            if(res.data.succeed){
-//              var tempApi = res.data.data;
+//              var apiTreeInfo = res.data.data;
 //              return resolve(res.data.data);
 //            }
 //            return;
@@ -95,7 +99,8 @@
 //
 //          });
 
-            var apiTreeData =  [{
+            var apiTreeData =  [
+                {
                 "id": 1,
                 "name": "1",
                 "description": "",
@@ -216,15 +221,17 @@
                 "optstatus": 0,
                 "system": "trd"
             }]
-            var tempApi = apiTreeData;
-            return resolve(apiTreeData);
+            var apiTreeInfo = apiTreeData;
+            return resolve(apiTreeInfo);
         }
       },
       addApi(){
+          console.log(this)
         var node = this.$refs.tree.currentNode.node;
         var data = node.data;
 
         if(node.isLeaf){
+
           if(typeof  data.requestHead === 'string'){
               data.requestHead = JSON.parse(data.requestHead);
           }else if(typeof  data.requestHead === 'undefined'){
@@ -245,7 +252,21 @@
             data.assertions = [{"Key": '', "Value": ''}];
           }
 
-          this.selectedApis.push(data);
+          if(typeof data.step === 'undefined'){
+              data.step = '';
+          }
+
+
+          var ifRepeat = false
+          for(var i=0;i<this.tempApis.length;i++){
+              if(data.id === this.tempApis[i].id){
+                  ifRepeat = true
+              }
+          }
+          if(!ifRepeat){
+              console.log(data);
+              this.tempApis.push(data);
+          }
         }
       },
       rowClick(row, event, column){
@@ -254,6 +275,12 @@
       },
       deleteRow(index, rows) {
         rows.splice(index, 1);
+      },
+      getApis(){
+             return this.tempApis.concat();
+      },
+      resetApis(){
+          this.tempApis = this.selectedApis.concat()
       }
     }
   }

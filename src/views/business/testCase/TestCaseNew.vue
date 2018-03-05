@@ -157,7 +157,7 @@
   import {moveup, movedown} from  "../../../assets/js/tableRowMove.js";
 
   export default {
-    components: {ApiInCase,VueTransfer},
+    components: {ApiInCase, VueTransfer},
 
     name: 'TestCaseNew',
 

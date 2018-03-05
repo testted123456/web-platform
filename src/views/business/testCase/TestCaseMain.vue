@@ -32,11 +32,12 @@
 </template>
 
 <script>
+
   import VueContentMenu from '@/components/common/VueContentMenu.vue';
-  import ElTree from '@/components/common/tree/src/tree.vue'
+  import ElTree from '@/components/common/tree/src/tree.vue';
 
   export default {
-    components: {VueContentMenu, ElTree},
+    components: { VueContentMenu,ElTree},
     name: 'TestCaseMain',
     data () {
       return {

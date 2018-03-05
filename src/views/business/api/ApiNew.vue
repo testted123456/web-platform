@@ -1,21 +1,5 @@
 <template>
   <el-container id="apiEdit">
-    <transition name="fade">
-      <el-alert
-        v-show="showSuccessAlert"
-        title="新增成功！"
-        type="success"
-        show-icon
-      >
-      </el-alert>
-    </transition>
-    <el-alert
-      v-show="showErrorAlert"
-      :title="alertErrorTitle"
-      type="error"
-      show-icon
-      >
-    </el-alert>
     <el-container >
       <el-main>
         <el-row>
@@ -106,23 +90,16 @@
                 >
                   <el-table-column
                     label="Key"
-                    width="180">
+                    width="230">
                     <template slot-scope="scope">
                       <el-input v-model="api.requestHead[scope.$index].Key"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
                     label="Value"
-                    width="280">
+                    width="450">
                     <template slot-scope="scope">
                       <el-input v-model="api.requestHead[scope.$index].Value"></el-input>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    label="Desription"
-                    width="220">
-                    <template slot-scope="scope">
-                      <el-input v-model="api.requestHead[scope.$index].Description"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -179,7 +156,7 @@
                   <el-col>
                     <el-input
                       type="textarea"
-                      :autosize="{ minRows: 8}"
+                      :autosize="{ minRows: 12, maxRows:12}"
                       placeholder="请输入请求消息体"
                       v-model="api.requestBody">
                     </el-input>
@@ -194,25 +171,20 @@
                 >
                   <el-table-column
                     label="Key"
-                    width="180">
+                    width="230">
                     <template slot-scope="scope">
                       <el-input v-model="api.responseHead[scope.$index].Key"></el-input>
                     </template>
                   </el-table-column>
+
                   <el-table-column
                     label="Value"
-                    width="280">
+                    width="450">
                     <template slot-scope="scope">
                       <el-input v-model="api.responseHead[scope.$index].Value"></el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    label="Desription"
-                    width="220">
-                    <template slot-scope="scope">
-                      <el-input v-model="api.responseHead[scope.$index].Description"></el-input>
-                    </template>
-                  </el-table-column>
+
                   <el-table-column
                     fixed="right"
                     label="" width="100">
@@ -249,7 +221,7 @@
                   <el-col>
                     <el-input
                       type="textarea"
-                      :autosize="{ minRows: 8, maxRows: 20}"
+                      :autosize="{ minRows: 12, maxRows:12}"
                       placeholder="请输入响应消息体"
                       v-model="api.responseBody"
                     >
@@ -288,7 +260,7 @@
       </el-main>
     </el-container>
     <el-footer style="text-align: right;">
-      <el-button type="primary" @click="saveApi">确认</el-button>
+      <el-button :plain="true" type="primary" @click="saveApi">确认</el-button>
       <el-button>取消</el-button>
     </el-footer>
   </el-container>
@@ -298,10 +270,8 @@
 <script>
 
   import {formatJson, isJson} from "../../../assets/js/formatJson.js";
-  import {ElFooter, ElCol, ElInput, ElAside, ElRow, ElMain, ElContainer} from 'element-ui'
 
   export default {
-    components: {ElFooter, ElCol, ElInput, ElAside, ElRow, ElMain, ElContainer},
     name: 'ApiNew',
     data () {
       return {
@@ -321,17 +291,15 @@
           type: true,
           postWay: '1',
           requestHead: [{
-            Key: null,
-            Value: null,
-            Description: null
+            Key: '',
+            Value: ''
           }],
           requestBodyType: '2',
           requestBodyRowType: '2',
           requestBody: null,
           responseHead: [{
-            Key: null,
-            Value: null,
-            Description: null
+            Key: '',
+            Value: ''
           }],
           responseBodyType: '0',
           responseBody: null,
@@ -341,48 +309,78 @@
           updatedTime: null,
           system: ''
         },
-        apiSystems: [{
-          value: 'usr',
-          label: '用户'
-        }, {
-          value: 'trd',
-          label: '交易'
-        }],
+        apiSystems: [],
         activeName: 'ReqHeaders'
       }
     },
+
+    created() {
+      this.init();
+    },
+
     methods: {
       formatJson,
       isJson,
-      handleClick(tab, event) {
-        console.log(tab, event);
+
+      //初始化页面
+      init(){
+        this.$http.get(this.testCaseServer + "sysCfg/getAllAlias").then(function (res) {
+          if(res.data.code == '10000'){
+            let tempSystems = this.apiSystems;
+            res.data.data.forEach(function (e, index) {
+              tempSystems.push({value: e, label: e})
+            });
+          }
+        },function (res) {
+        });
       },
+
+      handleClick(tab, event) {
+      },
+
       showAddHeader(index, rows){
-        if(rows.length == index + 1 && (rows[index].Key != '' || rows[index].Value != '' || rows[index].Description != '')){
+        if(rows.length == index + 1 && (rows[index].Key != '' && rows[index].Value != '')){
           return true;
         }else{
           return false;
         }
       },
+
+      //新增消息头一行
       addHeadersRow(index, rows){
-        if(rows.length == index + 1 && (rows[index].Key != '' || rows[index].Value != '' || rows[index].Description != '')){
+        if(rows.length == index + 1 && (rows[index].Key != '' || rows[index].Value != '' )){
           rows.push({
             Key: '',
-            Value: '',
-            Description: ''
+            Value: ''
           })
         }
       },
+
       //删除消息头中的一行
       deleteHeadersRow(index, rows) {
         if(index == 0 && rows.length == 1){
           rows[index].Key = '';
           rows[index].Value = '';
-          rows[index].Description = '';
         }else {
           rows.splice(index, 1);
         }
       },
+
+      validHeadersRow(rows){
+         let size = rows.length;
+         let row = rows[size-1];
+         let Key = row.Key;
+         let Value = row.Value;
+
+         if((Key === '' || Value === '') && size === 1){
+             return 0;
+         }else if((Key === '' || Value === '') && size != 1){
+             return 1;
+         }else{
+             return 2;
+         }
+      },
+
       selectRequestBodyRow(command){
           this.api.requestBodyRowType = command;
 
@@ -408,50 +406,66 @@
             this.requestBodyRowType = 'HTML(text/html)';
           }
       },
-      saveApi(){
-        this.api.pId = this.$route.query.pId;
-        var tempApi = {};
-        tempApi.id = this.api.pId;
-        tempApi.name = this.api.name;
-        tempApi.description = this.api.description;
-        tempApi.pId = this.api.pId;
-        tempApi.module = this.api.module;
-        tempApi.branch = this.api.branch;
-        tempApi.urlAddress = this.api.urlAddress;
-        tempApi.apiType = this.api.apiType;
-        tempApi.postWay = this.api.postWay;
-        tempApi.type = this.api.type;
-        tempApi.requestHead = JSON.stringify(this.api.requestHead);
-        tempApi.requestBodyType = this.api.requestBodyType;
-        tempApi.requestBodyRowType = this.api.requestBodyRowType;
-        tempApi.requestBody = this.api.requestBody;
-        tempApi.responseHead = JSON.stringify(this.api.responseHead);
-        tempApi.responseBodyType = this.api.responseBodyType;
-        tempApi.createdBy = this.api.createdBy;
-        tempApi.createdTime = this.api.createdTime;
-        tempApi.updatedBy = this.api.updatedBy;
-        tempApi.responseBody = this.api.responseBody;
-        tempApi.updatedTime = this.api.updatedTime;
-        tempApi.system = this.api.system;
 
-        this.$http.post("http://localhost:8082/inter/api/addApi", tempApi).then(function (res) {
-            if(res.data.succeed){
-              this.showSuccessAlert = true;
+      //保存api
+      saveApi(){
+        let validResult = this.validHeadersRow(this.api.requestHead);
+
+        if(validResult === 0){
+          this.api.requestHead = null;
+        }else if(validResult === 1){
+          this.$message.error('请求消息头字段不能为空！');
+          return;
+        }
+
+        validResult = this.validHeadersRow(this.api.responseHead);
+
+        if(validResult === 0){
+          this.api.responseHead = null;
+        }else if(validResult === 1){
+          if(this.api.requestHead === null){
+            this.api.requestHead = [{Key:'', Value:''}];
+          }
+          this.$message.error('响应消息头字段不能为空！');
+          return;
+        }
+
+        this.api.pId = this.$route.query.pId;
+
+        this.$http.post(this.apiServer + "api/addApi", this.api).then(function (res) {
+            if(res.data.code == '10000'){
+
+              this.$message({
+                message: '恭喜你，新增接口成功',
+                type: 'success'
+              });
+
               this.$store.commit('changeApiStatus', 1);
               this.api.id = res.data.data.id;
               this.$store.commit('setNewApi', this.api);
               this.$router.push({ name: 'ApiEdit', params: { id: this.api.id }})
             }else{
+              if(this.api.requestHead === null){
+                this.api.requestHead = [{Key:'', Value:''}];
+              }
 
-              this.alertErrorTitle = res.data.errorMessage;
-//              this.showErrorAlert = true;
-              this.showSuccessAlert = true;
+              if(this.api.responseHead === null){
+                this.api.responseHead = [{Key:'', Value:''}];
+              }
+
+              this.$message.error('抱歉，新增接口失败：' + res.data.msg);
             }
         }, function (res) {
-            this.alertErrorTitle = '服务器请求失败！';
-            this.showErrorAlert = true;
-        });
+          if(this.api.requestHead === null){
+            this.api.requestHead = [{Key:'', Value:''}];
+          }
 
+          if(this.api.responseHead === null){
+            this.api.responseHead = [{Key:'', Value:''}];
+          }
+
+          this.$message.error('服务器请求失败！');
+        });
       }
     }
   }

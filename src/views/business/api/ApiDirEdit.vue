@@ -34,37 +34,50 @@
 
 <script>
   export default {
-    name: 'ApiDirNew',
+    name: 'ApiDirEdit',
     data () {
       return {
-        api: {
-          id: '',
-          name: '',
-          description: '',
-          pId: '',
-          type: true
-        }
+        api: {}
       }
     },
+
+    computed: {
+      id: function () {
+        return this.$route.params.id;
+      }
+    },
+
+    created() {
+      this.init();
+    },
+
+    watch:{
+      id: function () {
+        this.init();
+      }
+    },
+
     methods: {
+      init(){
+        this.$http.get(this.apiServer + "api/getApi?id=" + this.$route.params.id).then(function (res) {
+          if(res.data.code == '10000'){
+            this.api = res.data.data;
+          }
+        },function (res) {
+        });
+      },
+
       saveApi(){
-        this.api.pId = this.$route.query.pId;
-
         this.$http.post("http://localhost:8082/inter/api/addApiDir", this.api).then(function (res) {
-
-          if(res.data.code == '10000') {
+          if(res.data.code == '10000'){
             this.$message({
-              message: '恭喜你，新增接口成功',
+              message: '恭喜你，更新接口成功',
               type: 'success'
             });
 
             this.api.id = res.data.data.id;
-            this.api.type = false;
-            this.$store.commit('changeApiStatus', 1);
-            this.$store.commit('setNewApi', this.api);
-            this.$router.push({ name: 'ApiDirEdit', params: { id: this.api.id }});
           }else{
-            this.$message.error('抱歉，新增接口失败：' + res.data.msg);
+            this.$message.error('抱歉，更新接口失败：' + res.data.msg);
           }
         },function (res) {
           this.$message.error('服务器请求失败！');

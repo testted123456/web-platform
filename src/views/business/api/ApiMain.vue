@@ -32,20 +32,16 @@
   import Router from 'vue-router';
   import store from '@/store';
   import VueContentMenu from '@/components/common/VueContentMenu.vue';
+  import ElTree from '@/components/common/tree/src/tree.vue'
 
   export default {
 
-  components: {Router,VueContentMenu},
+  components: {Router, VueContentMenu, ElTree},
 
   name: 'ApiMain',
   data () {
     return {
-      data: [
-        {id: 1, name: 'node1'},
-        {id: 2, name: 'node2', children:[
-          {id: 3, name: 'node2-1'}
-        ]}
-      ],
+      data: [],
       props: {
         label: 'name',
         isLeaf: 'type',
@@ -84,6 +80,11 @@
           }
 
           var newChild = this.$store.state.api.newApi;
+
+          if(newChild.type === false){
+            newChild.children = [];
+          }
+
           node.data.children.push(newChild);
           this.$store.commit( 'changeApiStatus', 0);
 
@@ -96,9 +97,11 @@
 
   methods: {
     handleNodeClick(data, node, instance){
-//      this.$router.push('/apiEdit')
-      let id = node.data.id;
-      this.$router.push({ name: 'ApiEdit', params: {id: id}});
+      if (node.isLeaf) {
+        this.$router.push({name: 'ApiEdit', params: {id: node.data.id}});
+      } else {
+        this.$router.push({name: 'ApiDirEdit', params: {id: node.data.id}});
+      }
     },
 
     loadNode(node, resolve) { //渲染树节点
@@ -107,15 +110,12 @@
       }else if(node.isLeaf === true){
           return;
       }else{
-        this.$http.get("http://192.168.32.105:8082/inter/api/getApiTreeByPId?pId=" + node.data.id).then(function (res) {
-          if(res.data.succeed){
+        this.$http.get(this.apiServer + "api/getApiTreeByPId?pId=" + node.data.id).then(function (res) {
+          if(res.data.code == '10000'){
             var tempApi = res.data.data;
-//            tempApi.requestHead = JSON.parse(tempApi.requestHead);
-//            tempApi.responseHead = JSON.parse(tempApi.responseHead);
             return resolve(res.data.data);
           }
           return;
-
         },function (res) {
 
         });
@@ -157,7 +157,7 @@
       }
 
       var pId = node.data.id;
-      this.$router.push({path: '/apiDirNew', query: {pId: pId}});
+      this.$router.push({name: 'ApiDirNew', query: {pId: pId}});
       this.closeMenu();
     },
 
@@ -169,7 +169,7 @@
       }
 
       var pId = node.data.id;
-      this.$router.push({path: '/apiNew', query: {pId: pId}});
+      this.$router.push({name: 'ApiNew', query: {pId: pId}});
       this.closeMenu();
     },
 

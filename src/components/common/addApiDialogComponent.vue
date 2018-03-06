@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-row :span="22">
+    <el-row >
       <el-col :span="8">
         <div class="vue-transfer-tree">
           <label class="vue-transfer-label">接口</label>
@@ -289,8 +289,7 @@
 
 <style scoped>
   .el-row {
-    width: 90%;
-
+    width:100%;
   }
   .el-tree {
     margin-right: 2px;

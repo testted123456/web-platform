@@ -106,8 +106,12 @@
                     fixed="right"
                     label="" width="100">
                     <template slot-scope="scope">
-                      <el-button @click.native.prevent="deleteHeadersRow(scope.$index, api.requestHead)" type="text" size="small">移除</el-button>
-                      <el-button @click.native.prevent="addHeadersRow(scope.$index, api.requestHead)" v-if="showAddHeader(scope.$index, api.requestHead)" type="text" size="small">新增</el-button>
+                      <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">
+                        <el-button @click.native.prevent="deleteHeadersRow(scope.$index, api.requestHead)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
+                      </el-tooltip>
+                      <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAddHeader(scope.$index, api.requestHead)">
+                        <el-button @click.native.prevent="addHeadersRow(scope.$index, api.requestHead)" v-if="showAddHeader(scope.$index, api.requestHead)" type="text" size="small"><i class="el-icon-plus"></i></el-button>
+                      </el-tooltip>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -189,8 +193,12 @@
                     fixed="right"
                     label="" width="100">
                     <template slot-scope="scope">
-                      <el-button @click.native.prevent="deleteHeadersRow(scope.$index, api.responseHead)" type="text" size="small">移除</el-button>
-                      <el-button @click.native.prevent="addHeadersRow(scope.$index, api.responseHead)" v-if="showAddHeader(scope.$index, api.responseHead)" type="text" size="small">新增</el-button>
+                      <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">
+                        <el-button @click.native.prevent="deleteHeadersRow(scope.$index, api.responseHead)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
+                      </el-tooltip>
+                      <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAddHeader(scope.$index, api.responseHead)">
+                        <el-button @click.native.prevent="addHeadersRow(scope.$index, api.responseHead)"  type="text" size="small"><i class="el-icon-plus"></i></el-button>
+                      </el-tooltip>
                     </template>
                   </el-table-column>
                 </el-table>

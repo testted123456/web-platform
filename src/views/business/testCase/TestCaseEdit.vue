@@ -5,7 +5,7 @@
     <el-main>
         <!--用例名称-->
       <el-row>
-        <el-col :span="4" >
+        <el-col :span="3" >
           <label>用例名称:</label>
         </el-col>
         <el-col :span="16">
@@ -14,7 +14,7 @@
       </el-row>
         <!--用例描述-->
       <el-row>
-        <el-col :span="4" >
+        <el-col :span="3" >
           <label>用例描述:</label>
         </el-col>
         <el-col :span="16">
@@ -23,7 +23,7 @@
       </el-row>
         <!--项目名称-->
       <el-row>
-        <el-col :span="4" >
+        <el-col :span="3" >
           <label>项目名称:</label>
         </el-col>
         <el-col :span="16">
@@ -32,7 +32,7 @@
       </el-row>
         <!--环境-->
       <el-row>
-        <el-col :span="4">
+        <el-col :span="3">
           <label>环境:</label>
         </el-col>
         <el-col :span="7">
@@ -65,7 +65,7 @@
                   <el-button type="text" @click="intellQueryClick">动态库查询</el-button>
               </div>
               <div class="pd12">
-                  <el-button type="text">校验</el-button>
+                  <el-button type="text" @click="apiInfoCheck">校验</el-button>
               </div>
               <div class="pd12">
                   <el-button  type="text" @click="pastApi">粘贴接口</el-button>
@@ -117,10 +117,10 @@
           <el-table-column
             prop="action"
             label="操作"
-            align="center" width="400px">
+            align="center" width="280px">
             <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :enterable="false"	:hide-after="500" content="搜索接口" placement="top">
-                    <el-button  type="text" size="mini" ><i class="el-icon-search"></i></el-button>
+                    <el-button  type="text" size="mini" @click="searchApi(scope.row,scope.$index)"><i class="el-icon-search"></i></el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="编辑接口信息" placement="top">
                     <el-button  type="text" size="mini" @click="apiEdit(scope.row,scope.$index)"><i class="el-icon-edit"></i></el-button>
@@ -150,11 +150,11 @@
     <!--页面最底部 footer-->
     <el-footer style="text-align: right;">
       <el-button type="primary" @click="saveCase">确认</el-button>
-      <el-button type="success" @click="execCase(excResult)">执行</el-button>
+      <el-button type="success" @click="execCase()">执行</el-button>
     </el-footer>
 
     <!--执行结果弹框-->
-    <el-dialog title="执行结果" width="80%" :visible.sync="executeDialogVisible">
+    <el-dialog title="执行结果" width="80%" :visible.sync="executeDialogVisible" >
       <el-input
         type="textarea"
         :rows="20"
@@ -165,7 +165,7 @@
     </el-dialog>
 
 
-      <!-- 弹框 -->
+      <!-- 搜索 增加 删除 编辑 校验 动态库查询等弹框 -->
     <el-dialog
           class="hd-dialog"
           :title="dialog.title"
@@ -173,10 +173,14 @@
           :width="dialog.width"
           :before-close="handleClose"
       >
+        <!--搜索接口-->
+        <search-api-dialog-component ref="searchApiDetailInfo" v-if="dialog.contentType === 5" ></search-api-dialog-component>
         <!--添加接口-->
         <add-api-dialog-component ref="apiSelectView" v-if="dialog.contentType === 1"  :selectedApis="apisInCase"></add-api-dialog-component>
         <!--动态库查询-->
         <intell-check-dialog-component ref="intellCheck" v-if="dialog.contentType === 2" :intellQuery="intellCheckData" ></intell-check-dialog-component>
+        <!--校验-->
+        <apis-info-check-component ref="apisInfoCheck" v-if="dialog.contentType === 6" :apisInfoCheck="apisInCase" ></apis-info-check-component>
         <!--编辑接口-->
         <edit-api-dialog-component ref="editApiDetailInfo" v-if="dialog.contentType === 3" :testCaseInterface="dialog.extend.data"></edit-api-dialog-component>
         <!--删除接口-->
@@ -196,12 +200,14 @@
 
   import addApiDialogComponent from '@/components/common/addApiDialogComponent.vue';
   import intellCheckDialogComponent from '@/components/common/intellCheckDialogComponent.vue';
-  import editApiDialogComponent from './editApiDialogComponent.vue';
+  import editApiDialogComponent from '@/components/common/editApiDialogComponent.vue';
+  import searchApiDialogComponent from '@/components/common/searchApiDialogComponent.vue';
+  import apisInfoCheckComponent from '@/components/common/apisInfoCheckComponent.vue';
   import {moveup, movedown} from  "../../../assets/js/tableRowMove.js";
   import store from '@/store'
 
 export default {
-  components: {editApiDialogComponent, addApiDialogComponent, intellCheckDialogComponent},
+  components: {editApiDialogComponent, addApiDialogComponent, intellCheckDialogComponent,searchApiDialogComponent,apisInfoCheckComponent},
 
   name: 'TestCaseEdit',
 
@@ -223,7 +229,7 @@ export default {
                 title: '',
                 visible:false,
                 footerVisible:true,
-                contentType:0, // 1=添加接口，2=动态库查询，3=编辑接口,4=删除接口
+                contentType:0, // 1=添加接口，2=动态库查询，3=编辑接口,4=删除接口,5=搜索接口
                 width:'60%',
                 extend:{}   // 扩展字段
             },
@@ -234,30 +240,28 @@ export default {
     },
 
   computed: {
-    excResult1: function () {
-      return this.excResult;
-    }
-  },
-    watch:{
-        $route(){
-            console.log(this.$route.params.id);
-            this.getData();
-        }
-    },
 
-    created() {
-        this.getData();
-    },
+  },
+  watch:{
+      $route(){
+          console.log(this.$route.params.id);
+          this.getData();
+      }
+  },
+
+  created() {
+      this.getData();
+  },
 
 
     methods: {
         moveup, movedown,
-        copyApi(data){
+        copyApi(data) {
 
             this.ApiCopyId = data.id;
             console.log(this.ApiCopyId);
         },
-        getData(){
+        getData() {
             //先注释 用本地数据
 //      this.$http.get("http://192.168.32.105:8083/case/testCase/getCase?id=" + this.$route.params.id).then(function (res) {
 //        if(res.data.succeed){
@@ -292,97 +296,115 @@ export default {
 
             this.apisInCase = [
                 {
-                "id": 1,
-                "name": "1",
-                step:"step1",
-                "description": "",
-                "pId": 0,
-                "module": "1",
-                "branch": "1",
-                "urlAddress": "1",
-                "apiType": "0",
-                "type": true,
-                "postWay": "1",
-                "requestHead": [{
-                    "Key": null,
-                    "Value": null,
-                    "Description": null
-                }],
-                "requestBodyType": "2",
-                "requestBodyRowType": "2",
-                "requestBody": null,
-                "responseHead": [{
-                    "Key": null,
-                    "Value": null,
-                    "Description": null
-                }],
-                "responseBodyType": "0",
-                "responseBody": null,
-                "createdBy": "",
-                "createdTime": null,
-                "updatedBy": "",
-                "updatedTime": null,
-                "optstatus": 0,
-                "system": "usr",
-                "variables": [{
-                    "Key": "",
-                    "Value": ""
-                }],
-                "assertions": [{
-                    "Key": "",
-                    "Value": ""
+                    "id": 1,
+                    "name": "1",
+                    step: "step1",
+                    "description": "",
+                    "pId": 0,
+                    "module": "1",
+                    "branch": "1",
+                    "urlAddress": "1",
+                    "apiType": "0",
+                    "type": true,
+                    "postWay": "1",
+                    "requestHead": [{
+                        "Key": null,
+                        "Value": null,
+                        "Description": null
+                    }],
+                    "requestBodyType": "2",
+                    "requestBodyRowType": "2",
+                    "requestBody": null,
+                    "responseHead": [{
+                        "Key": null,
+                        "Value": null,
+                        "Description": null
+                    }],
+                    "responseBodyType": "0",
+                    "responseBody": null,
+                    "createdBy": "",
+                    "createdTime": null,
+                    "updatedBy": "",
+                    "updatedTime": null,
+                    "optstatus": 0,
+                    "system": "usr",
+                    "variables": [{
+                        "Key": "",
+                        "Value": ""
+                    }],
+                    "assertions": [{
+                        "Key": "",
+                        "Value": ""
+                    }]
                 }]
-            }]
             this.intellCheckData = [
-              {
-                  name:'abc',
-                desc:'sdfaf'
-            },{
-                name:'abc1',
-                desc:'sdfaf1'
-            },{
-                name:'abc2',
-                desc:'sdfaf2'
-            },{
-                name:'ab3c',
-                desc:'sdfaf3'
-            },{
-                name:'abc4',
-                desc:'sdfaf4'
-            },{
-                name:'abc5',
-                desc:'sdfaf5'
-            },{
-                name:'abc6',
-                desc:'sdfaf6'
-            },{
-                name:'abc7',
-                desc:'sdfaf7'
-            },]
-         },
-        pastApi(){
+                {
+                    name: 'abc',
+                    desc: 'sdfaf'
+                }, {
+                    name: 'abc1',
+                    desc: 'sdfaf1'
+                }, {
+                    name: 'abc2',
+                    desc: 'sdfaf2'
+                }, {
+                    name: 'ab3c',
+                    desc: 'sdfaf3'
+                }, {
+                    name: 'abc4',
+                    desc: 'sdfaf4'
+                }, {
+                    name: 'abc5',
+                    desc: 'sdfaf5'
+                }, {
+                    name: 'abc6',
+                    desc: 'sdfaf6'
+                }, {
+                    name: 'abc7',
+                    desc: 'sdfaf7'
+                },]
+        },
+        pastApi() {
 
         },
 
-       // ------- 按钮事件  -------
+        // ------- 按钮事件  -------
         /*弹框确定*/
-        dialogDone(){
+        dialogDone() {
             this.dialog.visible = false;
-            switch (this.dialog.contentType){
-                case 1:{
-                    this.apisInCase =  this.$refs.apiSelectView.getApis();
+            switch (this.dialog.contentType) {
+                case 1: {
+                    this.apisInCase = this.$refs.apiSelectView.getApis();
 
                 }
                     break;
-                case 3:{
+                case 3: {
                     var data = this.$refs.editApiDetailInfo.saveApiDetailInfo()
                     var index = this.dialog.extend.index;
                     this.$set(this.apisInCase, index, data)
 
                 }
                     break;
-                case 4:{
-                    this.apisInCase.splice(this.removeApiIndex,1)
+                case 4: {
+                    this.apisInCase.splice(this.removeApiIndex, 1)
+
+                }
+                    break;
+                case 5: {
+                    var data = this.dialog.extend.data;
+                    var index = this.dialog.extend.index;
+                    var partData = this.$refs.searchApiDetailInfo.rewrite();
+                    console.log(partData);
+
+                    data.step = partData.step;
+                    data.urlAddress = partData.urlAddress;
+                    data.variables = partData.variables;
+                    data.requestHead = partData.requestHead;
+                    data.requestBody = partData.requestBody;
+                    data.responseBody = partData.responseBody;
+                    data.assertions = partData.assertions;
+
+                    this.$set(this.apisInCase, index, data)
 
                 }
                     break;
@@ -392,71 +414,101 @@ export default {
 
         },
         /*弹框取消*/
-        dialogCancel(){
+        dialogCancel() {
             this.dialog.visible = false;
-            switch (this.dialog.contentType){
-                case 1:{
+            switch (this.dialog.contentType) {
+                case 1: {
                     this.$refs.apiSelectView.resetApis();
                 }
                     break;
-                case 3:{
-                  this.$refs.editApiDetailInfo.cancelSaveInfo()
+                case 3: {
+                    this.$refs.editApiDetailInfo.cancelSaveInfo()
+                }
+                    break;
+                case 5: {
+                    this.$refs.editApiDetailInfo.cancelSaveInfo()
                 }
                     break;
                 default:
-                  break;
+                    break;
+            }
+        },
+
+        /*搜索接口*/
+        searchApi(data, index) {
+            this.dialog = {
+                title: '搜索接口',
+                visible: true,
+                footerVisible: true,
+                contentType: 5,
+                width: '70%',
+                extend: {
+                    data: data,
+                    index: index
+                }
             }
         },
         /*添加接口*/
-        addApiClick(){
+        addApiClick() {
 
             this.dialog = {
-                title:'添加接口',
-                visible:true,   //整个弹窗显示与否
-                footerVisible:true,
-                contentType:1,  //弹窗内容显示什么
-                width:'60%',
-                extend:{}
+                title: '添加接口',
+                visible: true,   //整个弹窗显示与否
+                footerVisible: true,
+                contentType: 1,  //弹窗内容显示什么
+                width: '60%',
+                extend: {}
             }
         },
         /*动态库查询*/
-        intellQueryClick(){
+        intellQueryClick() {
             this.dialog = {
-                title:'动态库查询',
-                visible:true,
-                footerVisible:false,
-                contentType:2,
-                width:'60%',
-                extend:{}
+                title: '动态库查询',
+                visible: true,
+                footerVisible: false,
+                contentType: 2,
+                width: '60%',
+                extend: {}
             }
-           if(this.$refs.intellCheck !== undefined){
-               this.$refs.intellCheck.setDefaultPage();
-           }
+            if (this.$refs.intellCheck !== undefined) {
+                this.$refs.intellCheck.setDefaultPage();
+            }
+        },
+        /*校验*/
+        apiInfoCheck() {
+            this.dialog = {
+                title: '校验接口',
+                visible: true,
+                footerVisible: false,
+                contentType: 6,
+                width: '60%',
+                extend: {}
+            }
         },
         /*接口编辑*/
-        apiEdit(data,index){
+        apiEdit(data, index) {
             this.dialog = {
-                title:'编辑接口',
-                visible:true,
-                footerVisible:true,
-                contentType:3,
-                width:'60%',
-                extend:{
-                    data:data,
-                    index:index
+                title: '编辑接口',
+                visible: true,
+                footerVisible: true,
+                contentType: 3,
+                width: '60%',
+                extend: {
+                    data: data,
+                    index: index
                 }
             }
         },
         // 删除接口
-        removeApi(index){
+        removeApi(index) {
             //this.apisInCase.splice(index,1)
             this.dialog = {
-                title:'删除接口',
-                visible:true,   //整个弹窗显示与否
-                footerVisible:true,
-                contentType:4,  //弹窗内容显示什么
-                width:'30%',
-                extend:{}
+                title: '删除接口',
+                visible: true,   //整个弹窗显示与否
+                footerVisible: true,
+                contentType: 4,  //弹窗内容显示什么
+                width: '30%',
+                extend: {}
             }
             this.removeApiIndex = index;
         },
@@ -475,40 +527,52 @@ export default {
                 });
         },
 
-        saveCase(){
+        saveCase() {
 
         },
 
-        execCase: function(data){
-          this.excResult = 'yyyyyyy';
-          this.executeDialogVisible = true;
+        execCase: function () {
 
-          if ("WebSocket" in window){
-              var ws = new WebSocket("ws://localhost:8083/case/webSocket/123");
+            this.executeDialogVisible = true;
+            this.excResult = '';
+            var ws = null;
+            var textArea_this = this;
+            if ("WebSocket" in window) {
+                ws = new WebSocket("ws://192.168.32.105:8083/case/webSocket/123");
 
-            ws.onopen = function()
-            {
-              // Web Socket 已连接上，使用 send() 方法发送数据
-              ws.send("发送数据");
-            };
+                ws.onopen = function () {
+                    // Web Socket 已连接上，使用 send() 方法发送数据
+                    ws.send("");
+                };
 
-            ws.onmessage = function (evt)
-            {
-              data = data + evt.data
-//              console.log(data)
-              ws.broadcast('resultChanged', evt.data)
-            };
+                // 接收数据
+                ws.onmessage = function (evt) {
+                    // 注意evt的数据类型
 
-            this.excResult = this.excResult + 'xxxx';
+                    console.log('接收到的数据：', evt)
+                    textArea_this.excResult =  textArea_this.excResult +  '\n' + evt.data;
+                    
 
-          }else{
-              this.excResult = '浏览器不支持websocket，无法显示case执行结果。';
-          }
+                    // ws.broadcast('resultChanged', evt.data)
+                };
+
+
+            } else {
+                this.excResult = '浏览器不支持websocket，无法显示case执行结果。';
+            }
+
+            // 模拟socket推送
+//            var msgNumber = 0;
+//            var serverSendMsg = function () {
+//                msgNumber ++;
+//               var newMsg = 'msg' + msgNumber;
+//                ws.onmessage(newMsg);
+//            }
+//            setInterval(serverSendMsg, 1000);
+
         },
 
-      refreshResult(){
-//          this.excResult = this.excResult + data;
-        console.log('xxx')
+        refreshResult() {
         }
     }
 

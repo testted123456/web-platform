@@ -9,7 +9,7 @@
                 <vue-content-menu :contextMenuData="contextMenuData"
                                   @addDir="addDir"
                                   @addItem="addApi"
-                                  @delApi="delApi"
+                                  @delApi="showDelDialog"
                                   @refreshApi="refreshApi"
                 ></vue-content-menu>
                 <el-tree
@@ -22,6 +22,17 @@
                     @node-click="handleNodeClick" @node-right-click="handleRightClick"
                 >
                 </el-tree>
+                <el-dialog
+                  title="提示"
+                  :visible.sync="delDialogVisible"
+                  width="30%"
+                  >
+                  <span>确认删除？</span>
+                  <span slot="footer" class="dialog-footer">
+                    <el-button @click="delDialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="delApi">确 定</el-button>
+                  </span>
+                </el-dialog>
             </el-aside>
             <router-view></router-view>
         </el-container>
@@ -58,7 +69,8 @@
           showAddItem: false,
           showDel: false
       },
-      currentTreeNode: {}
+      currentTreeNode: {},
+      delDialogVisible: false
     }
   },
 
@@ -98,7 +110,7 @@
 
   methods: {
     handleNodeClick(data, node, instance){
-      if (node.isLeaf) {
+      if (node.data.type === true) {
         this.$router.push({name: 'ApiEdit', params: {id: node.data.id}});
       } else {
         this.$router.push({name: 'ApiDirEdit', params: {id: node.data.id}});
@@ -120,12 +132,6 @@
         },function (res) {
 
         });
-        /**
-          if(node.data.children){
-              return resolve(node.data.children);
-          }else{
-            return resolve([{ name: 'region1', id: 1, type: false }, { name: 'region2', id: 2 }]);
-          }**/
       }
     },
 
@@ -189,6 +195,7 @@
     },
 
     delApi(){//删除树节点
+      this.delDialogVisible = false;
       const node = this.$refs.tree.currentNode.node;
       const nodeId = node.data.id;
 
@@ -223,9 +230,11 @@
           this.$message.error('抱歉，服务器异常。');
         });
       }
+    },
 
-
+    showDelDialog(){
       this.closeMenu();
+      this.delDialogVisible = true;
     },
 
     refreshApi(){
@@ -233,7 +242,6 @@
       node.expand();
       this.closeMenu();
     }
-
   }
 
 }

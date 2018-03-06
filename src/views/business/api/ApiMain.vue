@@ -9,6 +9,7 @@
                 <vue-content-menu :contextMenuData="contextMenuData"
                                   @addDir="addDir"
                                   @addItem="addApi"
+                                  @delApi="delApi"
                                   @refreshApi="refreshApi"
                 ></vue-content-menu>
                 <el-tree
@@ -170,6 +171,60 @@
 
       var pId = node.data.id;
       this.$router.push({name: 'ApiNew', query: {pId: pId}});
+      this.closeMenu();
+    },
+
+    delItem(node){
+      const data = node.data;
+      const parent = node.parent;
+      const children = parent.childNodes;
+      let i;
+      children.forEach(function (e, index) {
+        if(e.data.id === node.data.id){
+          i = index;
+          return;
+        }
+      });
+      children.splice(i, 1);
+    },
+
+    delApi(){//删除树节点
+      const node = this.$refs.tree.currentNode.node;
+      const nodeId = node.data.id;
+
+      if(node.isLeaf === false){//删除目录
+        this.$http.get(this.apiServer + "api/delApiDir?id=" + nodeId).then(function (res) {
+          if(res.data.code == '10000'){
+            this.delItem(node);
+
+            this.$message({
+              message: '恭喜你，删除接口目录成功！',
+              type: 'success'
+            });
+          }else{
+            this.$message.error('抱歉，删除接口目录失败：' + res.data.msg);
+          }
+        },function (res) {
+          this.$message.error('抱歉，服务器异常。');
+        });
+      }else{
+        this.$http.get(this.apiServer + "api/delApi?id=" + nodeId).then(function (res) {
+          if(res.data.code == '10000'){
+            this.delItem(node);
+
+            this.$message({
+              message: '恭喜你，删除接口成功！',
+              type: 'success'
+            });
+          }else{
+            this.$message.error('抱歉，删除接口失败：' + res.data.msg);
+          }
+        },function (res) {
+          this.$message.error('抱歉，服务器异常。');
+        });
+      }
+
+
       this.closeMenu();
     },
 

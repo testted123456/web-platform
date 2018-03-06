@@ -343,6 +343,14 @@
         this.$http.get(this.apiServer + "api/getApi?id=" + this.$route.params.id).then(function (res) {
           if(res.data.code == '10000'){
             this.api = res.data.data;
+
+            if(this.api.requestHead === null){
+              this.api.requestHead = [{Key: '', Value: ''}];
+            }
+
+            if(this.api.responseHead === null){
+              this.api.responseHead = [{Key: '', Value: ''}];
+            }
           }
         },function (res) {
         });

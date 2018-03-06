@@ -150,8 +150,19 @@
     <!--页面最底部 footer-->
     <el-footer style="text-align: right;">
       <el-button type="primary" @click="saveCase">确认</el-button>
-      <el-button type="success">执行</el-button>
+      <el-button type="success" @click="execCase(excResult)">执行</el-button>
     </el-footer>
+
+    <!--执行结果弹框-->
+    <el-dialog title="执行结果" width="80%" :visible.sync="executeDialogVisible">
+      <el-input
+        type="textarea"
+        :rows="20"
+        v-model="excResult"
+        :resultChanged="refreshResult()"
+      >
+      </el-input>
+    </el-dialog>
 
 
       <!-- 弹框 -->
@@ -187,6 +198,7 @@
   import intellCheckDialogComponent from '@/components/common/intellCheckDialogComponent.vue';
   import editApiDialogComponent from './editApiDialogComponent.vue';
   import {moveup, movedown} from  "../../../assets/js/tableRowMove.js";
+  import store from '@/store'
 
 export default {
   components: {editApiDialogComponent, addApiDialogComponent, intellCheckDialogComponent},
@@ -195,6 +207,8 @@ export default {
 
     data () {
         return {
+            executeDialogVisible: false,
+            excResult: '',
             testCase: {},
             apisInCase: [],
             intellCheckData:[],
@@ -220,7 +234,9 @@ export default {
     },
 
   computed: {
-
+    excResult1: function () {
+      return this.excResult;
+    }
   },
     watch:{
         $route(){
@@ -229,9 +245,9 @@ export default {
         }
     },
 
-  created() {
-      this.getData();
-  },
+    created() {
+        this.getData();
+    },
 
 
     methods: {
@@ -461,6 +477,38 @@ export default {
 
         saveCase(){
 
+        },
+
+        execCase: function(data){
+          this.excResult = 'yyyyyyy';
+          this.executeDialogVisible = true;
+
+          if ("WebSocket" in window){
+              var ws = new WebSocket("ws://localhost:8083/case/webSocket/123");
+
+            ws.onopen = function()
+            {
+              // Web Socket 已连接上，使用 send() 方法发送数据
+              ws.send("发送数据");
+            };
+
+            ws.onmessage = function (evt)
+            {
+              data = data + evt.data
+//              console.log(data)
+              ws.broadcast('resultChanged', evt.data)
+            };
+
+            this.excResult = this.excResult + 'xxxx';
+
+          }else{
+              this.excResult = '浏览器不支持websocket，无法显示case执行结果。';
+          }
+        },
+
+      refreshResult(){
+//          this.excResult = this.excResult + data;
+        console.log('xxx')
         }
     }
 

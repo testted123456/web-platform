@@ -1,6 +1,6 @@
-import TestCaseMain from  '@/views/business/testCase/TestCaseMain'
-import TestCase from  '@/views/business/testCase/TestCase'
-import TestCaseDir from  '@/views/business/testCase/TestCaseDir'
+import TestCaseMain from  '@/views/testCase/TestCaseMain'
+import TestCase from  '@/views/testCase/TestCase'
+import TestCaseDir from  '@/views/testCase/TestCaseDir'
 
 export default {
   path: 'case',

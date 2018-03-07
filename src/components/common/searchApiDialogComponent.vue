@@ -231,44 +231,22 @@
             tempApis:[],
             apiInCaseTab: 'variables',
             tempApiDetailInfo:{
-                "id": 1,
-                "name": "1",
                 "step":"step1",
-                "description": "",
-                "pId": 0,
-                "module": "1",
-                "branch": "1",
                 "urlAddress": "1",
-                "apiType": "0",
-                "type": true,
-                "postWay": "1",
-                "requestHead": [{
-                    "Key": null,
-                    "Value": null,
-                    "Description": null
-                }],
-                "requestBodyType": "2",
-                "requestBodyRowType": "2",
-                "requestBody": null,
-                "responseHead": [{
-                    "Key": null,
-                    "Value": null,
-                    "Description": null
-                }],
-                "responseBodyType": "0",
-                "responseBody": null,
-                "createdBy": "",
-                "createdTime": null,
-                "updatedBy": "",
-                "updatedTime": null,
-                "optstatus": 0,
-                "system": "usr",
                 "variables": [{
-                    "Key": "",
-                    "Value": ""
+                    "Key": "111",
+                    "Value": "111"
                 }],
+
+                "requestHead": [{
+                    "Key": "222",
+                    "Value": null,
+                    "Description": null
+                }],
+                "requestBody": "333",
+                "responseBody": "444",
                 "assertions": [{
-                    "Key": "",
+                    "Key": "555",
                     "Value": ""
                 }]
             }
@@ -473,18 +451,42 @@
       },
 
       rewrite(){
-            var reData = {
-                step:this.tempApiDetailInfo.step,
-                urlAddress:this.tempApiDetailInfo.urlAddress,
-                variables:this.tempApiDetailInfo.variables,
-                requestHead:this.tempApiDetailInfo.requestHead,
-                requestBody:this.tempApiDetailInfo.requestBody,
-                responseBody:this.tempApiDetailInfo.responseBody,
-                assertions:this.tempApiDetailInfo.assertions
-            }
+//            var reData = {
+//                step:this.tempApiDetailInfo.step,
+//                urlAddress:this.tempApiDetailInfo.urlAddress,
+//                variables:this.tempApiDetailInfo.variables,
+//                requestHead:this.tempApiDetailInfo.requestHead,
+//                requestBody:this.tempApiDetailInfo.requestBody,
+//                responseBody:this.tempApiDetailInfo.responseBody,
+//                assertions:this.tempApiDetailInfo.assertions
+//            }
+          var reData = this.tempApiDetailInfo;
             console.log(reData);
              return reData;
-      }
+      },
+        reset(){
+        this.tempApiDetailInfo = {
+            "step":"",
+            "urlAddress": "",
+            "variables": [{
+                "Key": "",
+                "Value": ""
+            }],
+
+            "requestHead": [{
+                "Key": "",
+                "Value": "",
+                "Description": ""
+            }],
+            "requestBody": "",
+            "responseBody": "",
+            "assertions": [{
+                "Key": "",
+                "Value": ""
+            }]
+        }
+        }
+
 
     }
   }

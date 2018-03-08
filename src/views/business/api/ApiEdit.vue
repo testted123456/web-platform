@@ -448,8 +448,11 @@
       saveApi(){
         let validResult = this.validHeadersRow(this.api.requestHead);
 
+        let tempApi = JSON.stringify(this.api);
+        tempApi = JSON.parse(tempApi);
+
         if(validResult === 0){
-          this.api.requestHead = null;
+          tempApi.requestHead = null;
         }else if(validResult === 1){
           this.$message.error('请求消息头字段不能为空！');
           return;
@@ -458,16 +461,13 @@
         validResult = this.validHeadersRow(this.api.responseHead);
 
         if(validResult === 0){
-          this.api.responseHead = null;
+          tempApi.responseHead = null;
         }else if(validResult === 1){
-          if(this.api.requestHead === null){
-            this.api.requestHead = [{Key:'', Value:''}];
-          }
           this.$message.error('响应消息头字段不能为空！');
           return;
         }
 
-        this.$http.post(this.apiServer + "api/addApi", this.api).then(function (res) {
+        this.$http.post(this.apiServer + "api/addApi", tempApi).then(function (res) {
           if(res.data.code == '10000'){
             this.$message({
               message: '恭喜你，更新接口成功',
@@ -475,27 +475,10 @@
             });
 
             this.api.id = res.data.data.id;
-//            this.$router.push( { name: 'ApiMain'});
           }else{
-            if(this.api.requestHead === null){
-              this.api.requestHead = [{Key:'', Value:''}];
-            }
-
-            if(this.api.responseHead === null){
-              this.api.responseHead = [{Key:'', Value:''}];
-            }
-
             this.$message.error('抱歉，更新接口失败：' + res.data.msg);
           }
         }, function (res) {
-          if(this.api.requestHead === null){
-            this.api.requestHead = [{Key:'', Value:''}];
-          }
-
-          if(this.api.responseHead === null){
-            this.api.responseHead = [{Key:'', Value:''}];
-          }
-
           this.$message.error('服务器请求失败！');
         });
       }

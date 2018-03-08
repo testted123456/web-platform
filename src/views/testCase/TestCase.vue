@@ -227,9 +227,7 @@
         executeDialogVisible: false,
         excResult: '',
         enviornment:[],
-        testCase: {
-          caseType:'true'
-        },
+        testCase: {},
         apisInCase: [],
         intellCheckData:[],
         envs: [],
@@ -280,7 +278,7 @@
         if (caseID == 0){
           console.log("重置页面为空")
           this.testCase = {
-            caseType:'true'
+            caseType:'false'
           }
           this.apisInCase = []
         }else{
@@ -314,7 +312,7 @@
           console.log(this.testCase)
           console.log(this.apisInCase)
 
-              //       this.testCase = {
+          //       this.testCase = {
 //                        "id": 1,
 //                        "pId": 0,
 //                        "name": "test",
@@ -580,39 +578,57 @@
         console.log(this.$route.params.id);
         var caseID = this.$route.params.id;
         if(caseID == 0){    /////////////////////////////////新增界面 确认按钮事件
+
           this.$http.post(this.testCaseServer+"testCase/addCase",this.testCase).then(function (res) {
             if(res.data.code == '10000'){
               console.log("case新增界面")
               var receiveCase = res.data.data;
-              for(var i=0;i<this.apisInCase.length;i++){
-                this.apisInCase[i].testCase = receiveCase;
-              }
-              console.log(this.apisInCase);
-              // 请求接口
-              this.$http.post(this.testCaseServer+"testCaseInterface/addCaseInterfaces",this.apisInCase).then(function (res) {
-                if(res.data.code == '10000'){
-                  console.log("新增页面增加成功")
+              if(this.apisInCase.length>0){
+                for(var i=0;i<this.apisInCase.length;i++){
+                  this.apisInCase[i].testCase = receiveCase;
                 }
+                console.log(this.apisInCase);
+                // 请求接口
+                this.$http.post(this.testCaseServer+"testCaseInterface/addCaseInterfaces",this.apisInCase).then(function (res) {
+                  if(res.data.code == '10000'){
+                    console.log("新增页面增加成功")
+                  }
+                },function (res) {
+
+                });
               }
-            },function (res) {
-            });
+
+            }
+          },function (res) {
+
+          });
+
         }else{     /////////////////////////编辑界面 确认按钮事件
+
           this.$http.post(this.testCaseServer+"updateCase",this.testCase).then(function (res) {
             if(res.data.code == '10000'){
               console.log("case编辑界面")
               var receiveCase = res.data.data;
-              for(var i=0;i<this.apisInCase.length;i++){
-                this.apisInCase[i].testCase = receiveCase;
-              }
-              console.log(this.apisInCase);
-              // 请求接口
-              this.$http.post(this.testCaseServer+"updateCaseInterfaces",this.apisInCase).then(function (res) {
-                if(res.data.code == '10000'){
-                  console.log("新增页面增加成功")
+              if(this.apisInCase.length>0){
+                for(var i=0;i<this.apisInCase.length;i++){
+                  this.apisInCase[i].testCase = receiveCase;
                 }
+                console.log(this.apisInCase);
+                // 请求接口
+                this.$http.post(this.testCaseServer+"updateCaseInterfaces",this.apisInCase).then(function (res) {
+                  if(res.data.code == '10000'){
+                    console.log("编辑页面修改成功")
+                  }
+                },function (res) {
+
+                });
               }
-            },function (res) {
-            });
+
+            }
+          },function (res) {
+
+          });
+
         }
       },
 

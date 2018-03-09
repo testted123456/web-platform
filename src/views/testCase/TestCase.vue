@@ -294,7 +294,7 @@
           ws.onopen = function () {
             // Web Socket 已连接上，使用 send() 方法发送数据
 
-            textArea_this.$http.get(textArea_this.testCaseServer+"testCase/execute?id="+textArea_this.$route.params.id).then(function (res) {
+            textArea_this.$http.get(textArea_this.testCaseServer+"testCase/execute?id="+textArea_this.$route.query.id).then(function (res) {
               if(res.data.code === 10000){
                 console.log("传送caseId成功")
               }
@@ -310,11 +310,7 @@
 
             console.log('接收到的数据：', evt)
 
-
-
             textArea_this.excResult =  textArea_this.excResult +  '\n' + evt.data;
-
-
             // ws.broadcast('resultChanged', evt.data)
           };
 

@@ -92,9 +92,9 @@
 
             handleNodeClick(data, node, instance){
                 if (node.isLeaf) {
-                    this.$router.push({name: 'TestCase', params: {id: node.data.id}});
+                  this.$router.push({name: 'TestCase', query: {id: node.data.id}});
                 } else {
-                    this.$router.push({name: 'TestCaseDir', params: {id: node.data.id}});
+                  this.$router.push({name: 'TestCaseDir', query: {id: node.data.id}});
                 }
             },
             loadNode(node, resolve) { //渲染树节点
@@ -165,8 +165,7 @@
                 }
 
                 var pId = node.data.id;
-//                this.$router.push({path: '/testCaseDirNew', query: {pId: pId}});
-                this.$router.push({name: 'TestCaseDir', params: {id: 0}});
+                this.$router.push({name: 'TestCaseDir', query: {id: 0,pId: node.data.id}});
                 this.closeMenu();
             },
             addCase(){ //右键新增接口树节点
@@ -175,12 +174,8 @@
                 if (!node.expanded) {
                     node.expand();
                 }
-
                 var pId = node.data.id;
-//        this.$router.push({path: '/home/case/TestCase', query: {id: 0,pId: node.data.id}});
-              this.$router.push({name: 'TestCase', query: {id: 0,pId: node.data.id}});
-
-//                this.$router.push({name: 'TestCase', params: {id: 0,pId: node.data.id}});
+                this.$router.push({name: 'TestCase', query: {id: 0,pId: node.data.id}});
                 this.closeMenu();
             },
             refreshApi(){

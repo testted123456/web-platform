@@ -14,7 +14,7 @@ export default {
       component: TestCase
     },
     {
-      path: 'testCaseDir/:id',
+      path: 'testCaseDir',
       name: 'TestCaseDir',
       component: TestCaseDir
     }

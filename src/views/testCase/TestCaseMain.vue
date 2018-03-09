@@ -79,6 +79,11 @@
                     }
 
                     var newChild = this.$store.state.testCase.newTestCase;
+
+                    if(newChild.type === false){
+                      newChild.children = [];
+                    }
+
                     node.data.children.push(newChild);
                     this.$store.commit('changeTestCaseStatus', 0);
 

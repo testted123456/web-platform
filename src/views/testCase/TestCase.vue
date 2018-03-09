@@ -226,7 +226,9 @@
         executeDialogVisible: false,
         excResult: '',
         enviornment:[],
-        testCase: {},
+        testCase: {
+
+        },
         apisInCase: [],
         intellCheckData:[],
         envs: [],
@@ -652,32 +654,39 @@
 
           this.$http.post(this.testCaseServer+"testCase/addCase",this.testCase).then(function (res) {
             if(res.data.code === 10000){
-              console.log("case新增界面")
-
-              this.$message({
-                message: '恭喜你，新增用例成功',
-                type: 'success'
-              });
 
               var receiveCase = res.data.data;
               if(this.apisInCase.length>0){
                 for(var i=0;i<this.apisInCase.length;i++){
                   this.apisInCase[i].testCase = receiveCase;
                 }
-                console.log(this.apisInCase);
                 // 请求接口
                 this.$http.post(this.testCaseServer+"testCaseInterface/addCaseInterfaces",this.apisInCase).then(function (res) {
                   if(res.data.code === 10000){
-                    console.log("新增页面增加成功")
-
                     this.$message({
                       message: '恭喜你，新增用例成功',
                       type: 'success'
                     });
+                    // 跳转到当且case的详情页
+                    //存数据  树节点刷新
+                    this.$store.commit('changeTestCaseStatus', 1);
+                    this.testCase.id = res.data.data.id;
+                    this.$store.commit('setNewTestCase', this.testCase);
+                    this.$router.push({name: 'TestCase', query: {id: res.data.data.id}});
                   }
                 },function (res) {
                   this.$message.error('抱歉，新增用例失败：' + res.data.msg);
                 });
+              }else{    //case列表数为0  且case信息提交成功  tip提示   并且跳转到当且case的详情页
+                this.$message({
+                  message: '恭喜你，新增用例成功',
+                  type: 'success'
+                });
+                //存数据  树节点刷新
+                this.$store.commit('changeTestCaseStatus', 1);
+                this.testCase.id = res.data.data.id;
+                this.$store.commit('setNewTestCase', this.testCase);
+                this.$router.push({name: 'TestCase', query: {id: res.data.data.id}});
               }
 
             }else{
@@ -688,10 +697,9 @@
           });
 
         }else{     /////////////////////////编辑界面 确认按钮事件
-
-          this.$http.post(this.testCaseServer+"updateCase",this.testCase).then(function (res) {
+          this.$http.post(this.testCaseServer+"testCase/updateCase",this.testCase).then(function (res) {
+              console.log(res.data.data);
             if(res.data.code === 10000){
-              console.log("case编辑界面")
               var receiveCase = res.data.data;
               if(this.apisInCase.length>0){
                 for(var i=0;i<this.apisInCase.length;i++){
@@ -699,26 +707,32 @@
                 }
                 console.log(this.apisInCase);
                 // 请求接口
-                this.$http.post(this.testCaseServer+"updateCaseInterfaces",this.apisInCase).then(function (res) {
+                this.$http.post(this.testCaseServer+"testCase/updateCaseInterfaces",this.apisInCase).then(function (res) {
                   if(res.data.code === 10000){
-                    console.log("编辑页面修改成功")
                     this.$message({
                       message: '恭喜你，更新用例成功',
                       type: 'success'
                     });
+                    //把case列表数据更新  防止新增的某条case数据没有id
+                    this.apisInCase = res.data.data;
                   }
                 },function (res) {
                   this.$message.error('抱歉，更新用例失败：' + res.data.msg);
                 });
+              }else{   //case列表数为0  且case信息更新成功  tip提示
+                this.$message({
+                  message: '恭喜你，更新用例成功',
+                  type: 'success'
+                });
               }
+            }else{
+              this.$message.error('抱歉，新增用例失败：' + res.data.msg);
             }
           },function (res) {
             this.$message.error('服务器请求失败！');
           });
-
         }
       },
-
       refreshResult() {
       }
     }

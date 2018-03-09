@@ -9,7 +9,7 @@ export default {
   children: [
 
     {
-      path: 'testCase/:id',
+      path: 'testCase',
       name: 'TestCase',
       component: TestCase
     },

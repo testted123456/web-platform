@@ -177,8 +177,10 @@
                 }
 
                 var pId = node.data.id;
-//        this.$router.push({path: '/home/case/', query: {pId: pId}});
-                this.$router.push({name: 'TestCase', params: {id: 0}});
+//        this.$router.push({path: '/home/case/TestCase', query: {id: 0,pId: node.data.id}});
+              this.$router.push({name: 'TestCase', query: {id: 0,pId: node.data.id}});
+
+//                this.$router.push({name: 'TestCase', params: {id: 0,pId: node.data.id}});
                 this.closeMenu();
             },
             refreshApi(){

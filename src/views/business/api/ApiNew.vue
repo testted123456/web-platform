@@ -333,7 +333,7 @@
       //初始化页面
       init(){
         this.$http.get(this.testCaseServer + "sysCfg/getAllAlias").then(function (res) {
-          if(res.data.code == '10000'){
+          if(res.data.code === 10000){
             let tempSystems = this.apiSystems;
             res.data.data.forEach(function (e, index) {
               tempSystems.push({value: e, label: e})
@@ -446,7 +446,7 @@
         }
 
         this.$http.post(this.apiServer + "api/addApi", tempApi).then(function (res) {
-            if(res.data.code == '10000'){
+            if(res.data.code === 10000){
 
               this.$message({
                 message: '恭喜你，新增接口成功',

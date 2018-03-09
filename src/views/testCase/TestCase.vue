@@ -173,51 +173,37 @@
       :width="dialog.width"
       :before-close="handleClose"
     >
-      <!--搜索接口-->
+      <!--搜索弹窗-->
       <search-api-dialog-component ref="searchApiDetailInfo" v-if="dialog.contentType === 5" ></search-api-dialog-component>
-      <!--添加接口-->
+      <!--添加接口弹窗-->
       <add-api-dialog-component ref="apiSelectView" v-if="dialog.contentType === 1"  :selectedApis="apisInCase"></add-api-dialog-component>
-      <!--动态库查询-->
+      <!--动态库查询弹窗-->
       <intell-check-dialog-component ref="intellCheck" v-if="dialog.contentType === 2" :intellQuery="intellCheckData" ></intell-check-dialog-component>
-      <!--校验-->
+      <!--校验弹窗-->
       <apis-info-check-component ref="apisInfoCheck" v-if="dialog.contentType === 6" :apisInfoCheck="apisInCase" ></apis-info-check-component>
-      <!--编辑接口-->
+      <!--编辑接口弹窗-->
       <edit-api-dialog-component ref="editApiDetailInfo" v-if="dialog.contentType === 3" :testCaseInterface="dialog.extend.data"></edit-api-dialog-component>
-      <!--删除接口-->
+      <!--删除接口弹窗-->
       <span v-if="dialog.contentType === 4" >是否删除这条接口？</span>
-
+      <!--执行弹窗-->
+      <div v-if="dialog.contentType === 7" ref="executeCase">
+        <el-input
+          type="textarea"
+          :rows="1"
+          v-model="excResult"
+          v-show="false"
+        >
+        </el-input>
+        <div v-html="compiledMarkdown" class="markDown"></div>
+      </div>
+      <!--弹窗footer-->
       <span v-if="dialog.footerVisible" slot="footer" class="dialog-footer">
                       <el-button @click="dialogCancel">取 消</el-button>
                       <el-button type="primary" @click="dialogDone">确 定</el-button>
         </span>
     </el-dialog>
-
-    <!--执行结果弹框-->
-    <el-dialog title="执行结果" width="60%" :visible.sync="executeDialogVisible" >
-      <el-input
-        type="textarea"
-        :rows="1"
-        v-model="excResult"
-        v-show="false"
-      >
-      </el-input>
-
-      <!--<el-input-->
-      <!--type="textarea"-->
-      <!--:rows="20"-->
-      <!--v-show="true"-->
-      <!--v-model="compiledMarkdown"-->
-      <!--:resultChanged="refreshResult()"-->
-      <!--&gt;-->
-      <!--</el-input>-->
-
-      <div v-html="compiledMarkdown" class="markDown"></div>
-    </el-dialog>
-
   </el-container>
-
 </template>
-
 
 <script>
 
@@ -281,59 +267,9 @@
     },
 
     methods: {
+      moveup,
+      movedown,
 
-      execCase: function () {
-
-        this.executeDialogVisible = true;
-        this.excResult = '';
-        var ws = null;
-        var textArea_this = this;
-        if ("WebSocket" in window) {
-          ws = new WebSocket("ws://192.168.32.105:8083/case/webSocket/123");
-          // ws = new Object();
-          ws.onopen = function () {
-            // Web Socket 已连接上，使用 send() 方法发送数据
-
-            textArea_this.$http.get(textArea_this.testCaseServer+"testCase/execute?id="+textArea_this.$route.query.id).then(function (res) {
-              if(res.data.code === 10000){
-                console.log("传送caseId成功")
-              }
-            },function (res) {});
-
-            ws.send("");
-            console.log("open")
-          };
-
-          // 接收数据
-          ws.onmessage = function (evt) {
-            // 注意evt的数据类型
-
-            console.log('接收到的数据：', evt)
-
-            textArea_this.excResult =  textArea_this.excResult +  '\n' + evt.data;
-            // ws.broadcast('resultChanged', evt.data)
-          };
-
-
-        } else {
-          this.excResult = '浏览器不支持websocket，无法显示case执行结果。';
-        }
-
-
-
-        //  模拟socket推送
-//            var msgNumber = 0;
-//            var serverSendMsg = function () {
-//                msgNumber ++;
-//               var newMsg = 'msg' + msgNumber;
-//                ws.onmessage(newMsg);
-//            }
-//            setInterval(serverSendMsg, 1000);
-
-      },
-
-
-      moveup, movedown,
       copyApi(data) {
 
         this.ApiCopyId = data.id;
@@ -523,6 +459,10 @@
 
           }
             break;
+          case 7: {
+
+          }
+            break;
           default:
             break;
         }
@@ -544,6 +484,10 @@
             this.$refs.searchApiDetailInfo.reset()
           }
             break;
+          case 7:{
+            console.log("closexxxxx")
+            ws.onclose();
+          }
           default:
             break;
         }
@@ -628,6 +572,62 @@
         this.removeApiIndex = index;
       },
 
+      //执行弹窗方法
+      execCase: function () {
+
+        this.dialog = {
+          title: '执行结果',
+          visible: true,
+          footerVisible: false,
+          contentType: 7,
+          width: '60%',
+          extend: {
+          }
+        }
+
+        this.excResult = '';
+        var ws = null;
+        var textArea_this = this;
+        if ("WebSocket" in window) {
+          ws = new WebSocket("ws://192.168.32.105:8083/case/webSocket/123");
+          // ws = new Object();
+          ws.onopen = function () {
+            textArea_this.$http.get(textArea_this.testCaseServer+"testCase/execute?id="+textArea_this.$route.query.id).then(function (res) {
+              if(res.data.code === 10000){
+                console.log("传送caseId成功")
+              }
+            },function (res) {});
+
+            ws.send("");
+          };
+
+          // 接收数据
+          ws.onmessage = function (evt) {
+            // 注意evt的数据类型
+            console.log('接收到的数据：', evt)
+            textArea_this.excResult =  textArea_this.excResult +  '\n' + evt.data;
+            // ws.broadcast('resultChanged', evt.data)
+          };
+
+          ws.onclose = function(){
+              console.log("close")
+          };
+
+        } else {
+          this.excResult = '浏览器不支持websocket，无法显示case执行结果。';
+        }
+
+        //  模拟socket推送
+        //  var msgNumber = 0;
+        //    var serverSendMsg = function () {
+        //          msgNumber ++;
+        //          var newMsg = 'msg' + msgNumber;
+        //            ws.onmessage(newMsg);
+        //        }
+        //        setInterval(serverSendMsg, 1000);
+
+      },
+
       //弹窗 右上角关闭事件
       handleClose(done) {
         this.$confirm('确认关闭？')
@@ -642,6 +642,8 @@
           });
       },
 
+
+      //新增，编辑 确认按钮事件
       saveCase() {
         var caseID = this.$route.query.id;
 

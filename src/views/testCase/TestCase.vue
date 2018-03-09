@@ -273,7 +273,7 @@
       },
       getData() {
 
-        var caseID = this.$route.params.id;
+        var caseID = this.$route.query.id;
 
         if (caseID == 0){
           console.log("重置页面为空")
@@ -284,7 +284,7 @@
         }else{
           //先注释 用本地数据
 
-          this.$http.get("http://192.168.32.105:8083/case/testCase/getCase?id=" + this.$route.params.id).then(function (res) {
+          this.$http.get("http://192.168.32.105:8083/case/testCase/getCase?id=" + this.$route.query.id).then(function (res) {
             if(res.data.code === 10000){
               this.testCase = res.data.data;
               if(this.testCase.caseType){
@@ -299,7 +299,7 @@
 
           });
 
-          this.$http.get("http://192.168.32.105:8083/case/testCaseInterface/getByTestCaseId?testCaseId=" + this.$route.params.id).then(function (res) {
+          this.$http.get("http://192.168.32.105:8083/case/testCaseInterface/getByTestCaseId?testCaseId=" + this.$route.query.id).then(function (res) {
             if(res.data.code === 10000){
               this.apisInCase = res.data.data;
             }
@@ -575,13 +575,20 @@
       },
 
       saveCase() {
-        console.log(this.$route.params.id);
-        var caseID = this.$route.params.id;
+        var caseID = this.$route.query.id;
+
         if(caseID == 0){    /////////////////////////////////新增界面 确认按钮事件
+          this.testCase.pId = this.$route.query.pId;
 
           this.$http.post(this.testCaseServer+"testCase/addCase",this.testCase).then(function (res) {
             if(res.data.code === 10000){
               console.log("case新增界面")
+
+              this.$message({
+                message: '恭喜你，新增用例成功',
+                type: 'success'
+              });
+
               var receiveCase = res.data.data;
               if(this.apisInCase.length>0){
                 for(var i=0;i<this.apisInCase.length;i++){
@@ -592,15 +599,22 @@
                 this.$http.post(this.testCaseServer+"testCaseInterface/addCaseInterfaces",this.apisInCase).then(function (res) {
                   if(res.data.code === 10000){
                     console.log("新增页面增加成功")
+
+                    this.$message({
+                      message: '恭喜你，新增用例成功',
+                      type: 'success'
+                    });
                   }
                 },function (res) {
-
+                  this.$message.error('抱歉，新增用例失败：' + res.data.msg);
                 });
               }
 
+            }else{
+              this.$message.error('抱歉，新增用例失败：' + res.data.msg);
             }
           },function (res) {
-
+            this.$message.error('服务器请求失败！');
           });
 
         }else{     /////////////////////////编辑界面 确认按钮事件
@@ -618,15 +632,18 @@
                 this.$http.post(this.testCaseServer+"updateCaseInterfaces",this.apisInCase).then(function (res) {
                   if(res.data.code === 10000){
                     console.log("编辑页面修改成功")
+                    this.$message({
+                      message: '恭喜你，更新用例成功',
+                      type: 'success'
+                    });
                   }
                 },function (res) {
-
+                  this.$message.error('抱歉，更新用例失败：' + res.data.msg);
                 });
               }
-
             }
           },function (res) {
-
+            this.$message.error('服务器请求失败！');
           });
 
         }

@@ -164,17 +164,6 @@
       <el-button type="success" @click="execCase()">执行</el-button>
     </el-footer>
 
-    <!--执行结果弹框-->
-    <el-dialog title="执行结果" width="80%" :visible.sync="executeDialogVisible" >
-      <el-input
-        type="textarea"
-        :rows="20"
-        v-model="excResult"
-        :resultChanged="refreshResult()"
-      >
-      </el-input>
-    </el-dialog>
-
 
     <!-- 搜索 增加 删除 编辑 校验 动态库查询等弹框 -->
     <el-dialog
@@ -203,9 +192,32 @@
         </span>
     </el-dialog>
 
+    <!--执行结果弹框-->
+    <el-dialog title="执行结果" width="60%" :visible.sync="executeDialogVisible" >
+      <el-input
+        type="textarea"
+        :rows="1"
+        v-model="excResult"
+        v-show="false"
+      >
+      </el-input>
+
+      <!--<el-input-->
+      <!--type="textarea"-->
+      <!--:rows="20"-->
+      <!--v-show="true"-->
+      <!--v-model="compiledMarkdown"-->
+      <!--:resultChanged="refreshResult()"-->
+      <!--&gt;-->
+      <!--</el-input>-->
+
+      <div v-html="compiledMarkdown" class="markDown"></div>
+    </el-dialog>
+
   </el-container>
 
 </template>
+
 
 <script>
 
@@ -215,7 +227,8 @@
   import searchApiDialogComponent from '@/views/testCase/searchApiDialogComponent.vue';
   import apisInfoCheckComponent from '@/views/testCase/apisInfoCheckComponent.vue';
   import {moveup, movedown} from  "@/assets/js/tableRowMove.js";
-  import store from '@/store'
+  import marked from 'marked';
+  import {lodash} from 'lodash';
 
   export default {
     components: {editApiDialogComponent, addApiDialogComponent, intellCheckDialogComponent,searchApiDialogComponent,apisInfoCheckComponent},
@@ -252,7 +265,10 @@
     },
 
     computed: {
-
+      compiledMarkdown: function () {
+        // return this.excResult
+        return marked(this.excResult, {sanitize: true})
+      }
     },
     watch:{
       $route(){
@@ -265,6 +281,62 @@
     },
 
     methods: {
+
+      execCase: function () {
+
+        this.executeDialogVisible = true;
+        this.excResult = '';
+        var ws = null;
+        var textArea_this = this;
+        if ("WebSocket" in window) {
+          ws = new WebSocket("ws://192.168.32.105:8083/case/webSocket/123");
+          // ws = new Object();
+          ws.onopen = function () {
+            // Web Socket 已连接上，使用 send() 方法发送数据
+
+            textArea_this.$http.get(textArea_this.testCaseServer+"testCase/execute?id="+textArea_this.$route.params.id).then(function (res) {
+              if(res.data.code === 10000){
+                console.log("传送caseId成功")
+              }
+            },function (res) {});
+
+            ws.send("");
+            console.log("open")
+          };
+
+          // 接收数据
+          ws.onmessage = function (evt) {
+            // 注意evt的数据类型
+
+            console.log('接收到的数据：', evt)
+
+
+
+            textArea_this.excResult =  textArea_this.excResult +  '\n' + evt.data;
+
+
+            // ws.broadcast('resultChanged', evt.data)
+          };
+
+
+        } else {
+          this.excResult = '浏览器不支持websocket，无法显示case执行结果。';
+        }
+
+
+
+        //  模拟socket推送
+//            var msgNumber = 0;
+//            var serverSendMsg = function () {
+//                msgNumber ++;
+//               var newMsg = 'msg' + msgNumber;
+//                ws.onmessage(newMsg);
+//            }
+//            setInterval(serverSendMsg, 1000);
+
+      },
+
+
       moveup, movedown,
       copyApi(data) {
 
@@ -632,47 +704,6 @@
         }
       },
 
-      execCase: function () {
-
-        this.executeDialogVisible = true;
-        this.excResult = '';
-        var ws = null;
-        var textArea_this = this;
-        if ("WebSocket" in window) {
-          ws = new WebSocket("ws://192.168.32.105:8083/case/webSocket/123");
-
-          ws.onopen = function () {
-            // Web Socket 已连接上，使用 send() 方法发送数据
-            ws.send("");
-          };
-
-          // 接收数据
-          ws.onmessage = function (evt) {
-            // 注意evt的数据类型
-
-            console.log('接收到的数据：', evt)
-            textArea_this.excResult =  textArea_this.excResult +  '\n' + evt.data;
-
-
-            // ws.broadcast('resultChanged', evt.data)
-          };
-
-
-        } else {
-          this.excResult = '浏览器不支持websocket，无法显示case执行结果。';
-        }
-
-        // 模拟socket推送
-//            var msgNumber = 0;
-//            var serverSendMsg = function () {
-//                msgNumber ++;
-//               var newMsg = 'msg' + msgNumber;
-//                ws.onmessage(newMsg);
-//            }
-//            setInterval(serverSendMsg, 1000);
-
-      },
-
       refreshResult() {
       }
     }
@@ -682,6 +713,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .markDown{
+    text-align: left;
+    height:400px;
+    overflow-y: scroll;
+  }
   #testCaseEdit {
     font-size: 0.875em;
   }

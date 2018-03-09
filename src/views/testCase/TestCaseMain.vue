@@ -106,7 +106,7 @@
 
                     //先注释 用本地数据
           this.$http.get(this.testCaseServer+"testCase/getCaseTreeByPId?pId=" + node.data.id).then(function (res) {
-            if (res.data.code == '10000') {
+            if (res.data.code === 10000 ) {
               var tempApi = res.data.data;
 
               return resolve(res.data.data);

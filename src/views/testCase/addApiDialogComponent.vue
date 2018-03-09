@@ -90,7 +90,7 @@
         }else{
           //先注释 用本地数据
           this.$http.get(this.apiServer + "api/getApiTreeByPId?pId=" + node.data.id).then(function (res) {
-            if(res.data.code == '10000'){
+            if(res.data.code === 10000){
               var apiTreeInfo = res.data.data;
               return resolve(res.data.data);
             }

@@ -285,7 +285,7 @@
           //先注释 用本地数据
 
           this.$http.get("http://192.168.32.105:8083/case/testCase/getCase?id=" + this.$route.params.id).then(function (res) {
-            if(res.data.code == '10000'){
+            if(res.data.code === 10000){
               this.testCase = res.data.data;
               if(this.testCase.caseType){
                 this.testCase.caseType = "true"
@@ -300,7 +300,7 @@
           });
 
           this.$http.get("http://192.168.32.105:8083/case/testCaseInterface/getByTestCaseId?testCaseId=" + this.$route.params.id).then(function (res) {
-            if(res.data.code == '10000'){
+            if(res.data.code === 10000){
               this.apisInCase = res.data.data;
             }
           },function (res) {
@@ -398,7 +398,7 @@
           },]
 
         this.$http.get(this.testCaseServer+"env/getAllEnvs").then(function (res) {
-          if(res.data.code == '10000'){
+          if(res.data.code === 10000){
 
             var tempEnviornment = [];
             res.data.data.forEach(function (e, index) {
@@ -580,7 +580,7 @@
         if(caseID == 0){    /////////////////////////////////新增界面 确认按钮事件
 
           this.$http.post(this.testCaseServer+"testCase/addCase",this.testCase).then(function (res) {
-            if(res.data.code == '10000'){
+            if(res.data.code === 10000){
               console.log("case新增界面")
               var receiveCase = res.data.data;
               if(this.apisInCase.length>0){
@@ -590,7 +590,7 @@
                 console.log(this.apisInCase);
                 // 请求接口
                 this.$http.post(this.testCaseServer+"testCaseInterface/addCaseInterfaces",this.apisInCase).then(function (res) {
-                  if(res.data.code == '10000'){
+                  if(res.data.code === 10000){
                     console.log("新增页面增加成功")
                   }
                 },function (res) {
@@ -606,7 +606,7 @@
         }else{     /////////////////////////编辑界面 确认按钮事件
 
           this.$http.post(this.testCaseServer+"updateCase",this.testCase).then(function (res) {
-            if(res.data.code == '10000'){
+            if(res.data.code === 10000){
               console.log("case编辑界面")
               var receiveCase = res.data.data;
               if(this.apisInCase.length>0){
@@ -616,7 +616,7 @@
                 console.log(this.apisInCase);
                 // 请求接口
                 this.$http.post(this.testCaseServer+"updateCaseInterfaces",this.apisInCase).then(function (res) {
-                  if(res.data.code == '10000'){
+                  if(res.data.code === 10000){
                     console.log("编辑页面修改成功")
                   }
                 },function (res) {

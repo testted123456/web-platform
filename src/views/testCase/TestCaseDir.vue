@@ -53,7 +53,7 @@
       saveApi(){
         this.api.pId = this.$route.query.pId;
 
-        this.$http.post("http://localhost:8083/case/testCase/addCaseDir", this.api).then(function (res) {
+        this.$http.post(this.testCaseServer+"addCaseDir", this.api).then(function (res) {
           this.$store.commit('changeStatus', 1);
           this.$store.commit('setNewApi', this.api);
           this.$router.push('/apiEdit');

@@ -75,9 +75,13 @@
         tempApis:[]
       }
     },
-    created(){
+
+
+
+  created(){
       this.tempApis = this.selectedApis.concat()
     },
+
     methods: {
       handleNodeClick(data, node, instance) {
 //          console.log('xxx');
@@ -88,93 +92,73 @@
         }else if(node.isLeaf === true){
           return;
         }else{
-          //先注释 用本地数据
-          this.$http.get(this.apiServer + "api/getApiTreeByPId?pId=" + node.data.id).then(function (res) {
-            if(res.data.code === 10000){
-              var apiTreeInfo = res.data.data;
-              return resolve(res.data.data);
-            }
-            return;
-          },function (res) {
 
-          });
+//          this.$http.get(this.apiServer + "api/getApiTreeByPId?pId=" + node.data.id).then(function (res) {
+//            if(res.data.code === 10000){
+//              var apiTreeInfo = res.data.data;
+//              return resolve(res.data.data);
+//            }
+//            return;
+//          },function (res) { });
 
-       //     var apiTreeData =  [
-//                {
-//                "id": 1,
-//                "name": "1",
-//                "description": "",
-//                "pId": 0,
-//                "module": "1",
-//                "branch": "1",
-//                "urlAddress": "1",
-//                "apiType": "0",
-//                "type": true,
-//                "postWay": "1",
-//                "requestHead": "[{\"Key\":null,\"Value\":null,\"Description\":null}]",
-//                "requestBodyType": "2",
-//                "requestBodyRowType": "2",
-//                "requestBody": null,
-//                "responseHead": "[{\"Key\":null,\"Value\":null,\"Description\":null}]",
-//                "responseBodyType": "0",
-//                "responseBody": null,
-//                "createdBy": "",
-//                "createdTime": null,
-//                "updatedBy": "",
-//                "updatedTime": null,
-//                "optstatus": 0,
-//                "system": "usr"
-//            }, {
-//                "id": 2,
-//                "name": "2",
-//                "description": "",
-//                "pId": 0,
-//                "module": "2",
-//                "branch": "2",
-//                "urlAddress": "2",
-//                "apiType": "0",
-//                "type": true,
-//                "postWay": "1",
-//                "requestHead": "[{\"Key\":null,\"Value\":null,\"Description\":null}]",
-//                "requestBodyType": "2",
-//                "requestBodyRowType": "2",
-//                "requestBody": null,
-//                "responseHead": "[{\"Key\":null,\"Value\":null,\"Description\":null}]",
-//                "responseBodyType": "0",
-//                "responseBody": null,
-//                "createdBy": "",
-//                "createdTime": null,
-//                "updatedBy": "",
-//                "updatedTime": null,
-//                "optstatus": 0,
-//                "system": "trd"
-//            }, {
-//                "id": 3,
-//                "name": "3",
-//                "description": "",
-//                "pId": 0,
-//                "module": "3",
-//                "branch": "3",
-//                "urlAddress": "3",
-//                "apiType": "0",
-//                "type": true,
-//                "postWay": "1",
-//                "requestHead": "[{\"Key\":null,\"Value\":null,\"Description\":null}]",
-//                "requestBodyType": "2",
-//                "requestBodyRowType": "2",
-//                "requestBody": null,
-//                "responseHead": "[{\"Key\":null,\"Value\":null,\"Description\":null}]",
-//                "responseBodyType": "0",
-//                "responseBody": null,
-//                "createdBy": "",
-//                "createdTime": null,
-//                "updatedBy": "",
-//                "updatedTime": null,
-//                "optstatus": 0,
-//                "system": "trd"
-//            }]
-//            var apiTreeInfo = apiTreeData;
-//            return resolve(apiTreeInfo);
+          var apiTreeData =  [
+            {
+              "id": 1,
+              "name": "1",
+              "description": "",
+              "pId": 0,
+              "module": "1",
+              "branch": "1",
+              "urlAddress": "1",
+              "apiType": "0",
+              "type": true,
+              "postWay": "1",
+              "requestHead": [{'Key':null,"Value":null,"Description":null}],
+              "requestBodyType": "2",
+              "requestBodyRowType": "2",
+              "requestBody": null,
+              "responseHead": [{"Key":null,"Value":null,"Description":null}],
+              "responseBodyType": "0",
+              "responseBody": null,
+              "createdBy": "",
+              "createdTime": null,
+              "updatedBy": "",
+              "updatedTime": null,
+              "optstatus": 0,
+              "system": "usr",
+              "variables":[{varName:"type",varValue:"2"}],
+              "assertions":[{actualResult:"${term}",comparator:"=",expectResult:"19"}]
+            }, {
+              "id": 2,
+              "name": "2",
+              "description": "",
+              "pId": 0,
+              "module": "2",
+              "branch": "2",
+              "urlAddress": "2",
+              "apiType": "0",
+              "type": true,
+              "postWay": "1",
+              "requestHead": [{"Key":null,"Value":null,"Description":null}],
+              "requestBodyType": "2",
+              "requestBodyRowType": "2",
+              "requestBody": null,
+              "responseHead": [{"Key":null,"Value":null,"Description":null}],
+              "responseBodyType": "0",
+              "responseBody": null,
+              "createdBy": "",
+              "createdTime": null,
+              "updatedBy": "",
+              "updatedTime": null,
+              "optstatus": 0,
+              "system": "trd",
+              "variables":null,
+              "assertions":null
+            }]
+          var apiTreeInfo = apiTreeData;
+          return resolve(apiTreeInfo);
+
+
         }
       },
       addApi(){
@@ -183,25 +167,13 @@
         var data = node.data;
 
         if(node.data.type){
-
-
           this.tempApis.push(data);
-
-//          var ifRepeat = false
-//          for(var i=0;i<this.tempApis.length;i++){
-//            if(data.id === this.tempApis[i].id){
-//              ifRepeat = true
-//            }
-//          }
-//          if(!ifRepeat){
-//            console.log(data);
-//          }
         }else{
           this.$message({
             message: '文件夹不能添加',
             type: 'error',
             duration:1500
-        });
+          });
 
         }
       },

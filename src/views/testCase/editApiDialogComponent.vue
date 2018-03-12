@@ -36,12 +36,12 @@
 
                 <el-table-column label="Key" class-name="cell-input" width="150">
                   <template slot-scope="scope">
-                    <el-input v-model="tempApiDetailInfo.variables[scope.$index].Key"></el-input>
+                    <el-input v-model="tempApiDetailInfo.variables[scope.$index].varName"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column label="Value" class-name="cell-input" width="300">
                   <template slot-scope="scope">
-                    <el-input v-model="tempApiDetailInfo.variables[scope.$index].Value"></el-input>
+                    <el-input v-model="tempApiDetailInfo.variables[scope.$index].varValue"></el-input>
                   </template>
                 </el-table-column>
 
@@ -174,17 +174,32 @@
                 :data="tempApiDetailInfo.assertions" style="width: 100%"
               >
                 <el-table-column
-                  label="Key" class-name="cell-input" width="150"
+                  label="预期结果" class-name="cell-input" width="150"
                 >
                   <template slot-scope="scope">
-                    <el-input v-model="tempApiDetailInfo.assertions[scope.$index].Key"></el-input>
+                    <el-input v-model="tempApiDetailInfo.assertions[scope.$index].actualResult"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column
-                  label="Value" class-name="cell-input" width="300"
+                  label="比较符" class-name="cell-input" width="150"
                 >
                   <template slot-scope="scope">
-                    <el-input v-model="tempApiDetailInfo.assertions[scope.$index].Value"></el-input>
+                    <!--<el-input v-model="tempApiDetailInfo.assertions[scope.$index].comparator"></el-input>-->
+                    <el-select v-model="tempApiDetailInfo.assertions[scope.$index].comparator" placeholder="请选择">
+                      <el-option
+                        v-for="item in comparisonOperator"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  label="实际结果" class-name="cell-input" width="300"
+                >
+                  <template slot-scope="scope">
+                    <el-input v-model="tempApiDetailInfo.assertions[scope.$index].expectResult"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column class-name="cell-input" width="120"
@@ -211,114 +226,192 @@
 
 
   export default {
-      name: 'ApiInCase',
-      props: ['testCaseInterface'],
-      components: {},
-      data(){
-          return {
-              'stepName': '',
-              'apiUrl': '',
-              'reqBody': '',
-              'apiInCaseTab': 'variables',
-              tempApiDetailInfo:{}
+    name: 'ApiInCase',
+    props: ['testCaseInterface'],
+    components: {},
+    data(){
+      return {
+        'stepName': '',
+        'apiUrl': '',
+        'reqBody': '',
+        'apiInCaseTab': 'variables',
+        'comparisonOperator':[
+          {
+              'label':'=',
+              'value':'='
+          },
+          {
+            'label':'>',
+            'value':'>'
+          },
+          {
+            'label':'>=',
+            'value':'>='
+          },
+          {
+            'label':'<',
+            'value':'<'
+          },
+          {
+            'label':'<=',
+            'value':'<='
+          },
+          {
+            'label':'equals',
+            'value':'equals'
+          },
+          {
+            'label':'contains',
+            'value':'contains'
+          },
+          {
+            'label':'match',
+            'value':'match'
+          },
+          {
+            'label':'ignore',
+            'value':'ignore'
           }
-      },
-      created(){
-          var json = JSON.stringify(this.testCaseInterface);
-          var obj = JSON.parse(json);
-          this.tempApiDetailInfo = obj;
-
-          if(this.tempApiDetailInfo.variables === null){
-            this.tempApiDetailInfo.variables = [{
+        ],
+        tempApiDetailInfo: {
+          step:'',
+          urlAddress:'',
+          apiType:'',
+          postWay:'',
+          variables:[
+            {
+              "varName": "",
+              "varValue": ""
+            }
+          ],
+          requestHead:[
+            {
               "Key": "",
               "Value": ""
-            }];
-          }
-          if(this.tempApiDetailInfo.requestHead === null){
-            this.tempApiDetailInfo.requestHead = [{
+            }
+          ],
+          requestBody:'',
+          responseHead:[
+            {
               "Key": "",
               "Value": ""
-            }];
-          }
-          if(this.tempApiDetailInfo.assertions === null){
-            this.tempApiDetailInfo.assertions = [{
-              "Key": "",
-              "Value": ""
-            }];
-          }
-          if(this.tempApiDetailInfo.responseHead === null){
-            this.tempApiDetailInfo.responseHead = [{
-              "Key": "",
-              "Value": ""
-            }];
-          }
-
-          console.log(this.tempApiDetailInfo)
-      },
-      methods: {
-
-          formatJson,
-          isJson,
-          handleClick(tab, event){
-
-          },
-          saveApiDetailInfo(){
-              var json = JSON.stringify(this.tempApiDetailInfo);
-              var obj = JSON.parse(json)
-              return obj;
-          },
-          cancelSaveInfo(){
-              var json = JSON.stringify(this.testCaseInterface);
-              var obj = JSON.parse(json)
-              this.tempApiDetailInfo = obj
-          },
-
-
-
-
-          showAddHeader(index, rows){
-              if (rows.length == index + 1 && (rows[index].Key != '' || rows[index].Value != '' || rows[index].Description != '')) {
-                  return true;
-              } else {
-                  return false;
-              }
-          },
-          addHeadersRow(index, rows){
-              if (rows.length == index + 1 && (rows[index].Key != '' || rows[index].Value != '' || rows[index].Description != '')) {
-                  rows.push({
-                      Key: '',
-                      Value: '',
-                      Description: ''
-                  })
-              }
-          },
-          //删除消息头中的一行
-          deleteHeadersRow(index, rows) {
-              if (index == 0 && rows.length == 1) {
-                  rows[index].Key = '';
-                  rows[index].Value = '';
-                  rows[index].Description = '';
-              } else {
-                  rows.splice(index, 1);
-              }
-          },
-          //上移
-          moveup(index, row, rows){
-              if (index > 0) {
-                  let upRow = rows[index - 1]
-                  rows.splice(index - 1, 1);
-                  rows.splice(index, 0, upRow);
-              }
-          },
-          //下移
-          movedown(index, row, rows){
-              if ((index + 1) != rows.length) {
-                  let downRow = rows[index + 1]
-                  rows.splice(index + 1, 1);
-                  rows.splice(index, 0, downRow);
-              }
-          }
+            }
+          ],
+          responseBody:'',
+          assertions:[
+            {
+              "actualResult": "",
+              "comparator": "=",
+              "expectResult":""
+            }
+          ]
+        }
       }
+    },
+    created(){
+      var json = JSON.stringify(this.testCaseInterface);
+      var obj = JSON.parse(json);
+      this.updateTempApiDetailInfo(obj)
+      console.log(this.tempApiDetailInfo)
+    },
+    destroyed(){
+      console.log('api edit dialog destroyed')
+    },
+    methods: {
+      formatJson,
+      isJson,
+      handleClick(tab, event){
+
+      },
+      saveApiDetailInfo(){
+
+        var json = JSON.stringify(this.tempApiDetailInfo);
+        var obj = JSON.parse(json)
+        return obj;
+      },
+      cancelSaveInfo(){
+        var json = JSON.stringify(this.testCaseInterface);
+        var obj = JSON.parse(json)
+        this.apiInCaseTab = 'variables'
+        this.updateTempApiDetailInfo(obj)
+      },
+      // tempApiDetailInfo 赋值
+      updateTempApiDetailInfo(obj){
+         // this.tempApiDetailInfo = obj;
+        this.tempApiDetailInfo.step = obj.step;
+        this.tempApiDetailInfo.urlAddress = obj.urlAddress;
+        this.tempApiDetailInfo.apiType = obj.apiType;
+        this.tempApiDetailInfo.postWay = obj.postWay;
+        this.tempApiDetailInfo.requestBody = obj.requestBody;
+        this.tempApiDetailInfo.responseBody = obj.responseBody;
+
+
+
+        if (obj.variables === 'undefined' || obj.variables === null) {
+
+        }
+        if (obj.requestHead === null) {
+
+        }
+        if (obj.assertions === null) {   //断言
+//          this.tempApiDetailInfo.assertions = [{
+//            actualResult:"${term}",
+//            comparator:"=",
+//            expectResult:"19"
+//          }];
+        }
+        if (obj.responseHead === null) {
+
+        }
+        console.log(this.tempApiDetailInfo)
+      },
+
+
+
+      showAddHeader(index, rows){
+        if (rows.length == index + 1 && (rows[index].Key != '' || rows[index].Value != '' || rows[index].Description != '')) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      addHeadersRow(index, rows){
+        if (rows.length == index + 1 && (rows[index].Key != '' || rows[index].Value != '' || rows[index].Description != '')) {
+          rows.push({
+            Key: '',
+            Value: '',
+            Description: ''
+          })
+        }
+      },
+      //删除消息头中的一行
+      deleteHeadersRow(index, rows) {
+        if (index == 0 && rows.length == 1) {
+          rows[index].Key = '';
+          rows[index].Value = '';
+          rows[index].Description = '';
+        } else {
+          rows.splice(index, 1);
+        }
+      },
+      //上移
+      moveup(index, row, rows){
+        if (index > 0) {
+          let upRow = rows[index - 1]
+          rows.splice(index - 1, 1);
+          rows.splice(index, 0, upRow);
+        }
+      },
+      //下移
+      movedown(index, row, rows){
+        if ((index + 1) != rows.length) {
+          let downRow = rows[index + 1]
+          rows.splice(index + 1, 1);
+          rows.splice(index, 0, downRow);
+        }
+      }
+
+    }
   }
 
 </script>

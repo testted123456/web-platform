@@ -14,8 +14,9 @@ Vue.use(VueResource)
 
 Vue.prototype.cookieManager = Cookie
 Vue.prototype.ApiCopyId = 0;
-Vue.prototype.apiServer = 'http://192.168.32.105:8082/inter/';
-Vue.prototype.testCaseServer = 'http://192.168.32.105:8083/case/';
+Vue.prototype.ApiCopyData = {};
+Vue.prototype.apiServer = 'http://192.168.32.49:8082/inter/';
+Vue.prototype.testCaseServer = 'http://192.168.32.49:8083/case/';
 
 new Vue({
   el: '#app',

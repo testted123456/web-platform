@@ -1,30 +1,32 @@
 <template>
-    <div>
-        <el-table
-            :data="appearData"
-            stripe
-            style="width: 100%">
-            <el-table-column
-                prop="name"
-                label="函数名称"
-                width="280">
-            </el-table-column>
+  <!--名称/参数/描述/实例-->
 
-            <el-table-column
-                prop="desc"
-                label="函数描述">
-            </el-table-column>
+  <div>
+        <!--<el-table-->
+            <!--:data="appearData"-->
+            <!--stripe-->
+            <!--style="width: 100%">-->
+            <!--<el-table-column-->
+                <!--prop="name"-->
+                <!--label="函数名称"-->
+                <!--width="280">-->
+            <!--</el-table-column>-->
 
-        </el-table>
+            <!--<el-table-column-->
+                <!--prop="desc"-->
+                <!--label="函数描述">-->
+            <!--</el-table-column>-->
 
-        <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="currentPage"
-            :page-size="pageSize"
-            layout="prev, pager, next, jumper"
-            :total="intellQuery.length">
-        </el-pagination>
+        <!--</el-table>-->
+
+        <!--<el-pagination-->
+            <!--@size-change="handleSizeChange"-->
+            <!--@current-change="handleCurrentChange"-->
+            <!--:current-page.sync="currentPage"-->
+            <!--:page-size="pageSize"-->
+            <!--layout="prev, pager, next, jumper"-->
+            <!--:total="intellQuery.length">-->
+        <!--</el-pagination>-->
     </div>
 
 

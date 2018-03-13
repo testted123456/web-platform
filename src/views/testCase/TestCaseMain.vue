@@ -10,6 +10,7 @@
         <vue-content-menu :contextMenuData="contextMenuData"
                           @addDir="addDir"
                           @addItem="addCase"
+                          @delItem="showDelDialog"
                           @refreshApi="refreshApi"
         ></vue-content-menu>
         <el-tree
@@ -23,6 +24,17 @@
         >
         </el-tree>
       </div>
+      <el-dialog
+        title="提示"
+        :visible.sync="delDialogVisible"
+        width="30%"
+      >
+        <span>确认删除？</span>
+        <span slot="footer" class="dialog-footer">
+                    <el-button @click="delDialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="delCase">确 定</el-button>
+                  </span>
+      </el-dialog>
     </el-aside>
     <router-view></router-view>
   </el-container>
@@ -55,7 +67,8 @@
           showAddDir: false,
           showAddItem: false,
           showDel: false
-        }
+        },
+        delDialogVisible: false
       }
     },
     computed: {
@@ -156,24 +169,58 @@
         this.$router.push({name: 'TestCase', query: {id: 0,pId: node.data.id}});
         this.closeMenu();
       },
-      delCaseDir(){ //右键删除case目录
-        var node = this.$refs.tree.currentNode.node;
-        if (!node.expanded) {
-          node.expand();
-        }
-        var pId = node.data.id;
-
+      showDelDialog(){
         this.closeMenu();
+        this.delDialogVisible = true;
       },
-      delCase(){ //右键删除case
-        var node = this.$refs.tree.currentNode.node;
 
-        if (!node.expanded) {
-          node.expand();
+      delCase(){ //右键删除case
+        this.delDialogVisible = false;
+        const node = this.$refs.tree.currentNode.node;
+        const nodeId = node.data.id;
+
+        if(node.isLeaf === false){//删除case目录
+          this.$http.get(this.testCaseServer + "deleteTestCaseDir?id=" + nodeId).then(function (res) {
+            if(res.data.code == '10000'){
+              this.delItem(node);
+              this.$message({
+                message: '恭喜你，删除用例目录成功！',
+                type: 'success'
+              });
+            }else{
+              this.$message.error('抱歉，删除用例目录失败：' + res.data.msg);
+            }
+          },function (res) {
+            this.$message.error('抱歉，服务器异常。');
+          });
+        }else{ //删除某个case
+          this.$http.get(this.testCaseServer + "deleteTestCaseDir?id=" + nodeId).then(function (res) {
+            if(res.data.code == '10000'){
+              this.delItem(node);
+              this.$message({
+                message: '恭喜你，删除用例成功！',
+                type: 'success'
+              });
+            }else{
+              this.$message.error('抱歉，删除用例失败：' + res.data.msg);
+            }
+          },function (res) {
+            this.$message.error('抱歉，服务器异常。');
+          });
         }
-        var pId = node.data.id;
-        this.$router.push({name: 'TestCase', query: {id: 0,pId: node.data.id}});
-        this.closeMenu();
+      },
+      delItem(node){
+        const data = node.data;
+        const parent = node.parent;
+        const children = parent.childNodes;
+        let i;
+        children.forEach(function (e, index) {
+          if(e.data.id === node.data.id){
+            i = index;
+            return;
+          }
+        });
+        children.splice(i, 1);
       },
       refreshApi(){
         var node = this.$refs.tree.currentNode.node;

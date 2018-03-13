@@ -9,7 +9,7 @@
                 <vue-content-menu :contextMenuData="contextMenuData"
                                   @addDir="addDir"
                                   @addItem="addApi"
-                                  @delApi="showDelDialog"
+                                  @delItem="showDelDialog"
                                   @refreshApi="refreshApi"
                 ></vue-content-menu>
                 <el-tree

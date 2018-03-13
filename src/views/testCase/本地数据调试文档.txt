@@ -1,6 +1,6 @@
 
 
-
+//case 详情页面 两个接口的数据
 this.testCase = {
     "id": 1,
     "pId": 0,
@@ -62,7 +62,7 @@ this.testCase = {
 
 
 
-
+//  api接口树的数据
 
  var apiTreeData =  [
       {
@@ -126,9 +126,26 @@ this.testCase = {
 
 
 
+// caseMain 树
 
+                    var caseTreeData =
+                        [{
+                            "id": 1,
+                            "pId": 0,
+                            "name": "test",
+                            "description": "xxx",
+                            "type": true,
+                            "env": "xx",
+                            "projectName": "",
+                            "createdBy": null,
+                            "createdTime": null,
+                            "updatedBy": null,
+                            "updatedTime": null,
+                            "optstatus": 0
+                        }];
+                    var tempApi = caseTreeData;
 
-
+                    return resolve(caseTreeData);
 
 
 

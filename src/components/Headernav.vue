@@ -1,23 +1,19 @@
 <template>
-    <div>
-        <el-container>
-            <el-header class="qcHeader">
-                <div class="header-logo"><img src="../assets/logo.png" alt="element-logo" ></div>
+  <el-header class="qcHeader">
+    <div class="header-logo"><img src="../assets/logo.png" alt="element-logo" ></div>
 
-                <el-menu :default-active="portalActiveIndex" class="el-menu-demo header-operations" mode="horizontal"
-                         @select="handleSelect">
-                    <el-menu-item index="1"><a>接口</a></el-menu-item>
-                    <el-menu-item index="2"><a>测试用例</a></el-menu-item>
-                    <el-menu-item index="3">测试集</el-menu-item>
-                    <el-menu-item index="4">配置</el-menu-item>
-                    <el-menu-item index="5">监控</el-menu-item>
-                    <el-menu-item index="6">报表</el-menu-item>
-                    <el-menu-item index="7">工具</el-menu-item>
-                    <el-menu-item index="8">质量管理</el-menu-item>
-                </el-menu>
-            </el-header>
-        </el-container>
-    </div>
+    <el-menu :default-active="portalActiveIndex" class="el-menu-demo header-operations" mode="horizontal"
+             @select="handleSelect">
+      <el-menu-item index="1"><a>接口</a></el-menu-item>
+      <el-menu-item index="2"><a>测试用例</a></el-menu-item>
+      <el-menu-item index="3">测试集</el-menu-item>
+      <el-menu-item index="4">配置</el-menu-item>
+      <el-menu-item index="5">监控</el-menu-item>
+      <el-menu-item index="6">报表</el-menu-item>
+      <el-menu-item index="7">工具</el-menu-item>
+      <el-menu-item index="8">质量管理</el-menu-item>
+    </el-menu>
+  </el-header>
 </template>
 
 <script>

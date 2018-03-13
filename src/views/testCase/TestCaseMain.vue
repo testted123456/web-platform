@@ -1,34 +1,31 @@
 <template>
-    <div class="container">
-        <div>
-            <el-container>
-                <el-aside width="240px">
-                    <el-input
-                        placeholder="输入用例名称进行过滤"
-                        round
-                    >
-                    </el-input>
-                    <vue-content-menu :contextMenuData="contextMenuData"
-                                      @addDir="addDir"
-                                      @addItem="addCase"
-                                      @refreshApi="refreshApi"
-                    ></vue-content-menu>
-                    <el-tree
-                        :props="props"
-                        :load="loadNode"
-                        ref="tree"
-                        :expand-on-click-node=false
-                        lazy
-                        node-key="id"
-                        @node-click="handleNodeClick" @node-right-click="handleRightClick"
-                    >
-                    </el-tree>
-                </el-aside>
-                <router-view></router-view>
-            </el-container>
-        </div>
-    </div>
-
+  <el-container>
+    <el-aside width="240px" style="border-right:1px solid #e6e6e6">
+      <div class="menu">
+        <el-input
+          placeholder="输入用例名称进行过滤"
+          round
+        >
+        </el-input>
+        <vue-content-menu :contextMenuData="contextMenuData"
+                          @addDir="addDir"
+                          @addItem="addCase"
+                          @refreshApi="refreshApi"
+        ></vue-content-menu>
+        <el-tree
+          :props="props"
+          :load="loadNode"
+          ref="tree"
+          :expand-on-click-node=false
+          lazy
+          node-key="id"
+          @node-click="handleNodeClick" @node-right-click="handleRightClick"
+        >
+        </el-tree>
+      </div>
+    </el-aside>
+    <router-view></router-view>
+  </el-container>
 </template>
 
 <script>
@@ -122,24 +119,7 @@
 
           });
 
-//                    var caseTreeData =
-//                        [{
-//                            "id": 1,
-//                            "pId": 0,
-//                            "name": "test",
-//                            "description": "xxx",
-//                            "type": true,
-//                            "env": "xx",
-//                            "projectName": "",
-//                            "createdBy": null,
-//                            "createdTime": null,
-//                            "updatedBy": null,
-//                            "updatedTime": null,
-//                            "optstatus": 0
-//                        }];
-//                    var tempApi = caseTreeData;
 
-//                    return resolve(caseTreeData);
 
                 }
             },
@@ -194,6 +174,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
     h1, h2 {
         font-weight: normal;
     }
@@ -215,6 +196,7 @@
     aside {
         padding-left: 20px;
         padding-top: 20px;
+        padding-right: 20px;
         width: 100%;
     }
 

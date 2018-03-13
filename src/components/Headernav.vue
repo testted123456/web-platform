@@ -1,6 +1,6 @@
 <template>
   <el-header class="qcHeader">
-    <div class="header-logo"><img src="../assets/logo.png" alt="element-logo" ></div>
+    <div class="header-logo"><img src="../assets/logo3.png" alt="element-logo" ></div>
 
     <el-menu :default-active="portalActiveIndex" class="el-menu-demo header-operations" mode="horizontal"
              @select="handleSelect">
@@ -58,7 +58,7 @@
   .header-logo {
       display: inline-block;
       vertical-align: middle;
-      width: 151px;
+      width: 190px;
       float: left;
       padding-top: 6px;
   }

@@ -1,167 +1,172 @@
 <template>
-  <el-main>
-    <div style="width:80%;text-align: left">
-      <el-form   ref="testCase"  :label-position="labelPosition"  label-width="100px" :model="testCase">
-        <!--用例名称-->
-        <el-form-item label="用例名称" prop="name" :rules="[{ required: true, trigger: 'blur',message: '用例名称不能为空'} ]">
-          <el-input v-model="testCase.name" placeholder="请输入用例名称"></el-input>
-        </el-form-item>
-        <!--用例描述-->
-        <el-form-item label="用例描述" prop="description" :rules="[{ required: false, trigger: 'blur',message: '用例描述不能为空'} ]">
-          <el-input v-model="testCase.description" placeholder="请输入用例描述"></el-input>
-        </el-form-item>
-        <!--项目名称-->
-        <el-form-item label="项目名称" prop="projectName" :rules="[{ required: false, trigger: 'blur',message: '项目名称不能为空'} ]">
-          <el-input v-model="testCase.projectName" placeholder="请输入项目名称"></el-input>
-        </el-form-item>
-        <!--流程用例-->
-        <el-form-item label="流程用例" prop="caseType" :rules="[{ required: true, message: '流程用例不能为空'} ]">
-          <el-radio v-model="testCase.caseType" label="true">是</el-radio>
-          <el-radio v-model="testCase.caseType" label="false">否</el-radio>
-        </el-form-item>
-        <!--环境-->
-        <el-form-item label="环境" prop="env" :rules="[{ required: true, message: '环境不能为空'} ]">
-          <el-col :span="8">
-            <el-select v-model="testCase.env" placeholder="请选择">
-              <el-option
-                v-for="item in enviornment"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="16">
-            <div class="pd12">
-              <el-button type="text" @click="addApiClick">添加接口</el-button>
-            </div>
-            <div class="pd12">
-              <el-button type="text" @click="intellQueryClick">动态库查询</el-button>
-            </div>
-            <div class="pd12">
-              <el-button type="text" @click="apiInfoCheck">校验</el-button>
-            </div>
-            <div class="pd12">
-              <el-button  type="text" @click="pastApi">粘贴接口</el-button>
-            </div>
-          </el-col>
-        </el-form-item>
-      </el-form>
-    </div>
-    <!--用例列表-->
-    <el-row style="padding-top:30px;">
-      <el-table v-show="apisInCase.length>0"
-                :data="apisInCase"
-                style="width: 100%">
-        <el-table-column
-          prop="isCheck"
-          label="批量执行/全选"
-          type="selection"
-          align="left"
-        >
-        </el-table-column>
+  <el-container>
+    <el-main>
+      <div style="padding-bottom: 60px;">
+        <div style="width:80%;text-align: left">
+          <el-form   ref="testCase"  :label-position="labelPosition"  label-width="100px" :model="testCase">
+            <!--用例名称-->
+            <el-form-item label="用例名称" prop="name" :rules="[{ required: true, trigger: 'blur',message: '用例名称不能为空'} ]">
+              <el-input v-model="testCase.name" placeholder="请输入用例名称"></el-input>
+            </el-form-item>
+            <!--用例描述-->
+            <el-form-item label="用例描述" prop="description" :rules="[{ required: false, trigger: 'blur',message: '用例描述不能为空'} ]">
+              <el-input v-model="testCase.description" placeholder="请输入用例描述"></el-input>
+            </el-form-item>
+            <!--项目名称-->
+            <el-form-item label="项目名称" prop="projectName" :rules="[{ required: false, trigger: 'blur',message: '项目名称不能为空'} ]">
+              <el-input v-model="testCase.projectName" placeholder="请输入项目名称"></el-input>
+            </el-form-item>
+            <!--流程用例-->
+            <el-form-item label="流程用例" prop="caseType" :rules="[{ required: true, message: '流程用例不能为空'} ]">
+              <el-radio v-model="testCase.caseType" label="true">是</el-radio>
+              <el-radio v-model="testCase.caseType" label="false">否</el-radio>
+            </el-form-item>
+            <!--环境-->
+            <el-form-item label="环境" prop="env" :rules="[{ required: true, message: '环境不能为空'} ]">
+              <el-col :span="8">
+                <el-select v-model="testCase.env" placeholder="请选择">
+                  <el-option
+                    v-for="item in enviornment"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="16">
+                <div class="pd12">
+                  <el-button type="text" @click="addApiClick">添加接口</el-button>
+                </div>
+                <div class="pd12">
+                  <el-button type="text" @click="intellQueryClick">动态库查询</el-button>
+                </div>
+                <div class="pd12">
+                  <el-button type="text" @click="apiInfoCheck">校验</el-button>
+                </div>
+                <div class="pd12">
+                  <el-button  type="text" @click="pastApi">粘贴接口</el-button>
+                </div>
+              </el-col>
+            </el-form-item>
+          </el-form>
+        </div>
+        <!--用例列表-->
+        <el-row style="padding-top:30px;">
+          <el-table v-show="apisInCase.length>0"
+                    :data="apisInCase"
+                    style="width: 100%">
+            <el-table-column
+              prop="isCheck"
+              label="批量执行/全选"
+              type="selection"
+              align="left"
+            >
+            </el-table-column>
 
-        <el-table-column
-          prop="name"
-          label="接口名称"
-          align="left"
-        >
-        </el-table-column>
+            <el-table-column
+              prop="name"
+              label="接口名称"
+              align="left"
+            >
+            </el-table-column>
 
-        <el-table-column
-          prop="step"
-          label="步骤名称"
-          align="left"
-        >
-        </el-table-column>
+            <el-table-column
+              prop="step"
+              label="步骤名称"
+              align="left"
+            >
+            </el-table-column>
 
-        <el-table-column
-          prop="system"
-          label="系统"
-          align="left"
-        >
-        </el-table-column>
+            <el-table-column
+              prop="system"
+              label="系统"
+              align="left"
+            >
+            </el-table-column>
 
-        <el-table-column
-          prop="branch"
-          label="分支"
-          align="left"
-        >
-        </el-table-column>
+            <el-table-column
+              prop="branch"
+              label="分支"
+              align="left"
+            >
+            </el-table-column>
 
-        <el-table-column
-          prop="action"
-          label="操作"
-          align="center" width="280px">
-          <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" :enterable="false"	:hide-after="500" content="搜索接口" placement="top">
-              <el-button  type="text" size="mini" @click="searchApi(scope.row,scope.$index)"><i class="el-icon-search"></i></el-button>
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="编辑接口信息" placement="top">
-              <el-button  type="text" size="mini" @click="apiEdit(scope.row,scope.$index)"><i class="el-icon-edit"></i></el-button>
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="复制接口信息" placement="top">
-              <el-button  type="text" size="mini" @click="copyApi(scope.row,scope.$index)"><i class="el-icon-tickets"></i></el-button>
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="上移" placement="top">
-              <el-button  type="text" size="mini" @click.native.prevent="moveup(scope.$index, scope.row, apisInCase)"  ><i class="el-icon-arrow-up"></i></el-button>
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="下移" placement="top">
-              <el-button  type="text" size="mini" @click.native.prevent="movedown(scope.$index, scope.row, apisInCase)" ><i class="el-icon-arrow-down"></i></el-button>
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除接口" placement="top">
-              <el-button  type="text" size="mini" @click="removeApi(scope.$index)"><i class="el-icon-minus"></i></el-button>
-            </el-tooltip>
-          </template>
-        </el-table-column>
+            <el-table-column
+              prop="action"
+              label="操作"
+              align="center" width="280px">
+              <template slot-scope="scope">
+                <el-tooltip class="item" effect="dark" :enterable="false"	:hide-after="500" content="搜索接口" placement="top">
+                  <el-button  type="text" size="mini" @click="searchApi(scope.row,scope.$index)"><i class="el-icon-search"></i></el-button>
+                </el-tooltip>
+                <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="编辑接口信息" placement="top">
+                  <el-button  type="text" size="mini" @click="apiEdit(scope.row,scope.$index)"><i class="el-icon-edit"></i></el-button>
+                </el-tooltip>
+                <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="复制接口信息" placement="top">
+                  <el-button  type="text" size="mini" @click="copyApi(scope.row,scope.$index)"><i class="el-icon-tickets"></i></el-button>
+                </el-tooltip>
+                <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="上移" placement="top">
+                  <el-button  type="text" size="mini" @click.native.prevent="moveup(scope.$index, scope.row, apisInCase)"  ><i class="el-icon-arrow-up"></i></el-button>
+                </el-tooltip>
+                <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="下移" placement="top">
+                  <el-button  type="text" size="mini" @click.native.prevent="movedown(scope.$index, scope.row, apisInCase)" ><i class="el-icon-arrow-down"></i></el-button>
+                </el-tooltip>
+                <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除接口" placement="top">
+                  <el-button  type="text" size="mini" @click="removeApi(scope.$index)"><i class="el-icon-minus"></i></el-button>
+                </el-tooltip>
+              </template>
+            </el-table-column>
 
-      </el-table>
-    </el-row>
-    <!--页面最底部 footer-->
-    <el-footer style="text-align: right;">
-      <el-button type="primary" @click="saveCase">确认</el-button>
-      <el-button type="success" @click="execCase()" v-if="executeBtnShow">执行</el-button>
-    </el-footer>
-    <!-- 搜索 增加 删除 编辑 校验 动态库查询等弹框 -->
-    <el-dialog
-      v-if="dialog.visible"
-      class="hd-dialog"
-      :title="dialog.title"
-      :visible.sync="dialog.visible"
-      :width="dialog.width"
-      :before-close="handleClose"
-    >
-      <!--搜索弹窗-->
-      <search-api-dialog-component ref="searchApiDetailInfo" v-if="dialog.contentType === 5" ></search-api-dialog-component>
-      <!--添加接口弹窗-->
-      <add-api-dialog-component ref="apiSelectView" v-if="dialog.contentType === 1"  :selectedApis="apisInCase"></add-api-dialog-component>
-      <!--动态库查询弹窗-->
-      <intell-check-dialog-component ref="intellCheck" v-if="dialog.contentType === 2" :intellQuery="intellCheckData" ></intell-check-dialog-component>
-      <!--校验弹窗-->
-      <apis-info-check-component ref="apisInfoCheck" v-if="dialog.contentType === 6" :apisInfoCheck="apisInCase" ></apis-info-check-component>
-      <!--编辑接口弹窗-->
-      <edit-api-dialog-component ref="editApiDetailInfo" v-if="dialog.contentType === 3" :testCaseInterface="dialog.extend.data"></edit-api-dialog-component>
-      <!--删除接口弹窗-->
-      <span v-if="dialog.contentType === 4" >是否删除这条接口？</span>
-      <!--执行弹窗-->
-      <div v-if="dialog.contentType === 7" ref="executeCase">
-        <el-input
-          type="textarea"
-          :rows="1"
-          v-model="excResult"
-          v-show="false"
-        >
-        </el-input>
-        <div v-html="compiledMarkdown" class="markDown"></div>
+          </el-table>
+        </el-row>
       </div>
-      <!--弹窗footer-->
-      <span v-if="dialog.footerVisible" slot="footer" class="dialog-footer">
+
+      <!-- 搜索 增加 删除 编辑 校验 动态库查询等弹框 -->
+      <el-dialog
+        v-if="dialog.visible"
+        class="hd-dialog"
+        :title="dialog.title"
+        :visible.sync="dialog.visible"
+        :width="dialog.width"
+        :before-close="handleClose"
+      >
+        <!--搜索弹窗-->
+        <search-api-dialog-component ref="searchApiDetailInfo" v-if="dialog.contentType === 5" ></search-api-dialog-component>
+        <!--添加接口弹窗-->
+        <add-api-dialog-component ref="apiSelectView" v-if="dialog.contentType === 1"  :selectedApis="apisInCase"></add-api-dialog-component>
+        <!--动态库查询弹窗-->
+        <intell-check-dialog-component ref="intellCheck" v-if="dialog.contentType === 2" :intellQuery="intellCheckData" ></intell-check-dialog-component>
+        <!--校验弹窗-->
+        <apis-info-check-component ref="apisInfoCheck" v-if="dialog.contentType === 6" :apisInfoCheck="apisInCase" ></apis-info-check-component>
+        <!--编辑接口弹窗-->
+        <edit-api-dialog-component ref="editApiDetailInfo" v-if="dialog.contentType === 3" :testCaseInterface="dialog.extend.data"></edit-api-dialog-component>
+        <!--删除接口弹窗-->
+        <span v-if="dialog.contentType === 4" >是否删除这条接口？</span>
+        <!--执行弹窗-->
+        <div v-if="dialog.contentType === 7" ref="executeCase">
+          <el-input
+            type="textarea"
+            :rows="1"
+            v-model="excResult"
+            v-show="false"
+          >
+          </el-input>
+          <div v-html="compiledMarkdown" class="markDown"></div>
+        </div>
+        <!--弹窗footer-->
+        <span v-if="dialog.footerVisible" slot="footer" class="dialog-footer">
                       <el-button @click="dialogCancel">取 消</el-button>
                       <el-button type="primary" @click="dialogDone">确 定</el-button>
         </span>
-    </el-dialog>
+      </el-dialog>
 
-  </el-main>
+    </el-main>
+    <!--页面最底部 footer-->
+    <el-footer style="text-align: right">
+      <el-button type="primary" @click="saveCase">确认</el-button>
+      <el-button type="success" @click="execCase()" v-if="executeBtnShow">执行</el-button>
+    </el-footer>
+  </el-container>
 </template>
 
 <script>
@@ -625,6 +630,9 @@
                         });
                         //把case列表数据更新  防止新增的某条case数据没有id
                         this.apisInCase = res.data.data;
+                        //存数据  树节点刷新
+                        this.$store.commit('changeTestCaseStatus', 1);
+                        this.$store.commit('setNewTestCase', this.testCase);
                       }
                     },function (res) {
                       this.$message.error('抱歉，更新用例失败：' + res.data.msg);
@@ -634,6 +642,8 @@
                       message: '恭喜你，更新用例成功',
                       type: 'success'
                     });
+                    this.$store.commit('changeTestCaseStatus', 1);
+                    this.$store.commit('setNewTestCase', this.testCase);
                   }
                 }else{
                   this.$message.error('抱歉，新增用例失败：' + res.data.msg);
@@ -707,5 +717,16 @@
   .pd12{
     float: left;
     padding:0 12px;
+  }
+  .footer-fix{
+    height: 60px;
+    text-align: right;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background-color: white;
+    z-index: 99;
+    width: 100%;
+    padding-top: 10px;
   }
 </style>

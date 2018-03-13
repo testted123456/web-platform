@@ -1,33 +1,19 @@
 <template>
-  <el-container  id="testCaseDirEdit">
-    <el-container >
+  <el-container  style="font-size: 0.875em;">
       <el-main>
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4" >
-            <label>用例目录名称:</label>
-          </el-col>
-          <el-col :span="16">
-            <el-input v-model="api.name"  placeholder="请输入用例目录名称"></el-input>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4">
-            <label>用例目录描述:</label>
-          </el-col>
-          <el-col :span="16">
-            <el-input v-model="api.description" placeholder="请输入用例目录描述"></el-input>
-          </el-col>
-        </el-row>
-
+        <el-form   ref="testCaseDir"  :label-position="labelPosition"  label-width="150px" :model="testCaseDirInfo" style="width:78%;">
+          <el-form-item label="用例目录名称" prop="name" :rules="[{ required: true, trigger: 'blur',message: '用例目录名称不能为空'} ]">
+            <el-input v-model="testCaseDirInfo.name" placeholder="请输入用例目录名称"></el-input>
+          </el-form-item>
+          <el-form-item label="用例目录描述" prop="description" :rules="[{ required: false, trigger: 'blur',message: '用例目录描述不能为空'} ]">
+            <el-input v-model="testCaseDirInfo.description" placeholder="请输入用例目录描述"></el-input>
+          </el-form-item>
+        </el-form>
       </el-main>
-    </el-container>
-    <el-footer style="text-align: right;">
-      <el-button type="primary" @click="saveApi">确认</el-button>
-      <el-button>取消</el-button>
-    </el-footer>
+      <el-footer style="text-align: right;">
+        <el-button type="primary" @click="saveApi">确认</el-button>
+        <el-button>取消</el-button>
+      </el-footer>
   </el-container>
 
 </template>
@@ -40,26 +26,49 @@
     name: 'TestCaseDir',
     data () {
       return {
-        api: {
+        labelPosition:'right',
+        testCaseDirInfo: {
           id: '',
           name: '',
           description: '',
           pId: '',
-          type: true
+          type:false
         }
       }
     },
     methods: {
       saveApi(){
-        this.api.pId = this.$route.query.pId;
+        var caseDirID = this.$route.query.id;
+        var caseDirThis = this;
+        this.$refs['testCaseDir'].validate((valid) => {
+          if (valid) {
+            if(caseDirID == 0){    /////////////////////////////////新增界面 确认按钮事件
+              this.testCaseDirInfo.pId = this.$route.query.pId;
+              this.$http.post(this.testCaseServer+"testCase/addCaseDir",this.testCaseDirInfo).then(function (res) {
+                if(res.data.code === 10000){
+                  this.$message({
+                    message: '恭喜你，新增用例成功',
+                    type: 'success'
+                  });
+                  // 跳转到当且caseDir的详情页
+                  //存数据  树节点刷新
+                  this.$store.commit('changeTestCaseStatus', 1);
+                  this.testCaseDirInfo.id = res.data.data.id;
+                  this.$store.commit('setNewTestCase', this.testCaseDirInfo);
+                  this.$router.push({name: 'TestCaseDir', query: {id: res.data.data.id}});
+                }else{
+                  this.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
+                }
+              },function (res) {
+                this.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
+              });
+            }else{     /////////////////////////编辑界面 确认按钮事件
 
-        this.$http.post(this.testCaseServer+"addCaseDir", this.api).then(function (res) {
-          this.$store.commit('changeStatus', 1);
-          this.$store.commit('setNewApi', this.api);
-          this.$router.push('/apiEdit');
-        },function (res) {
-
-        })
+            }
+          } else {
+            return false;
+          }
+        });
       }
     }
   }
@@ -67,9 +76,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  #testCaseDirEdit {
-    font-size: 0.875em;
-  }
+
   .el-row {
     width: 100%;
     margin-bottom: 20px;

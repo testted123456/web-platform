@@ -8,7 +8,7 @@
       <span id="addItem" :style="{background:addItemBackGroundColor}" @mouseover="setAddItemBackground('#46A3FF')" @mouseleave="setAddItemBackground('none')" >
         <input type="button" @click.stop="addItem" v-bind:disabled="!contextMenuData.showAddItem" style="width: inherit;height: inherit; border: none;background: inherit" value="新增节点"/></span>
       <span id="del" :style="{background:delBackGroundColor}" @mouseover="setDelBackground('#46A3FF')" @mouseleave="setDelBackground('none')">
-        <input type="button" @click.stop="delApi" v-bind:disabled="!contextMenuData.showDel" style="width: inherit;height: inherit; border: none;background: inherit" value="删除"/>
+        <input type="button" @click.stop="delItem" v-bind:disabled="!contextMenuData.showDel" style="width: inherit;height: inherit; border: none;background: inherit" value="删除"/>
       </span>
         <span id="refresh" :style="{background:refreshBackGroundColor}" @mouseover="setRefreshBackground('#46A3FF')" @mouseleave="setRefreshBackground('none')">
         <input type="button" @click.stop="refreshApi" style="width: inherit;height: inherit; border: none;background: inherit" value="刷新"/>
@@ -73,8 +73,8 @@
       addItem(){
         this.$emit('addItem');
       },
-      delApi(){
-        this.$emit('delApi');
+      delItem(){
+        this.$emit('delItem');
       },
       refreshApi(){
         this.$emit('refreshApi');

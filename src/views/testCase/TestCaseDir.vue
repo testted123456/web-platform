@@ -36,7 +36,44 @@
         }
       }
     },
+    watch:{
+      $route(){
+        this.getData();
+      }
+    },
+    mounted() {
+      this.getData()
+    },
     methods: {
+      getData(){
+        var caseDirID = this.$route.query.id;
+        if(caseDirID === 0){
+            this.testCaseDirInfo= {
+                id: '',
+                name: '',
+                description: '',
+                pId: '',
+                type:false
+            }
+        }else{
+          this.$http.get(this.testCaseServer+"testCase/getCase?id="+ caseDirID).then(function (res) {
+            if(res.data.code === 10000){
+                console.log(res.data.data);
+              this.testCaseDirInfo= {
+                id: res.data.data.id,
+                name: res.data.data.name,
+                description: res.data.data.description,
+                pId: res.data.data.pId,
+                type:false
+              }
+            }else{
+              this.$message.error('抱歉，获取信息失败：' + res.data.msg);
+            }
+          },function (res) {
+            this.$message.error('抱歉，获取信息失败：' + res.data.msg);
+          });
+        }
+      },
       saveApi(){
         var caseDirID = this.$route.query.id;
         var caseDirThis = this;
@@ -47,7 +84,7 @@
               this.$http.post(this.testCaseServer+"testCase/addCaseDir",this.testCaseDirInfo).then(function (res) {
                 if(res.data.code === 10000){
                   this.$message({
-                    message: '恭喜你，新增用例成功',
+                    message: '恭喜你，新增用例目录成功',
                     type: 'success'
                   });
                   // 跳转到当且caseDir的详情页
@@ -63,7 +100,22 @@
                 this.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
               });
             }else{     /////////////////////////编辑界面 确认按钮事件
-
+              this.$http.post(this.testCaseServer+"testCase/addCaseDir",this.testCaseDirInfo).then(function (res) {
+                if(res.data.code === 10000){
+                  this.$message({
+                    message: '恭喜你，更新用例目录成功',
+                    type: 'success'
+                  });
+                  //存数据  树节点刷新
+                  this.$store.commit('changeTestCaseStatus', 1);
+                  this.testCaseDirInfo.id = res.data.data.id;
+                  this.$store.commit('setNewTestCase', this.testCaseDirInfo);
+                }else{
+                  this.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
+                }
+              },function (res) {
+                this.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
+              });
             }
           } else {
             return false;

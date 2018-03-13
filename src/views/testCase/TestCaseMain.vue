@@ -106,7 +106,7 @@
     methods: {
 
       handleNodeClick(data, node, instance){
-        if (node.isLeaf) {
+        if (node.data.type) {
           this.$router.push({name: 'TestCase', query: {id: node.data.id}});
         } else {
           this.$router.push({name: 'TestCaseDir', query: {id: node.data.id}});
@@ -180,9 +180,9 @@
         const nodeId = node.data.id;
 
         if(node.isLeaf === false){//删除case目录
-          this.$http.get(this.testCaseServer + "deleteTestCaseDir?id=" + nodeId).then(function (res) {
+          this.$http.get(this.testCaseServer + "testCase/deleteTestCaseDir?id=" + nodeId).then(function (res) {
             if(res.data.code == '10000'){
-              this.delItem(node);
+              this.delItemNode(node);
               this.$message({
                 message: '恭喜你，删除用例目录成功！',
                 type: 'success'
@@ -194,9 +194,9 @@
             this.$message.error('抱歉，服务器异常。');
           });
         }else{ //删除某个case
-          this.$http.get(this.testCaseServer + "deleteTestCaseDir?id=" + nodeId).then(function (res) {
+          this.$http.get(this.testCaseServer + "testCase/deleteCase?id=" + nodeId).then(function (res) {
             if(res.data.code == '10000'){
-              this.delItem(node);
+              this.delItemNode(node);
               this.$message({
                 message: '恭喜你，删除用例成功！',
                 type: 'success'
@@ -209,7 +209,7 @@
           });
         }
       },
-      delItem(node){
+      delItemNode(node){
         const data = node.data;
         const parent = node.parent;
         const children = parent.childNodes;

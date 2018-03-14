@@ -36,20 +36,20 @@
           <template>
             <el-tabs v-model="apiInCaseTab" @tab-click="handleClick">
               <el-tab-pane label="自定义变量" name="variables">
-                <el-table :data="tempApiDetailInfo.variables" style="width: 100%">
+                <el-table :data="tempApiDetailInfo.variables" >
 
-                  <el-table-column label="Key" class-name="cell-input" width="150">
+                  <el-table-column label="Key" class-name="cell-input" >
                     <template slot-scope="scope">
                       <el-input v-model="tempApiDetailInfo.variables[scope.$index].varName"></el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column label="Value" class-name="cell-input" width="300">
+                  <el-table-column label="Value" class-name="cell-input" >
                     <template slot-scope="scope">
                       <el-input v-model="tempApiDetailInfo.variables[scope.$index].varValue"></el-input>
                     </template>
                   </el-table-column>
 
-                  <el-table-column class-name="cell-input" width="120" label="" >
+                  <el-table-column class-name="cell-input"  label="" width="120px">
                     <template slot-scope="scope">
                       <el-button @click.native.prevent="addHeadersRow(scope.$index, tempApiDetailInfo.variables, 1)" type="text" size="small"><i class="el-icon-plus"></i></el-button>
                       <el-button @click.native.prevent="deleteHeadersRow(scope.$index, tempApiDetailInfo.variables)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
@@ -61,26 +61,19 @@
               </el-tab-pane>
 
               <el-tab-pane label="消息头" name="reqHeaders">
-                <el-table
-                  :data="tempApiDetailInfo.requestHead" style="width: 100%"
-                >
-                  <el-table-column
-                    label="Key" class-name="cell-input" width="180"
-                  >
+                <el-table :data="tempApiDetailInfo.requestHead">
+                  <el-table-column label="Key" class-name="cell-input">
                     <template slot-scope="scope">
                       <el-input v-model="tempApiDetailInfo.requestHead[scope.$index].Key"></el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    label="Value" class-name="cell-input" width="180"
-                  >
+                  <el-table-column label="Value" class-name="cell-input">
                     <template slot-scope="scope">
                       <el-input v-model="tempApiDetailInfo.requestHead[scope.$index].Value"></el-input>
                     </template>
                   </el-table-column>
 
-                  <el-table-column class-name="cell-input" width="120"
-                                   label="" >
+                  <el-table-column class-name="cell-input" label="" width="120px">
                     <template slot-scope="scope">
                       <el-button @click.native.prevent="addHeadersRow(scope.$index, tempApiDetailInfo.requestHead, 2)" type="text" size="small"><i class="el-icon-plus"></i></el-button>
                       <el-button @click.native.prevent="deleteHeadersRow(scope.$index, tempApiDetailInfo.requestHead)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
@@ -95,8 +88,8 @@
                   <el-col :span="4" style="text-align: right">
                     <el-button size="small" v-if="isJson(tempApiDetailInfo.requestBody)"
                                @click.native.prevent="tempApiDetailInfo.requestBody = formatJson(tempApiDetailInfo.requestBody)"
-                               round
-                    >格式化Json</el-button>
+                               round>格式化Json
+                    </el-button>
                     <el-button style="color: red"
                                size="small" v-else
                                disabled
@@ -117,26 +110,19 @@
                 </el-row>
               </el-tab-pane>
               <el-tab-pane label="响应消息头" name="responseHeaders">
-                <el-table
-                  :data="tempApiDetailInfo.responseHead" style="width: 100%"
-                >
-                  <el-table-column
-                    label="Key" class-name="cell-input" width="180"
-                  >
+                <el-table :data="tempApiDetailInfo.responseHead">
+                  <el-table-column label="Key" class-name="cell-input">
                     <template slot-scope="scope">
                       <el-input v-model="tempApiDetailInfo.responseHead[scope.$index].Key"></el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    label="Value" class-name="cell-input" width="180"
-                  >
+                  <el-table-column label="Value" class-name="cell-input">
                     <template slot-scope="scope">
                       <el-input v-model="tempApiDetailInfo.responseHead[scope.$index].Value"></el-input>
                     </template>
                   </el-table-column>
 
-                  <el-table-column class-name="cell-input" width="120"
-                                   label="" >
+                  <el-table-column class-name="cell-input" label="" width="120px">
                     <template slot-scope="scope">
                       <el-button @click.native.prevent="addHeadersRow(scope.$index, tempApiDetailInfo.requestHead, 3)" type="text" size="small"><i class="el-icon-plus"></i></el-button>
                       <el-button @click.native.prevent="deleteHeadersRow(scope.$index, tempApiDetailInfo.requestHead)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
@@ -151,8 +137,8 @@
                   <el-col :span="4" style="text-align: right">
                     <el-button size="small" v-if="isJson(tempApiDetailInfo.responseBody)"
                                @click.native.prevent="tempApiDetailInfo.responseBody = formatJson(tempApiDetailInfo.responseBody)"
-                               round
-                    >格式化Json</el-button>
+                               round>格式化Json
+                    </el-button>
                     <el-button style="color: red"
                                size="small" v-else
                                disabled
@@ -174,19 +160,13 @@
               </el-tab-pane>
 
               <el-tab-pane label="断言" name="assertions">
-                <el-table
-                  :data="tempApiDetailInfo.assertions" style="width: 100%"
-                >
-                  <el-table-column
-                    label="预期结果" class-name="cell-input" width="150"
-                  >
+                <el-table :data="tempApiDetailInfo.assertions">
+                  <el-table-column label="预期结果" class-name="cell-input">
                     <template slot-scope="scope">
                       <el-input v-model="tempApiDetailInfo.assertions[scope.$index].actualResult"></el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    label="比较符" class-name="cell-input" width="150"
-                  >
+                  <el-table-column label="比较符" class-name="cell-input">
                     <template slot-scope="scope">
                       <!--<el-input v-model="tempApiDetailInfo.assertions[scope.$index].comparator"></el-input>-->
                       <el-select v-model="tempApiDetailInfo.assertions[scope.$index].comparator" placeholder="请选择">
@@ -199,15 +179,12 @@
                       </el-select>
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    label="实际结果" class-name="cell-input" width="300"
-                  >
+                  <el-table-column label="实际结果" class-name="cell-input">
                     <template slot-scope="scope">
                       <el-input v-model="tempApiDetailInfo.assertions[scope.$index].expectResult"></el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column class-name="cell-input" width="120"
-                                   label="" >
+                  <el-table-column class-name="cell-input" label="" width="120px">
                     <template slot-scope="scope">
                       <el-button @click.native.prevent="addHeadersRow(scope.$index, tempApiDetailInfo.assertions, 4)" type="text" size="small"><i class="el-icon-plus"></i></el-button>
                       <el-button @click.native.prevent="deleteHeadersRow(scope.$index, tempApiDetailInfo.assertions)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
@@ -307,7 +284,7 @@
           assertions:[
             {
               "actualResult": "",
-              "comparator": "=",
+              "comparator": "",
               "expectResult":""
             }
           ]
@@ -332,34 +309,73 @@
       intellCheck(){
         window.open('https://www.baidu.com')
       },
-      cancelSaveInfo(){
-//                var json = JSON.stringify(this.testCaseInterface);
-//                var obj = JSON.parse(json)
-//                this.apiInCaseTab = 'variables'
-//                this.updateTempApiDetailInfo(obj)
+
+      // tempApiDetailInfo 页面赋值
+      updateTempApiDetailInfo(obj){
+        this.tempApiDetailInfo.step = obj.step;
+        this.tempApiDetailInfo.urlAddress = obj.urlAddress;
+        this.tempApiDetailInfo.apiType = obj.apiType;
+        this.tempApiDetailInfo.postWay = obj.postWay;
+
+        //消息体
+        if(obj.requestBody !== null){
+          this.tempApiDetailInfo.requestBody = JSON.parse(obj.requestBody);
+        }
+        //预期结果
+        if(obj.responseBody !== null){
+          this.tempApiDetailInfo.responseBody = JSON.parse(obj.responseBody);
+        }
+        //自定义变量
+        if (obj.variables !== 'undefined' && obj.variables !== null) {
+          this.tempApiDetailInfo.variables = obj.variables;
+        }
+        //消息头
+        if (obj.requestHead !== 'undefined' && obj.requestHead !== null) {
+          this.tempApiDetailInfo.requestHead = obj.requestHead;
+        }
+        //响应消息头
+        if (obj.responseHead !== 'undefined' && obj.responseHead !== null) {
+          this.tempApiDetailInfo.responseHead = obj.responseHead;
+        }
+        //断言
+        if (obj.assertions !== 'undefined' && obj.assertions !== null) {
+          this.tempApiDetailInfo.assertions = obj.assertions;
+        }
       },
+      //确定按钮
       saveApiDetailInfo(){
         var tempThis = this;
         var ifFill = true;
 
-        var ifvariables = true;
-        var ifrequestHead = true;
-        var ifassertions = true;
-        var ifresponseHead = true;
+        var ifVariablesNull = false;
+        var ifRequestHeadNull = false;
+        var ifResponseHeadNull = false;
+        var ifAssertionsNull = false;
+
+        //判断步骤名称是否为空
+//        if(tempThis.tempApiDetailInfo.step.trim() === ''){
+//          ifFill = false;
+//        }
 
 
-        if($.trim(tempThis.tempApiDetailInfo.step) === ''){
-          ifFill = false;
-        }
-        for(var i =0;i<this.tempApiDetailInfo.variables.length;i++){
-          if($.trim(tempThis.tempApiDetailInfo.variables[i].varName) === '' || $.trim(tempThis.tempApiDetailInfo.variables[i].varValue) === ''){
-            ifFill = false;
-          }
-        }
 
         if(ifFill){
           var json = JSON.stringify(this.tempApiDetailInfo);
           var obj = JSON.parse(json)
+
+          if(ifVariablesNull){
+            this.tempApiDetailInfo.variables = null
+          }
+          if(ifRequestHeadNull){
+            this.tempApiDetailInfo.requestHead = null
+          }
+          if(ifResponseHeadNull){
+            this.tempApiDetailInfo.responseHead = null
+          }
+          if(ifAssertionsNull){
+            this.tempApiDetailInfo.assertions = null
+          }
+          console.log(obj)
           return obj;
         }else{
           this.$message.error('接口信息漏填');
@@ -367,39 +383,15 @@
 
 
       },
-
-      // tempApiDetailInfo 赋值
-      updateTempApiDetailInfo(obj){
-        // this.tempApiDetailInfo = obj;
-        this.tempApiDetailInfo.step = obj.step;
-        this.tempApiDetailInfo.urlAddress = obj.urlAddress;
-        this.tempApiDetailInfo.apiType = obj.apiType;
-        this.tempApiDetailInfo.postWay = obj.postWay;
-        this.tempApiDetailInfo.requestBody = obj.requestBody;
-        this.tempApiDetailInfo.responseBody = obj.responseBody;
-
-        if (obj.variables !== 'undefined' && obj.variables !== null) {
-          this.tempApiDetailInfo.variables = obj.variables;
-        }
-        if (obj.requestHead !== 'undefined' && obj.requestHead !== null) {
-          this.tempApiDetailInfo.requestHead = obj.requestHead;
-        }
-        if (obj.assertions !== 'undefined' && obj.assertions !== null) {
-          this.tempApiDetailInfo.assertions = obj.assertions;
-        }
-        if (obj.responseHead !== 'undefined' && obj.responseHead !== null) {
-          this.tempApiDetailInfo.responseHead = obj.responseHead;
-        }
-
+      //取消按钮
+      cancelSaveInfo(){
+//                var json = JSON.stringify(this.testCaseInterface);
+//                var obj = JSON.parse(json)
+//                this.apiInCaseTab = 'variables'
+//                this.updateTempApiDetailInfo(obj)
       },
 
-      showAddHeader(index, rows){
-        if (rows.length == index + 1 && (rows[index].Key != '' || rows[index].Value != '' || rows[index].Description != '')) {
-          return true;
-        } else {
-          return false;
-        }
-      },
+      //增加
       addHeadersRow(index, rows,type){
         var obj1 = {
           varValue:'',

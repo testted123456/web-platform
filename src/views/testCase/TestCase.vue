@@ -193,7 +193,7 @@
         excResult: '',
         enviornment:[],
         testCase: {
-
+          type:true
         },
         copyIndex:0,
         apisInCase: [],
@@ -285,7 +285,8 @@
             if (caseID == 0){   //新增case页面
               this.testCase = {
                 caseType:'false',
-                env:this.enviornment[0].value
+                env:this.enviornment[0].value,
+                type:true
               }
               this.apisInCase = []
             }else{

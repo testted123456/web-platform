@@ -149,3 +149,75 @@ this.testCase = {
 
 
 
+
+
+
+//判断API URL是否为空
+//        if($.trim(tempThis.tempApiDetailInfo.urlAddress) === ''){
+//          ifFill = false;
+//        }
+//        //判断消息体是否为空
+//        if($.trim(JSON.stringify(tempThis.tempApiDetailInfo.requestBody)) === ''){
+//          ifFill = false;
+//        }
+//        //判断预期结果是否为空
+//        if($.trim(JSON.stringify(tempThis.tempApiDetailInfo.responseBody)) === ''){
+//          ifFill = false;
+//        }
+//
+//        //判断 自定义变量 是否为空
+//        if(this.tempApiDetailInfo.variables.length>1){
+//          for(var i =0;i<this.tempApiDetailInfo.variables.length;i++){
+//            if($.trim(tempThis.tempApiDetailInfo.variables[i].varName) === '' || $.trim(tempThis.tempApiDetailInfo.variables[i].varValue) === ''){
+//              ifFill = false;
+//            }
+//          }
+//        }else if($.trim(tempThis.tempApiDetailInfo.variables[i].varName) === '' && $.trim(tempThis.tempApiDetailInfo.variables[i].varValue) === ''){
+//          ifVariablesNull = true;
+//          console.log("自定义变量为空")
+//        }else{
+//          ifFill = false;
+//        }
+//
+//        //判断 消息头 是否为空
+//        if(this.tempApiDetailInfo.requestHead.length>1){
+//          for(var i =0;i<this.tempApiDetailInfo.requestHead.length;i++){
+//            if($.trim(tempThis.tempApiDetailInfo.requestHead[i].Key) === '' || $.trim(tempThis.tempApiDetailInfo.requestHead[i].Value) === ''){
+//              ifFill = false;
+//            }
+//          }
+//        }else if($.trim(tempThis.tempApiDetailInfo.requestHead[i].Key) === '' && $.trim(tempThis.tempApiDetailInfo.requestHead[i].Value) !== ''){
+//          ifRequestHeadNull = true;
+//          console.log("消息头为空")
+//        }else{
+//          ifFill = false;
+//        }
+//
+//        //判断 响应消息头 是否为空
+//        if(this.tempApiDetailInfo.responseHead.length>1){
+//          for(var i =0;i<this.tempApiDetailInfo.responseHead.length;i++){
+//            if($.trim(tempThis.tempApiDetailInfo.responseHead[i].Key) === '' || $.trim(tempThis.tempApiDetailInfo.responseHead[i].Value) === ''){
+//              ifFill = false;
+//            }
+//          }
+//        }else if($.trim(tempThis.tempApiDetailInfo.responseHead[i].Key) === '' && $.trim(tempThis.tempApiDetailInfo.responseHead[i].Value) !== ''){
+//          ifResponseHeadNull = true;
+//          console.log("响应消息头为空")
+//        }else{
+//          ifFill = false;
+//        }
+//
+//
+//        //判断 断言 是否为空
+//        if(this.tempApiDetailInfo.assertions.length>1){
+//          for(var i =0;i<this.tempApiDetailInfo.assertions.length;i++){
+//            if($.trim(tempThis.tempApiDetailInfo.assertions[i].actualResult) === '' || $.trim(tempThis.tempApiDetailInfo.assertions[i].comparator) === '' || $.trim(tempThis.tempApiDetailInfo.assertions[i].expectResult) === ''){
+//              ifFill = false;
+//            }
+//          }
+//        }else if($.trim(tempThis.tempApiDetailInfo.assertions[i].actualResult) === '' && $.trim(tempThis.tempApiDetailInfo.assertions[i].comparator) === '' && $.trim(tempThis.tempApiDetailInfo.assertions[i].expectResult) === ''){
+//          console.log("断言为空")
+//          ifAssertionsNull = true;
+//        }else{
+//          ifFill = false;
+//        }

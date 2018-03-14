@@ -90,12 +90,16 @@
 
           var newChild = this.$store.state.testCase.newTestCase;
 
-          if(newChild.type === false){
+          if(newChild.type === "undefined"){
+              return;
+          }else if(newChild.type === false){
             newChild.children = [];
           }
 
           node.data.children.push(newChild);
           this.$store.commit('changeTestCaseStatus', 0);
+
+          node.updateChildren()
 
           if (!node.expanded) {
             node.expand();
@@ -221,6 +225,7 @@
           }
         });
         children.splice(i, 1);
+        this.$router.push({name: 'TestCaseMain'});
       },
       refreshApi(){
         var node = this.$refs.tree.currentNode.node;

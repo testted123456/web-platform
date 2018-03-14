@@ -85,6 +85,8 @@
         if(val == 1){
           var node = this.$refs.tree.currentNode.node;
 
+          var newChild = this.$store.state.api.newApi;
+
           if (!node.data.children) {
             this.$set(node.data, 'children', []);
             node.childNodes.forEach(function (vaule, index, array) {
@@ -92,14 +94,14 @@
             })
           }
 
-          var newChild = this.$store.state.api.newApi;
-
           if(newChild.type === false){
             newChild.children = [];
           }
 
           node.data.children.push(newChild);
           this.$store.commit( 'changeApiStatus', 0);
+
+          node.updateChildren()
 
           if(!node.expanded){
               node.expand();
@@ -163,6 +165,8 @@
         node.expand();
       }
 
+      node.isLeaf = false;
+
       var pId = node.data.id;
       this.$router.push({name: 'ApiDirNew', query: {pId: pId}});
       this.closeMenu();
@@ -174,6 +178,8 @@
       if(!node.expanded){
         node.expand();
       }
+
+      node.isLeaf = false;
 
       var pId = node.data.id;
       this.$router.push({name: 'ApiNew', query: {pId: pId}});

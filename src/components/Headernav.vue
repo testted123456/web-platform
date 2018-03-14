@@ -53,7 +53,7 @@
         width:100%;
         height: 60px !important;
         border-bottom: solid 1px #e6e6e6;
-        background-color: #409eff;
+        background-color: #428bca;
     }
   .header-logo {
       display: inline-block;
@@ -88,7 +88,7 @@
   .el-menu--horizontal .el-menu-item:not(.is-disabled):focus, .el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
       outline: 0;
       color: #fff;
-      background-color: #409eff;
+      background-color: #428bca;
       border-bottom:4px solid #fff;
   }
   .el-menu--horizontal>.el-menu-item a, .el-menu--horizontal>.el-menu-item a:hover {

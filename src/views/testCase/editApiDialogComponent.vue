@@ -273,14 +273,14 @@
               "Value": ""
             }
           ],
-          requestBody:'',
+          requestBody:null,
           responseHead:[
             {
               "Key": "",
               "Value": ""
             }
           ],
-          responseBody:'',
+          responseBody:null,
           assertions:[
             {
               "actualResult": "",

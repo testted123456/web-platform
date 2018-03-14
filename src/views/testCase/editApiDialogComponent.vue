@@ -295,7 +295,6 @@
       var json = JSON.stringify(this.testCaseInterface);
       var obj = JSON.parse(json);
       this.updateTempApiDetailInfo(obj)
-      console.log(this.tempApiDetailInfo)
     },
     destroyed(){
       console.log('api edit dialog destroyed')
@@ -342,6 +341,7 @@
           this.tempApiDetailInfo.assertions = obj.assertions;
         }
       },
+
       //确定按钮
       saveApiDetailInfo(){
         var tempThis = this;
@@ -352,10 +352,10 @@
         var ifResponseHeadNull = false;
         var ifAssertionsNull = false;
 
-        //判断步骤名称是否为空
-//        if(tempThis.tempApiDetailInfo.step.trim() === ''){
-//          ifFill = false;
-//        }
+//        判断步骤名称是否为空
+        if(tempThis.tempApiDetailInfo.step.trim() === ''){
+          ifFill = false;
+        }
 
 
 
@@ -379,9 +379,8 @@
           return obj;
         }else{
           this.$message.error('接口信息漏填');
+          return false;
         }
-
-
       },
       //取消按钮
       cancelSaveInfo(){

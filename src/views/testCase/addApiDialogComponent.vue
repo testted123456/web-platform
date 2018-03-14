@@ -127,7 +127,8 @@
               "optstatus": 0,
               "system": "usr",
               "variables":[{varName:"type",varValue:"2"}],
-              "assertions":[{actualResult:"${term}",comparator:"=",expectResult:"19"}]
+              "assertions":[{actualResult:"${term}",comparator:"=",expectResult:"19"}],
+              "step":'1'
             }, {
               "id": 2,
               "name": "2",
@@ -153,7 +154,8 @@
               "optstatus": 0,
               "system": "trd",
               "variables":null,
-              "assertions":null
+              "assertions":null,
+              "step":'1'
             }]
           var apiTreeInfo = apiTreeData;
           return resolve(apiTreeInfo);

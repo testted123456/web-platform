@@ -256,7 +256,10 @@
   a {
     color: #42b983;
   }
-
+  .el-aside{
+    overflow: scroll;
+    -webkit-box-sizing: border-box;
+  }
   aside {
     padding-left: 20px;
     padding-top: 20px;

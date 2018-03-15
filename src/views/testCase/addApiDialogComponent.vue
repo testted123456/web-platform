@@ -198,7 +198,7 @@
           this.tempApi.responseBody  = data.responseBody;
           this.tempApi.apiType = data.apiType;
           this.tempApi.postWay = data.postWay;
-          this.tempApi.push(this.tempApi);
+          this.tempApis.push(this.tempApi);
         }else{
           this.$message({
             message: '文件夹不能添加',

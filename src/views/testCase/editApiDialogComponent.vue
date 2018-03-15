@@ -306,6 +306,9 @@
       isJson,
       handleClick(tab, event){
       },
+      trim(str){ //删除左右两端的空格
+        return str.replace(/(^\s*)|(\s*$)/g,"");
+      },
       //动态库查询 点击跳转新页面
       intellCheck(){
         window.open('https://www.baidu.com')
@@ -323,7 +326,7 @@
         //消息体
         if(this.tempApiDetailInfo.requestBody){
             console.log('消息体不为空')
-//          this.tempApiDetailInfo.requestBody = JSON.parse(this.tempApiDetailInfo.requestBody);
+          this.tempApiDetailInfo.requestBody = JSON.parse(this.tempApiDetailInfo.requestBody);
         }
         //预期结果
         if(this.tempApiDetailInfo.responseBody){
@@ -385,7 +388,7 @@
         var ifAssertionsNull = false;
 
         //判断步骤名称是否为空
-        if(this.tempApiDetailInfo.step.replace(/ /g,'') === ''){
+        if(this.tempApiDetailInfo.step.replace(/(^\s*)|(\s*$)/g, "") === ''){
           ifFill = false;
         }
         //判断API URL是否为空
@@ -464,21 +467,20 @@
           var obj = JSON.parse(json)
 
           if(ifVariablesNull){
-            this.tempApiDetailInfo.variables = null
+            obj.variables = null
           }
           if(ifRequestHeadNull){
-            this.tempApiDetailInfo.requestHead = null
+            obj.requestHead = null
           }
           if(ifResponseHeadNull){
-            this.tempApiDetailInfo.responseHead = null
+            obj.responseHead = null
           }
           if(ifAssertionsNull){
-            this.tempApiDetailInfo.assertions = null
+            obj.assertions = null
           }
           console.log(obj)
           return obj;
         }else{
-
           this.$message.error('接口信息漏填');
           return false;
         }

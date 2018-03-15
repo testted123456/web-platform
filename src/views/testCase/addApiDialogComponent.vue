@@ -186,18 +186,18 @@
         var data = node.data;
 
         if(node.data.type){
-          tempApis.testCase = data.testCase;
-          tempApis.interfaceId = data.id;
-          tempApis.name = data.name;
-          tempApis.branch = data.branch;
-          tempApis.system = data.system;
-          tempApis.urlAddress = data.urlAddress;
-          tempApis.requestHead = data.requestHead;
-          tempApis.requestBody = data.requestBody;
-          tempApis.responseHead = data.responseHead;
-          tempApis.responseBody  = data.responseBody;
-          tempApis.apiType = data.apiType;
-          tempApis.postWay = data.postWay;
+          this.tempApis.testCase = data.testCase;
+          this.tempApis.interfaceId = data.id;
+          this.tempApis.name = data.name;
+          this.tempApis.branch = data.branch;
+          this.tempApis.system = data.system;
+          this.tempApis.urlAddress = data.urlAddress;
+          this.tempApis.requestHead = data.requestHead;
+          this.tempApis.requestBody = data.requestBody;
+          this.tempApis.responseHead = data.responseHead;
+          this.tempApis.responseBody  = data.responseBody;
+          this.tempApis.apiType = data.apiType;
+          this.tempApis.postWay = data.postWay;
           this.tempApis.push(data);
         }else{
           this.$message({

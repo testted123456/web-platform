@@ -345,7 +345,9 @@
           case 3: {
             var data = this.$refs.editApiDetailInfo.saveApiDetailInfo()
             var index = this.dialog.extend.index;
-            this.$set(this.apisInCase, index, data)
+            if(data){
+              this.$set(this.apisInCase, index, data)
+            }
 
           }
             break;

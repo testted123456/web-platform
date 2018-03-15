@@ -294,7 +294,7 @@
     },
     created(){
       var json = JSON.stringify(this.testCaseInterface);
-//      console.log(json)
+      console.log(json)
       var obj = JSON.parse(json);
       this.updateTempApiDetailInfo(obj)
     },
@@ -408,7 +408,7 @@
               ifFill = false;
             }
           }
-        }else if(this.tempApiDetailInfo.variables[i].varName.replace(/ /g,'') === '' && this.tempApiDetailInfo.variables[i].varValue.replace(/ /g,'') === ''){
+        }else if(this.tempApiDetailInfo.variables[0].varName.replace(/ /g,'') === '' && this.tempApiDetailInfo.variables[0].varValue.replace(/ /g,'') === ''){
           ifVariablesNull = true;
           console.log("自定义变量为空")
         }else{
@@ -422,7 +422,7 @@
               ifFill = false;
             }
           }
-        }else if(this.tempApiDetailInfo.requestHead[i].Key.replace(/ /g,'') === '' && this.tempApiDetailInfo.requestHead[i].Value.replace(/ /g,'') !== ''){
+        }else if(this.tempApiDetailInfo.requestHead[0].Key.replace(/ /g,'') === '' && this.tempApiDetailInfo.requestHead[0].Value.replace(/ /g,'') !== ''){
           ifRequestHeadNull = true;
           console.log("消息头为空")
         }else{
@@ -436,7 +436,7 @@
               ifFill = false;
             }
           }
-        }else if(this.tempApiDetailInfo.responseHead[i].Key.replace(/ /g,'') === '' && this.tempApiDetailInfo.responseHead[i].Value.replace(/ /g,'') !== ''){
+        }else if(this.tempApiDetailInfo.responseHead[0].Key.replace(/ /g,'') === '' && this.tempApiDetailInfo.responseHead[0].Value.replace(/ /g,'') !== ''){
           ifResponseHeadNull = true;
           console.log("响应消息头为空")
         }else{
@@ -451,7 +451,7 @@
               ifFill = false;
             }
           }
-        }else if(this.tempApiDetailInfo.assertions[i].actualResult.replace(/ /g,'') === '' && this.tempApiDetailInfo.assertions[i].comparator.replace(/ /g,'') === '' && this.tempApiDetailInfo.assertions[i].expectResult.replace(/ /g,'') === ''){
+        }else if(this.tempApiDetailInfo.assertions[0].actualResult.replace(/ /g,'') === '' && this.tempApiDetailInfo.assertions[0].comparator.replace(/ /g,'') === '' && this.tempApiDetailInfo.assertions[i].expectResult.replace(/ /g,'') === ''){
           console.log("断言为空")
           ifAssertionsNull = true;
         }else{

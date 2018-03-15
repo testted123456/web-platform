@@ -84,12 +84,12 @@
            branch:'',
            system:'',
            urlAddress:'',
-           variables:'',
-           requestHead:'',
-           requestBody:'',
-           responseHead:'',
-           responseBody:'',
-           assertions:''
+           variables:null,
+           requestHead:null,
+           requestBody:null,
+           responseHead:null,
+           responseBody:null,
+           assertions:null
         },
         tempApis:[]
       }

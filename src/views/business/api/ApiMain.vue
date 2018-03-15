@@ -1,7 +1,7 @@
 <template>
-    <div>
         <el-container>
-            <el-aside  width="240px" >
+            <el-aside width="240px" style="border-right:1px solid #e6e6e6;overflow-x: scroll">
+
                 <el-input
                     placeholder="输入接口名称进行过滤"
                 >
@@ -36,7 +36,6 @@
             </el-aside>
             <router-view></router-view>
         </el-container>
-    </div>
 </template>
 
 <script>
@@ -112,7 +111,10 @@
 
   methods: {
     handleNodeClick(data, node, instance){
-      if (node.data.type === true) {
+      if(node.data.id === 0){
+          console.log('xxx')
+        this.$router.push({path: '/home/api'});
+      }else if (node.data.type === true) {
         this.$router.push({name: 'ApiEdit', params: {id: node.data.id}});
       } else {
         this.$router.push({name: 'ApiDirEdit', params: {id: node.data.id}});
@@ -121,7 +123,7 @@
 
     loadNode(node, resolve) { //渲染树节点
       if(node.level === 0){
-        return resolve([{ name:  'Root', id: 0 , type: false}]);
+        return resolve([{ name:  '接口', id: 0 , type: false}]);
       }else if(node.isLeaf === true){
           return;
       }else{
@@ -214,6 +216,8 @@
               message: '恭喜你，删除接口目录成功！',
               type: 'success'
             });
+
+            this.$router.push({path: '/home/api'});
           }else{
             this.$message.error('抱歉，删除接口目录失败：' + res.data.msg);
           }
@@ -229,6 +233,8 @@
               message: '恭喜你，删除接口成功！',
               type: 'success'
             });
+
+            this.$router.push({path: '/home/api'});
           }else{
             this.$message.error('抱歉，删除接口失败：' + res.data.msg);
           }
@@ -273,6 +279,12 @@ aside {
   padding-left: 20px;
   padding-top: 20px;
   width: 100%;
+
+}
+.el-aside{
+  overflow: scroll;
+  -webkit-box-sizing: border-box;
+  float:right;
 }
 
 </style>

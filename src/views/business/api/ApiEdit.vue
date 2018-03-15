@@ -1,83 +1,54 @@
 <template>
   <el-container  id="apiEdit">
-    <el-container >
       <el-main >
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4" >
-            <label>API名称:</label>
-          </el-col>
-          <el-col :span="16">
-            <el-input v-model="api.name"  placeholder="请输入接口名称"></el-input>
-          </el-col>
-        </el-row>
+        <div style="padding-bottom: 60px;">
+          <div style="width:80%;text-align: left">
+            <el-form   ref="api"  :label-position="labelPosition"  label-width="100px" :model="api">
+              <el-form-item label="API名称:" prop="name" :rules="[{ required: true, trigger: 'blur',message: 'API名称不能为空'} ]">
+                <el-input v-model="api.name" placeholder="请输入接口名称"></el-input>
+              </el-form-item>
 
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4">
-            <label>API URL:</label>
-          </el-col>
-          <el-col :span="16">
-            <el-input v-model="api.urlAddress" placeholder="请输入接口URL"></el-input>
-          </el-col>
-        </el-row>
+              <el-form-item label="API URL:" prop="urlAddress" :rules="[{ required: true, trigger: 'blur',message: 'API URL不能为空'} ]">
+                <el-input v-model="api.urlAddress" placeholder="请输入接口URL"></el-input>
+              </el-form-item>
 
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4">
-            <label>API分支:</label>
-          </el-col>
-          <el-col :span="16">
-            <el-input v-model="api.branch" placeholder="请输入接口分支"></el-input>
-          </el-col>
-        </el-row>
+              <el-form-item label="API分支:" prop="branch" :rules="[{ required: true, trigger: 'blur',message: '接口分支不能为空'} ]">
+                <el-input v-model="api.branch" placeholder="请输入接口分支"></el-input>
+              </el-form-item>
 
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4">
-            <label>API模块:</label>
-          </el-col>
-          <el-col :span="16">
-            <el-input v-model="api.module" placeholder="请输入接口模块"></el-input>
-          </el-col>
-        </el-row>
+              <el-form-item label="API模块:" prop="module" :rules="[{ required: true, trigger: 'blur',message: '接口模块不能为空'} ]">
+                <el-input v-model="api.module" placeholder="请输入接口模块"></el-input>
+              </el-form-item>
 
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4">
-            <label>系统:</label>
-          </el-col>
-          <el-col :span="16">
-            <el-select v-model="api.system" placeholder="请选择">
-              <el-option
-                v-for="item in apiSystems"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-        </el-row>
+              <el-form-item label="API系统:" prop="system" :rules="[{ required: true, trigger: 'blur',message: '接口系统不能为空'} ]">
+                <el-select v-model="api.system" placeholder="请选择">
+                  <el-option
+                    v-for="item in apiSystems"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
 
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4" >
-            <label>API协议:</label>
-          </el-col>
-          <el-col :span="10">
-            <el-radio v-model="api.apiType" label="0">Http</el-radio>
-            <el-radio v-model="api.apiType" label="1">Https</el-radio>
-            <el-radio v-model="api.apiType" label="2">MQ</el-radio>
-          </el-col>
-          <el-col :span="4">
-            <el-select v-model="api.postWay" v-if="api.apiType!=2" placeholder="请选择">
-              <el-option label="Get" value="0"></el-option>
-              <el-option label="Post" value="1"></el-option>
-            </el-select>
-          </el-col>
-        </el-row>
+              <el-form-item label="API协议:" prop="apiType" :rules="[{ required: true, trigger: 'blur',message: '接口协议不能为空'} ]">
+                <el-col :span="10">
+                  <el-radio v-model="api.apiType" label="0">Http</el-radio>
+                  <el-radio v-model="api.apiType" label="1">Https</el-radio>
+                  <el-radio v-model="api.apiType" label="2">MQ</el-radio>
+                </el-col>
+                <el-col :span="4">
+                  <el-select v-model="api.postWay" v-if="api.apiType!=2" placeholder="请选择">
+                    <el-option label="Get" value="0"></el-option>
+                    <el-option label="Post" value="1"></el-option>
+                  </el-select>
+                </el-col>
+              </el-form-item>
 
-        <el-row v-if="api.apiType!=2">
+            </el-form>
+          </div>
+
+        <el-row v-if="api.apiType!=2" style="padding-left: 30px">
           <el-col :span="2"></el-col>
           <el-col :span="22" >
             <el-tabs v-model="activeName" @tab-click="handleClick" >
@@ -89,14 +60,14 @@
                 >
                   <el-table-column
                     label="Key"
-                    width="180">
+                    width="230">
                     <template slot-scope="scope">
                       <el-input v-model="api.requestHead[scope.$index].Key"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
                     label="Value"
-                    width="350">
+                    width="450">
                     <template slot-scope="scope">
                       <el-input v-model="api.requestHead[scope.$index].Value"></el-input>
                     </template>
@@ -160,9 +131,10 @@
                   <el-col>
                     <el-input
                       type="textarea"
-                      :autosize="{ minRows: 12, maxRows: 12}"
+                      :autosize="{ minRows: 12}"
                       placeholder="请输入请求消息体"
-                      v-model="api.requestBody">
+                      v-model="api.requestBody"
+                    >
                     </el-input>
                   </el-col>
                 </el-row>
@@ -175,14 +147,14 @@
                 >
                   <el-table-column
                     label="Key"
-                    width="180">
+                    width="230">
                     <template slot-scope="scope">
                       <el-input v-model="api.responseHead[scope.$index].Key"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
                     label="Value"
-                    width="350">
+                    width="450">
                     <template slot-scope="scope">
                       <el-input v-model="api.responseHead[scope.$index].Value"></el-input>
                     </template>
@@ -263,33 +235,8 @@
             </el-col>
           </el-row>
         </el-row>
+        </div>
       </el-main>
-
-      <el-aside>
-        <el-collapse v-model="activeName" accordion>
-          <el-collapse-item title="接口分支" name="branch">
-            <el-table
-              :data="apiBranchs"
-              style="width: 100%">
-              <el-table-column
-                prop="version"
-                label="分支"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="normal"
-                label="创建时间"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="warning"
-                label="最新版本？">
-              </el-table-column>
-            </el-table>
-          </el-collapse-item>
-        </el-collapse>
-      </el-aside>
-    </el-container>
     <el-footer style="text-align: right;">
       <el-button type="primary" @click="saveApi">确认</el-button>
       <el-button>取消</el-button>
@@ -306,6 +253,7 @@
     name: 'ApiEdit',
     data () {
       return {
+        labelPosition:"right",
         api: {
           requestHead:[{
             Key: '',
@@ -338,14 +286,19 @@
 
     watch:{
       id: function () {
-      this.init();
+
+      },
+      $route(){
+        this.init();
       }
     },
 
     methods: {
       formatJson, isJson,
 
-      handleClick(tab, event){},
+      handleClick(tab, event){
+
+      },
 
       init(){
         this.$http.get(this.apiServer + "api/getApi?id=" + this.$route.params.id).then(function (res) {
@@ -358,6 +311,18 @@
 
             if(this.api.responseHead === null){
               this.api.responseHead = [{Key: '', Value: ''}];
+            }
+
+            if(tab.label === 'Req Body'){
+              if(isJson(this.api.requestBody)){
+                this.api.requestBody = formatJson(this.api.requestBody)
+              }
+            }
+
+            if(tab.label === 'Res Body'){
+              if(isJson(this.api.responseBody)){
+                this.api.responseBody = formatJson(this.api.responseBody)
+              }
             }
           }
         },function (res) {
@@ -507,5 +472,9 @@
   }
   .el-aside{
     width: 280px !important;
+    overflow-x: scroll;
+  }
+  .el-main {
+    padding-right: 15%;
   }
 </style>

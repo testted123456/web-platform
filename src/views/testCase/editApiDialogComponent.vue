@@ -257,6 +257,7 @@
           }
         ],
         tempApiDetailInfo: {
+
           step:'',
           urlAddress:'',
           apiType:'',
@@ -293,6 +294,7 @@
     },
     created(){
       var json = JSON.stringify(this.testCaseInterface);
+//      console.log(json)
       var obj = JSON.parse(json);
       this.updateTempApiDetailInfo(obj)
     },
@@ -311,35 +313,65 @@
 
       // tempApiDetailInfo 页面赋值
       updateTempApiDetailInfo(obj){
-        this.tempApiDetailInfo.step = obj.step;
-        this.tempApiDetailInfo.urlAddress = obj.urlAddress;
-        this.tempApiDetailInfo.apiType = obj.apiType;
-        this.tempApiDetailInfo.postWay = obj.postWay;
+          this.tempApiDetailInfo = JSON.stringify(obj);
+          this.tempApiDetailInfo = JSON.parse(this.tempApiDetailInfo);
+//        this.tempApiDetailInfo.step = obj.step;
+//        this.tempApiDetailInfo.urlAddress = obj.urlAddress;
+//        this.tempApiDetailInfo.apiType = obj.apiType;
+//        this.tempApiDetailInfo.postWay = obj.postWay;
 
         //消息体
-        if(obj.requestBody !== null){
-          this.tempApiDetailInfo.requestBody = JSON.parse(obj.requestBody);
+        if(this.tempApiDetailInfo.requestBody){
+            console.log('消息体不为空')
+//          this.tempApiDetailInfo.requestBody = JSON.parse(this.tempApiDetailInfo.requestBody);
         }
         //预期结果
-        if(obj.responseBody !== null){
-          this.tempApiDetailInfo.responseBody = JSON.parse(obj.responseBody);
+        if(this.tempApiDetailInfo.responseBody){
+          console.log('预期结果不为空')
+//          this.tempApiDetailInfo.responseBody = JSON.parse(this.tempApiDetailInfo.responseBody);
         }
         //自定义变量
-        if (obj.variables !== 'undefined' && obj.variables !== null) {
-          this.tempApiDetailInfo.variables = obj.variables;
+        if (this.tempApiDetailInfo.variables === undefined  ||this.tempApiDetailInfo.variables === null) {
+          console.log('自定义变量为空')
+          this.tempApiDetailInfo.variables = [
+              {
+                  "varName": "1",
+                  "varValue": "1"
+              }
+          ]
         }
         //消息头
-        if (obj.requestHead !== 'undefined' && obj.requestHead !== null) {
-          this.tempApiDetailInfo.requestHead = obj.requestHead;
+        if (this.tempApiDetailInfo.requestHead === undefined || this.tempApiDetailInfo.requestHead === null) {
+          console.log('消息头为空')
+            this.tempApiDetailInfo.requestHead = [
+              {
+                  "Key": "1",
+                  "Value": "1"
+              }
+          ]
         }
         //响应消息头
-        if (obj.responseHead !== 'undefined' && obj.responseHead !== null) {
-          this.tempApiDetailInfo.responseHead = obj.responseHead;
+        if (this.tempApiDetailInfo.responseHead === undefined || this.tempApiDetailInfo.responseHead === null) {
+          console.log('响应消息头为空')
+            this.tempApiDetailInfo.responseHead = [
+              {
+                  "Key": "1",
+                  "Value": "1"
+              }
+          ]
         }
         //断言
-        if (obj.assertions !== 'undefined' && obj.assertions !== null) {
-          this.tempApiDetailInfo.assertions = obj.assertions;
+        if (this.tempApiDetailInfo.assertions === undefined || this.tempApiDetailInfo.assertions === null) {
+          console.log('断言为空')
+            this.tempApiDetailInfo.assertions = [
+              {
+                  "actualResult": "1",
+                  "comparator": "1",
+                  "expectResult":"1"
+              }
+          ]
         }
+        console.log(JSON.stringify(this.tempApiDetailInfo))
       },
 
       //确定按钮
@@ -352,11 +384,79 @@
         var ifResponseHeadNull = false;
         var ifAssertionsNull = false;
 
-//        判断步骤名称是否为空
-        if(tempThis.tempApiDetailInfo.step.trim() === ''){
+        //判断步骤名称是否为空
+        if(this.tempApiDetailInfo.step.replace(/ /g,'') === ''){
+          ifFill = false;
+        }
+        //判断API URL是否为空
+        if(this.tempApiDetailInfo.urlAddress.replace(/ /g,'') === ''){
+          ifFill = false;
+        }
+        //判断消息体是否为空
+        if(this.tempApiDetailInfo.requestBody === ''){
+          ifFill = false;
+        }
+        //判断预期结果是否为空
+        if(this.tempApiDetailInfo.responseBody === ''){
           ifFill = false;
         }
 
+        //判断 自定义变量 是否为空
+        if(this.tempApiDetailInfo.variables.length>1){
+          for(var i =0;i<this.tempApiDetailInfo.variables.length;i++){
+            if(this.tempApiDetailInfo.variables[i].varName.replace(/ /g,'') === '' || this.tempApiDetailInfo.variables[i].varValue.replace(/ /g,'') === ''){
+              ifFill = false;
+            }
+          }
+        }else if(this.tempApiDetailInfo.variables[i].varName.replace(/ /g,'') === '' && this.tempApiDetailInfo.variables[i].varValue.replace(/ /g,'') === ''){
+          ifVariablesNull = true;
+          console.log("自定义变量为空")
+        }else{
+          ifFill = false;
+        }
+
+        //判断 消息头 是否为空
+        if(this.tempApiDetailInfo.requestHead.length>1){
+          for(var i =0;i<this.tempApiDetailInfo.requestHead.length;i++){
+            if( this.tempApiDetailInfo.requestHead[i].Key.replace(/ /g,'') === '' || this.tempApiDetailInfo.requestHead[i].Value.replace(/ /g,'') === ''){
+              ifFill = false;
+            }
+          }
+        }else if(this.tempApiDetailInfo.requestHead[i].Key.replace(/ /g,'') === '' && this.tempApiDetailInfo.requestHead[i].Value.replace(/ /g,'') !== ''){
+          ifRequestHeadNull = true;
+          console.log("消息头为空")
+        }else{
+          ifFill = false;
+        }
+
+        //判断 响应消息头 是否为空
+        if(this.tempApiDetailInfo.responseHead.length>1){
+          for(var i =0;i<this.tempApiDetailInfo.responseHead.length;i++){
+            if(this.tempApiDetailInfo.responseHead[i].Key.replace(/ /g,'') === '' || this.tempApiDetailInfo.responseHead[i].Value.replace(/ /g,'') === ''){
+              ifFill = false;
+            }
+          }
+        }else if(this.tempApiDetailInfo.responseHead[i].Key.replace(/ /g,'') === '' && this.tempApiDetailInfo.responseHead[i].Value.replace(/ /g,'') !== ''){
+          ifResponseHeadNull = true;
+          console.log("响应消息头为空")
+        }else{
+          ifFill = false;
+        }
+
+
+        //判断 断言 是否为空
+        if(this.tempApiDetailInfo.assertions.length>1){
+          for(var i =0;i<this.tempApiDetailInfo.assertions.length;i++){
+            if( this.tempApiDetailInfo.assertions[i].actualResult.replace(/ /g,'') === '' || this.tempApiDetailInfo.assertions[i].comparator.replace(/ /g,'') === '' || this.tempApiDetailInfo.assertions[i].expectResult.replace(/ /g,'') === ''){
+              ifFill = false;
+            }
+          }
+        }else if(this.tempApiDetailInfo.assertions[i].actualResult.replace(/ /g,'') === '' && this.tempApiDetailInfo.assertions[i].comparator.replace(/ /g,'') === '' && this.tempApiDetailInfo.assertions[i].expectResult.replace(/ /g,'') === ''){
+          console.log("断言为空")
+          ifAssertionsNull = true;
+        }else{
+          ifFill = false;
+        }
 
 
         if(ifFill){
@@ -378,6 +478,7 @@
           console.log(obj)
           return obj;
         }else{
+
           this.$message.error('接口信息漏填');
           return false;
         }

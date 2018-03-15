@@ -1,29 +1,22 @@
 <template>
   <el-container  id="apiEdit">
-    <el-container >
       <el-main>
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4" >
-            <label>API目录名称:</label>
-          </el-col>
-          <el-col :span="16">
-            <el-input v-model="api.name"  placeholder="请输入接口目录名称"></el-input>
-          </el-col>
-        </el-row>
+        <div style="padding-bottom: 60px;">
+          <div style="width:80%;text-align: left">
+            <el-form   ref="api"  :label-position="labelPosition"  label-width="100px" :model="api">
+              <el-form-item label="目录名称:" prop="name" :rules="[{ required: true, trigger: 'blur',message: 'API名称不能为空'} ]">
+                <el-input v-model="api.name" placeholder="请输入接口目录名称"></el-input>
+              </el-form-item>
 
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4">
-            <label>API目录描述:</label>
-          </el-col>
-          <el-col :span="16">
-            <el-input v-model="api.description" placeholder="请输入接口目录描述"></el-input>
-          </el-col>
-        </el-row>
+              <el-form-item label="目录描述:" prop="description" :rules="[{ required: false, trigger: 'blur'} ]">
+                <el-input v-model="api.description" placeholder="请输入接口目录描述"></el-input>
+              </el-form-item>
+
+            </el-form>
+          </div>
+        </div>
 
       </el-main>
-    </el-container>
     <el-footer style="text-align: right;">
       <el-button type="primary" @click="saveApi">确认</el-button>
       <el-button>取消</el-button>
@@ -37,6 +30,7 @@
     name: 'ApiDirNew',
     data () {
       return {
+        labelPosition:"right",
         api: {
           id: '',
           name: '',

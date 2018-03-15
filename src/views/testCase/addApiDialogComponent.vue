@@ -72,11 +72,28 @@
           isLeaf: 'type',
           children: 'children'
         },
+        tempApi:{
+           id:'',
+           testCase:{},
+           interfaceId:'',
+            apiType: '0',
+            postWay: '1',
+           orderNo:'',
+           step:'',
+           name:'',
+           branch:'',
+           system:'',
+           urlAddress:'',
+           variables:'',
+           requestHead:'',
+           requestBody:'',
+           responseHead:'',
+           responseBody:'',
+           assertions:''
+        },
         tempApis:[]
       }
     },
-
-
 
   created(){
       this.tempApis = this.selectedApis.concat()
@@ -169,6 +186,18 @@
         var data = node.data;
 
         if(node.data.type){
+          tempApis.testCase = data.testCase;
+          tempApis.interfaceId = data.id;
+          tempApis.name = data.name;
+          tempApis.branch = data.branch;
+          tempApis.system = data.system;
+          tempApis.urlAddress = data.urlAddress;
+          tempApis.requestHead = data.requestHead;
+          tempApis.requestBody = data.requestBody;
+          tempApis.responseHead = data.responseHead;
+          tempApis.responseBody  = data.responseBody;
+          tempApis.apiType = data.apiType;
+          tempApis.postWay = data.postWay;
           this.tempApis.push(data);
         }else{
           this.$message({

@@ -1,84 +1,54 @@
 <template>
   <el-container id="apiEdit">
-    <el-container >
       <el-main>
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4" >
-            <label>API名称:</label>
-          </el-col>
-          <el-col :span="16">
-            <el-input v-model="api.name"  placeholder="请输入接口名称"></el-input>
-          </el-col>
-        </el-row>
+        <div style="padding-bottom: 60px;">
+          <div style="width:80%;text-align: left">
+            <el-form   ref="api"  :label-position="labelPosition"  label-width="100px" :model="api">
+              <el-form-item label="API名称:" prop="name" :rules="[{ required: true, trigger: 'blur',message: 'API名称不能为空'} ]">
+                <el-input v-model="api.name" placeholder="请输入用例名称"></el-input>
+              </el-form-item>
 
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4">
-            <label>API URL:</label>
-          </el-col>
-          <el-col :span="16">
-            <el-input v-model="api.urlAddress" placeholder="请输入接口URL"></el-input>
-          </el-col>
-        </el-row>
+              <el-form-item label="API URL:" prop="urlAddress" :rules="[{ required: true, trigger: 'blur',message: 'API URL不能为空'} ]">
+                <el-input v-model="api.urlAddress" placeholder="请输入接口URL"></el-input>
+              </el-form-item>
 
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4">
-            <label>API分支:</label>
-          </el-col>
-          <el-col :span="16">
-            <el-input v-model="api.branch" placeholder="请输入接口分支"></el-input>
-          </el-col>
-        </el-row>
+              <el-form-item label="API分支:" prop="branch" :rules="[{ required: true, trigger: 'blur',message: '接口分支不能为空'} ]">
+                <el-input v-model="api.branch" placeholder="请输入接口分支"></el-input>
+              </el-form-item>
 
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4">
-            <label>API模块:</label>
-          </el-col>
-          <el-col :span="16">
-            <el-input v-model="api.module" placeholder="请输入接口模块"></el-input>
-          </el-col>
-        </el-row>
+              <el-form-item label="API模块:" prop="module" :rules="[{ required: true, trigger: 'blur',message: '接口模块不能为空'} ]">
+                <el-input v-model="api.module" placeholder="请输入接口模块"></el-input>
+              </el-form-item>
 
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4">
-            <label>系统:</label>
-          </el-col>
-          <el-col :span="16">
-            <el-select v-model="api.system" placeholder="请选择">
-              <el-option
-                v-for="item in apiSystems"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-        </el-row>
+              <el-form-item label="API系统:" prop="system" :rules="[{ required: true, trigger: 'blur',message: '接口系统不能为空'} ]">
+                <el-select v-model="api.system" placeholder="请选择">
+                  <el-option
+                    v-for="item in apiSystems"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
 
+              <el-form-item label="API协议:" prop="apiType" :rules="[{ required: true, trigger: 'blur',message: '接口协议不能为空'} ]">
+                <el-col :span="10">
+                  <el-radio v-model="api.apiType" label="0">Http</el-radio>
+                  <el-radio v-model="api.apiType" label="1">Https</el-radio>
+                  <el-radio v-model="api.apiType" label="2">MQ</el-radio>
+                </el-col>
+                <el-col :span="4">
+                  <el-select v-model="api.postWay" v-if="api.apiType!=2" placeholder="请选择">
+                    <el-option label="Get" value="0"></el-option>
+                    <el-option label="Post" value="1"></el-option>
+                  </el-select>
+                </el-col>
+              </el-form-item>
 
-        <el-row>
-          <el-col :span="2"></el-col>
-          <el-col :span="4" >
-            <label>API协议:</label>
-          </el-col>
-          <el-col :span="10">
-            <el-radio v-model="api.apiType" label="0">Http</el-radio>
-            <el-radio v-model="api.apiType" label="1">Https</el-radio>
-            <el-radio v-model="api.apiType" label="2">MQ</el-radio>
-          </el-col>
-          <el-col :span="4">
-            <el-select v-model="api.postWay" v-if="api.apiType!=2" placeholder="请选择">
-              <el-option label="Get" value="0"></el-option>
-              <el-option label="Post" value="1"></el-option>
-            </el-select>
-          </el-col>
-        </el-row>
+            </el-form>
+          </div>
 
-        <el-row v-if="api.apiType!=2">
+        <el-row v-if="api.apiType!=2" style="padding-left: 30px">
           <el-col :span="2"></el-col>
           <el-col :span="22" >
             <el-tabs v-model="activeName" @tab-click="handleClick" >
@@ -265,8 +235,8 @@
             </el-col>
           </el-row>
         </el-row>
+        </div>
       </el-main>
-    </el-container>
     <el-footer style="text-align: right;">
       <el-button :plain="true" type="primary" @click="saveApi">确认</el-button>
       <el-button>取消</el-button>
@@ -283,9 +253,10 @@
     name: 'ApiNew',
     data () {
       return {
-        showSuccessAlert: false,
-        showErrorAlert: false,
-        alertErrorTitle: '',
+        labelPosition:"right",
+//        showSuccessAlert: false,
+//        showErrorAlert: false,
+//        alertErrorTitle: '',
         requestBodyRowType: 'Text',
         api: {
           id: '',

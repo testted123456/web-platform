@@ -186,19 +186,19 @@
         var data = node.data;
 
         if(node.data.type){
-          this.tempApis.testCase = data.testCase;
-          this.tempApis.interfaceId = data.id;
-          this.tempApis.name = data.name;
-          this.tempApis.branch = data.branch;
-          this.tempApis.system = data.system;
-          this.tempApis.urlAddress = data.urlAddress;
-          this.tempApis.requestHead = data.requestHead;
-          this.tempApis.requestBody = data.requestBody;
-          this.tempApis.responseHead = data.responseHead;
-          this.tempApis.responseBody  = data.responseBody;
-          this.tempApis.apiType = data.apiType;
-          this.tempApis.postWay = data.postWay;
-          this.tempApis.push(data);
+          this.tempApi.testCase = data.testCase;
+          this.tempApi.interfaceId = data.id;
+          this.tempApi.name = data.name;
+          this.tempApi.branch = data.branch;
+          this.tempApi.system = data.system;
+          this.tempApi.urlAddress = data.urlAddress;
+          this.tempApi.requestHead = data.requestHead;
+          this.tempApi.requestBody = data.requestBody;
+          this.tempApi.responseHead = data.responseHead;
+          this.tempApi.responseBody  = data.responseBody;
+          this.tempApi.apiType = data.apiType;
+          this.tempApi.postWay = data.postWay;
+          this.tempApi.push(this.tempApi);
         }else{
           this.$message({
             message: '文件夹不能添加',

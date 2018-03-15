@@ -131,6 +131,8 @@
 
           }, function (res) {
           });
+
+
         }
       },
       handleRightClick(data, node, instance, x, y){ //右键接口树

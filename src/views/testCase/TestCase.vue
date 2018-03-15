@@ -37,11 +37,11 @@
                 <div class="pd12">
                   <el-button type="text" @click="addApiClick">添加接口</el-button>
                 </div>
+                <!--<div class="pd12">-->
+                  <!--<el-button type="text" @click="intellQueryClick">动态库查询</el-button>-->
+                <!--</div>-->
                 <div class="pd12">
-                  <el-button type="text" @click="intellQueryClick">动态库查询</el-button>
-                </div>
-                <div class="pd12">
-                  <el-button type="text" @click="apiInfoCheck">校验</el-button>
+                  <el-button type="text" @click="apiInfoCheck" v-if="executeBtnShow">校验</el-button>
                 </div>
                 <div class="pd12">
                   <el-button  type="text" @click="pastApi">粘贴接口</el-button>
@@ -64,7 +64,7 @@
             </el-table-column>
 
             <el-table-column
-              prop="name"
+              prop="testCase.name"
               label="接口名称"
               align="left"
             >
@@ -175,13 +175,12 @@
   import intellCheckDialogComponent from '@/views/testCase/intellCheckDialogComponent.vue';
   import editApiDialogComponent from '@/views/testCase/editApiDialogComponent.vue';
   import searchApiDialogComponent from '@/views/testCase/searchApiDialogComponent.vue';
-  import apisInfoCheckComponent from '@/views/testCase/apisInfoCheckComponent.vue';
   import {moveup, movedown} from  "@/assets/js/tableRowMove.js";
   import marked from 'marked';
   import {lodash} from 'lodash';
 
   export default {
-    components: {editApiDialogComponent, addApiDialogComponent, intellCheckDialogComponent,searchApiDialogComponent,apisInfoCheckComponent},
+    components: {editApiDialogComponent, addApiDialogComponent, intellCheckDialogComponent,searchApiDialogComponent},
 
     name: 'TestCase',
 
@@ -193,6 +192,18 @@
         excResult: '',
         enviornment:[],
         testCase: {
+          caseType:false,
+          createdBy:null,
+          createdTime:null,
+          description:null,
+          env:'',
+          id:0,
+          name:'',
+          optstatus:0,
+          pId:0,
+          projectName:null,
+          updatedBy:null,
+          updatedTime:null,
           type:true
         },
         copyIndex:0,
@@ -209,7 +220,7 @@
           title: '',
           visible:false,
           footerVisible:true,
-          contentType:0, // 1=添加接口，2=动态库查询，3=编辑接口,4=删除接口,5=搜索接口
+          contentType:0, // 1=添加接口，2=动态库查询，3=编辑接口,4=删除接口,5=搜索接口,6=校验接口,7=执行
           width:'60%',
           extend:{}   // 扩展字段
         },
@@ -335,28 +346,38 @@
       // ------- 按钮事件  -------
       /*弹框确定*/
       dialogDone() {
-        this.dialog.visible = false;
+
         switch (this.dialog.contentType) {
-          case 1: {
+          case 1: {   //1=添加接口
             this.apisInCase = this.$refs.apiSelectView.getApis();
             console.log(this.apisInCase)
+            this.dialog.visible = false;
           }
             break;
-          case 3: {
+          case 2: { //2=动态库查询
+            this.dialog.visible = false;
+          }
+            break;
+          case 3: { //3=编辑接口
             var data = this.$refs.editApiDetailInfo.saveApiDetailInfo()
             var index = this.dialog.extend.index;
             if(data){
               this.$set(this.apisInCase, index, data)
+              this.dialog.visible = false;
+            }else{
+
             }
 
           }
             break;
-          case 4: {
+          case 4: { //4=删除接口
+            this.dialog.visible = false;
             this.apisInCase.splice(this.removeApiIndex, 1)
 
           }
             break;
-          case 5: {
+          case 5: { //5=搜索接口
+            this.dialog.visible = false;
             var data = this.dialog.extend.data;
             var index = this.dialog.extend.index;
             var partData = this.$refs.searchApiDetailInfo.rewrite();
@@ -374,8 +395,12 @@
 
           }
             break;
-          case 7: {
-
+          case 6: { //6=校验接口
+            this.dialog.visible = false;
+          }
+            break;
+          case 7: { //7=执行
+            this.dialog.visible = false;
           }
             break;
           default:
@@ -450,14 +475,15 @@
       },
       /*校验*/
       apiInfoCheck() {
-        this.dialog = {
-          title: '校验接口',
-          visible: true,
-          footerVisible: false,
-          contentType: 6,
-          width: '60%',
-          extend: {}
-        }
+        window.open(this.address+'apisInfoCheck?testCaseId='+this.$route.query.id)
+     //   this.dialog = {
+//          title: '校验接口',
+//          visible: true,
+//          footerVisible: false,
+//          contentType: 6,
+//          width: '90%',
+//          extend: {}
+//        }
       },
       /*接口编辑*/
       apiEdit(data, index) {
@@ -625,7 +651,7 @@
                     }
                     console.log(this.apisInCase);
                     // 请求接口
-                    this.$http.post(this.testCaseServer+"testCase/updateCaseInterfaces",this.apisInCase).then(function (res) {
+                    this.$http.post(this.testCaseServer+"testCaseInterface/updateCaseInterfaces",this.apisInCase).then(function (res) {
                       if(res.data.code === 10000){
                         this.$message({
                           message: '恭喜你，更新用例成功',
@@ -636,6 +662,8 @@
                         //存数据  树节点刷新
                         this.$store.commit('changeTestCaseStatus', 1);
                         this.$store.commit('setNewTestCase', this.testCase);
+                      }else{
+                        this.$message.error('抱歉，更新用例失败：' + res.data.msg);
                       }
                     },function (res) {
                       this.$message.error('抱歉，更新用例失败：' + res.data.msg);
@@ -649,7 +677,7 @@
                     this.$store.commit('setNewTestCase', this.testCase);
                   }
                 }else{
-                  this.$message.error('抱歉，新增用例失败：' + res.data.msg);
+                  this.$message.error('抱歉，更新用例失败：' + res.data.msg);
                 }
               },function (res) {
                 this.$message.error('服务器请求失败！');

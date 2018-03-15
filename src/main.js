@@ -17,7 +17,7 @@ Vue.prototype.ApiCopyId = 0;
 Vue.prototype.ApiCopyData = {};
 Vue.prototype.apiServer = 'http://192.168.32.49:8082/inter/';
 Vue.prototype.testCaseServer = 'http://192.168.32.49:8083/case/';
-
+Vue.prototype.address = 'http://localhost:8080/#/';
 new Vue({
   el: '#app',
   router,

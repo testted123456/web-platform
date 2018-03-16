@@ -220,6 +220,10 @@
         'apiInCaseTab': 'variables',
         'comparisonOperator':[
           {
+            'label':'请选择',
+            'value':''
+          },
+          {
             'label':'=',
             'value':'='
           },
@@ -450,11 +454,11 @@
         //判断 断言 是否为空
         if(this.tempApiDetailInfo.assertions.length>1){
           for(var i =0;i<this.tempApiDetailInfo.assertions.length;i++){
-            if( this.tempApiDetailInfo.assertions[i].actualResult.replace(/ /g,'') === '' || this.tempApiDetailInfo.assertions[i].comparator.replace(/ /g,'') === '' || this.tempApiDetailInfo.assertions[i].expectResult.replace(/ /g,'') === ''){
+            if( this.tempApiDetailInfo.assertions[i].actualResult.replace(/ /g,'') === '' || this.tempApiDetailInfo.assertions[i].comparator.replace(/ /g,'') === '' || this.tempApiDetailInfo.assertions[0].expectResult.replace(/ /g,'') === ''){
               ifFill = false;
             }
           }
-        }else if(this.tempApiDetailInfo.assertions[0].actualResult.replace(/ /g,'') === '' && this.tempApiDetailInfo.assertions[0].comparator.replace(/ /g,'') === '' && this.tempApiDetailInfo.assertions[i].expectResult.replace(/ /g,'') === ''){
+        }else if(this.tempApiDetailInfo.assertions[0].actualResult.replace(/ /g,'') === '' && this.tempApiDetailInfo.assertions[0].comparator.replace(/ /g,'') === '' && this.tempApiDetailInfo.assertions[0].expectResult.replace(/ /g,'') === ''){
           console.log("断言为空")
           ifAssertionsNull = true;
         }else{

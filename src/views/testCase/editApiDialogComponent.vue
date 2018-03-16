@@ -330,7 +330,7 @@
         }
         //预期结果
         if(this.tempApiDetailInfo.responseBody){
-          console.log('预期结果不为空')
+          console.log('预期结果不为空')    
           this.tempApiDetailInfo.responseBody = formatJson(this.tempApiDetailInfo.responseBody);
         }
         //自定义变量

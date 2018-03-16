@@ -29,7 +29,7 @@
             :data="tempApis"
             style="width: 100%; margin-top: 2px">
             <el-table-column
-              prop="name"
+              prop="testCase.name"
               label="接口名称">
             </el-table-column>
             <el-table-column

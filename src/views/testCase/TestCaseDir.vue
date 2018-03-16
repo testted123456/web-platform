@@ -47,7 +47,7 @@
     methods: {
       getData(){
         var caseDirID = this.$route.query.id;
-        if(caseDirID === 0){
+        if(caseDirID == 0){
             this.testCaseDirInfo= {
                 id: '',
                 name: '',

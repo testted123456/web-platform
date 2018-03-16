@@ -310,9 +310,6 @@
       isJson,
       handleClick(tab, event){
       },
-      trim(str){ //删除左右两端的空格
-        return str.replace(/(^\s*)|(\s*$)/g,"");
-      },
       //动态库查询 点击跳转新页面
       intellCheck(){
         window.open('https://www.baidu.com')
@@ -322,6 +319,19 @@
       updateTempApiDetailInfo(obj){
           this.tempApiDetailInfo = JSON.stringify(obj);
           this.tempApiDetailInfo = JSON.parse(this.tempApiDetailInfo);
+          if(this.tempApiDetailInfo.apiType == 0){
+            this.tempApiDetailInfo.apiType = 'Http'
+          }else if(this.tempApiDetailInfo.apiType == 1){
+            this.tempApiDetailInfo.apiType = 'Https'
+          }else if(this.tempApiDetailInfo.apiType === 2){
+            this.tempApiDetailInfo.apiType = 'MQ'
+          }
+
+        if(this.tempApiDetailInfo.postWay == 0){
+          this.tempApiDetailInfo.postWay = 'get'
+        }else if(this.tempApiDetailInfo.postWay == 1){
+          this.tempApiDetailInfo.postWay = 'post'
+        }
 //        this.tempApiDetailInfo.step = obj.step;
 //        this.tempApiDetailInfo.urlAddress = obj.urlAddress;
 //        this.tempApiDetailInfo.apiType = obj.apiType;
@@ -390,63 +400,69 @@
         var ifRequestHeadNull = false;
         var ifResponseHeadNull = false;
         var ifAssertionsNull = false;
+        var ifResponseBodyNull = false;
+        var ifRequestBodyNull = false;
 
         //判断步骤名称是否为空
-        if(this.tempApiDetailInfo.step.replace(/(^\s*)|(\s*$)/g, "") === ''){
+        if(this.tempApiDetailInfo.step.trim() === ''){
           ifFill = false;
         }
         //判断API URL是否为空
-        if(this.tempApiDetailInfo.urlAddress.replace(/ /g,'') === ''){
+        if(this.tempApiDetailInfo.urlAddress.trim() === ''){
           ifFill = false;
         }
         //判断消息体是否为空
-        if(this.tempApiDetailInfo.requestBody === ''){
-          ifFill = false;
+        if(this.tempApiDetailInfo.requestBody === null){
+          ifRequestBodyNull = true;
+        }else if(this.tempApiDetailInfo.requestBody.trim() === ''){
+          ifRequestBodyNull = true;
         }
         //判断预期结果是否为空
-        if(this.tempApiDetailInfo.responseBody === ''){
-          ifFill = false;
+        if(this.tempApiDetailInfo.responseBody === null){
+          ifResponseBodyNull = true;
+        }else if(this.tempApiDetailInfo.responseBody.trim() === ''){
+          ifResponseBodyNull = true;
         }
 
         //判断 自定义变量 是否为空
         if(this.tempApiDetailInfo.variables.length>1){
           for(var i =0;i<this.tempApiDetailInfo.variables.length;i++){
-            if(this.tempApiDetailInfo.variables[i].varName.replace(/ /g,'') === '' || this.tempApiDetailInfo.variables[i].varValue.replace(/ /g,'') === ''){
+            if(this.tempApiDetailInfo.variables[i].varName.trim() === '' || this.tempApiDetailInfo.variables[i].varValue.trim() === ''){
               ifFill = false;
             }
           }
-        }else if(this.tempApiDetailInfo.variables[0].varName.replace(/ /g,'') === '' && this.tempApiDetailInfo.variables[0].varValue.replace(/ /g,'') === ''){
+        }else if(this.tempApiDetailInfo.variables[0].varName.trim() === '' && this.tempApiDetailInfo.variables[0].varValue.trim() === ''){
           ifVariablesNull = true;
           console.log("自定义变量为空")
-        }else if(this.tempApiDetailInfo.variables[0].varName.replace(/ /g,'') === '' || this.tempApiDetailInfo.variables[0].varValue.replace(/ /g,'') === ''){
+        }else if(this.tempApiDetailInfo.variables[0].varName.trim() === '' || this.tempApiDetailInfo.variables[0].varValue.trim() === ''){
           ifFill = false;
         }
 
         //判断 消息头 是否为空
         if(this.tempApiDetailInfo.requestHead.length>1){
           for(var i =0;i<this.tempApiDetailInfo.requestHead.length;i++){
-            if( this.tempApiDetailInfo.requestHead[i].Key.replace(/ /g,'') === '' || this.tempApiDetailInfo.requestHead[i].Value.replace(/ /g,'') === ''){
+            if( this.tempApiDetailInfo.requestHead[i].Key.trim() === '' || this.tempApiDetailInfo.requestHead[i].Value.trim() === ''){
               ifFill = false;
             }
           }
-        }else if(this.tempApiDetailInfo.requestHead[0].Key.replace(/ /g,'') === '' && this.tempApiDetailInfo.requestHead[0].Value.replace(/ /g,'') === ''){
+        }else if(this.tempApiDetailInfo.requestHead[0].Key.trim() === '' && this.tempApiDetailInfo.requestHead[0].Value.trim() === ''){
           ifRequestHeadNull = true;
           console.log("消息头为空")
-        }else if(this.tempApiDetailInfo.requestHead[0].Key.replace(/ /g,'') === '' || this.tempApiDetailInfo.requestHead[0].Value.replace(/ /g,'') === ''){
+        }else if(this.tempApiDetailInfo.requestHead[0].Key.trim() === '' || this.tempApiDetailInfo.requestHead[0].Value.trim() === ''){
           ifFill = false;
         }
 
         //判断 响应消息头 是否为空
         if(this.tempApiDetailInfo.responseHead.length>1){
           for(var i =0;i<this.tempApiDetailInfo.responseHead.length;i++){
-            if(this.tempApiDetailInfo.responseHead[i].Key.replace(/ /g,'') === '' || this.tempApiDetailInfo.responseHead[i].Value.replace(/ /g,'') === ''){
+            if(this.tempApiDetailInfo.responseHead[i].Key.trim() === '' || this.tempApiDetailInfo.responseHead[i].Value.trim() === ''){
               ifFill = false;
             }
           }
-        }else if(this.tempApiDetailInfo.responseHead[0].Key.replace(/ /g,'') === '' && this.tempApiDetailInfo.responseHead[0].Value.replace(/ /g,'') === ''){
+        }else if(this.tempApiDetailInfo.responseHead[0].Key.trim() === '' && this.tempApiDetailInfo.responseHead[0].Value.trim() === ''){
           ifResponseHeadNull = true;
           console.log("响应消息头为空")
-        }else if(this.tempApiDetailInfo.responseHead[0].Key.replace(/ /g,'') === '' || this.tempApiDetailInfo.responseHead[0].Value.replace(/ /g,'') === ''){
+        }else if(this.tempApiDetailInfo.responseHead[0].Key.trim() === '' || this.tempApiDetailInfo.responseHead[0].Value.trim() === ''){
           ifFill = false;
         }
 
@@ -454,14 +470,14 @@
         //判断 断言 是否为空
         if(this.tempApiDetailInfo.assertions.length>1){
           for(var i =0;i<this.tempApiDetailInfo.assertions.length;i++){
-            if( this.tempApiDetailInfo.assertions[i].actualResult.replace(/ /g,'') === '' || this.tempApiDetailInfo.assertions[i].comparator.replace(/ /g,'') === '' || this.tempApiDetailInfo.assertions[0].expectResult.replace(/ /g,'') === ''){
+            if( this.tempApiDetailInfo.assertions[i].actualResult.trim() === '' || this.tempApiDetailInfo.assertions[i].comparator.trim() === '' || this.tempApiDetailInfo.assertions[0].expectResult.trim() === ''){
               ifFill = false;
             }
           }
-        }else if(this.tempApiDetailInfo.assertions[0].actualResult.replace(/ /g,'') === '' && this.tempApiDetailInfo.assertions[0].comparator.replace(/ /g,'') === '' && this.tempApiDetailInfo.assertions[0].expectResult.replace(/ /g,'') === ''){
+        }else if(this.tempApiDetailInfo.assertions[0].actualResult.trim() === '' && this.tempApiDetailInfo.assertions[0].comparator.trim() === '' && this.tempApiDetailInfo.assertions[0].expectResult.trim() === ''){
           console.log("断言为空")
           ifAssertionsNull = true;
-        }else if(this.tempApiDetailInfo.assertions[0].actualResult.replace(/ /g,'') === '' || this.tempApiDetailInfo.assertions[0].comparator.replace(/ /g,'') === '' || this.tempApiDetailInfo.assertions[0].expectResult.replace(/ /g,'') === ''){
+        }else if(this.tempApiDetailInfo.assertions[0].actualResult.trim() === '' || this.tempApiDetailInfo.assertions[0].comparator.trim() === '' || this.tempApiDetailInfo.assertions[0].expectResult.trim() === ''){
           ifFill = false;
         }
 
@@ -481,6 +497,12 @@
           }
           if(ifAssertionsNull){
             obj.assertions = null
+          }
+          if(ifRequestBodyNull){
+            obj.requestBody = null
+          }
+          if(ifResponseBodyNull){
+            obj.responseBody = null
           }
           console.log(obj)
           return obj;

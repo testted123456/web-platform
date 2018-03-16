@@ -339,7 +339,7 @@
           this.tempApiDetailInfo.variables = [
               {
                   "varName": "",
-                  "varValue":
+                  "varValue":""
               }
           ]
         }

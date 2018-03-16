@@ -330,7 +330,7 @@
         }
         //预期结果
         if(this.tempApiDetailInfo.responseBody){
-          console.log('预期结果不为空')    
+          console.log('预期结果不为空')
           this.tempApiDetailInfo.responseBody = formatJson(this.tempApiDetailInfo.responseBody);
         }
         //自定义变量
@@ -338,8 +338,8 @@
           console.log('自定义变量为空')
           this.tempApiDetailInfo.variables = [
               {
-                  "varName": "1",
-                  "varValue": "1"
+                  "varName": "",
+                  "varValue":
               }
           ]
         }
@@ -348,8 +348,8 @@
           console.log('消息头为空')
             this.tempApiDetailInfo.requestHead = [
               {
-                  "Key": "1",
-                  "Value": "1"
+                  "Key": "",
+                  "Value": ""
               }
           ]
         }
@@ -358,8 +358,8 @@
           console.log('响应消息头为空')
             this.tempApiDetailInfo.responseHead = [
               {
-                  "Key": "1",
-                  "Value": "1"
+                  "Key": "",
+                  "Value": ""
               }
           ]
         }
@@ -368,9 +368,9 @@
           console.log('断言为空')
             this.tempApiDetailInfo.assertions = [
               {
-                  "actualResult": "1",
-                  "comparator": "1",
-                  "expectResult":"1"
+                  "actualResult": "",
+                  "comparator": "",
+                  "expectResult":""
               }
           ]
         }

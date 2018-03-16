@@ -529,10 +529,10 @@
         this.excResult = '';
         var textArea_this = this;
         if ("WebSocket" in window) {
-          this.ws = new WebSocket("ws://192.168.32.105:8083/case/webSocket/123");
+          this.ws = new WebSocket("ws://192.168.32.49:8083/case/webSocket/123");
 //          this.ws = new Object();
           this.ws.onopen = function () {
-            this.$http.get(this.testCaseServer+"testCase/execute?id="+this.$route.query.id).then(function (res) {
+            textArea_this.$http.get(textArea_this.testCaseServer+"testCase/execute?id="+textArea_this.$route.query.id).then(function (res) {
               if(res.data.code === 10000){
                 console.log("传送caseId成功")
               }

@@ -310,9 +310,6 @@
       isJson,
       handleClick(tab, event){
       },
-      trim(str){ //删除左右两端的空格
-        return str.replace(/(^\s*)|(\s*$)/g,"");
-      },
       //动态库查询 点击跳转新页面
       intellCheck(){
         window.open('https://www.baidu.com')

@@ -313,16 +313,13 @@
               this.api.responseHead = [{Key: '', Value: ''}];
             }
 
-            if(tab.label === 'Req Body'){
-              if(isJson(this.api.requestBody)){
-                this.api.requestBody = formatJson(this.api.requestBody)
-              }
+            if(isJson(this.api.requestBody)){
+              this.api.requestBody = formatJson(this.api.requestBody)
             }
 
-            if(tab.label === 'Res Body'){
-              if(isJson(this.api.responseBody)){
-                this.api.responseBody = formatJson(this.api.responseBody)
-              }
+
+            if(isJson(this.api.responseBody)){
+              this.api.responseBody = formatJson(this.api.responseBody)
             }
           }
         },function (res) {

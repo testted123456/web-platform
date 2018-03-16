@@ -8,7 +8,7 @@ var formatJson =function (jsonStr) {
 
 //判断字符串是否为json
 var isJson = function(text){
-  if(text == 'null' || text == ''){
+  if(text == null || text == 'null' || text == ''){
     return false;
   }
   try{

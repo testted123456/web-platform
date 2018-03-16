@@ -13,16 +13,15 @@
             label="名称" align="center">
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="currentBranch"
             label="当前分支" align="center">
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="lastBranch"
             label="最新分支" align="center">
             <template slot-scope="scope">
 
-              <!--<div v-for="item in scope.row.name" >{{item}}</div>-->
-              <!--<div>{{scope.row.name}}</div>-->
+              <div v-for="item in scope.row.lastBranch" ><a href="javascript:;" @click="getCheckInfo(item.id,item.branch)">{{item.system}}</a></div>
 
             </template>
           </el-table-column>

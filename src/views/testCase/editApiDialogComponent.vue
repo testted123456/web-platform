@@ -326,12 +326,12 @@
         //消息体
         if(this.tempApiDetailInfo.requestBody){
             console.log('消息体不为空')
-          this.tempApiDetailInfo.requestBody = JSON.parse(this.tempApiDetailInfo.requestBody);
+          this.tempApiDetailInfo.requestBody = formatJson(this.tempApiDetailInfo.requestBody);
         }
         //预期结果
         if(this.tempApiDetailInfo.responseBody){
           console.log('预期结果不为空')
-//          this.tempApiDetailInfo.responseBody = JSON.parse(this.tempApiDetailInfo.responseBody);
+          this.tempApiDetailInfo.responseBody = formatJson(this.tempApiDetailInfo.responseBody);
         }
         //自定义变量
         if (this.tempApiDetailInfo.variables === undefined  ||this.tempApiDetailInfo.variables === null) {

@@ -23,10 +23,10 @@
             <label>API方法:</label>
           </el-col>
           <el-col :span="3">
-            <label>{{tempApiDetailInfo.api_type}}</label>
+            <label>{{tempApiDetailInfo.apiType}}</label>
           </el-col>
           <el-col :span="3">
-            <label>{{tempApiDetailInfo.post_way}}</label>
+            <label>{{tempApiDetailInfo.postWay}}</label>
           </el-col>
           <el-col :span="3">
             <el-button type="text" @click="intellCheck">动态库查询</el-button>
@@ -264,8 +264,8 @@
 
           step:'',
           urlAddress:'',
-          api_type:'',
-          post_way:'',
+          apiType:'',
+          postWay:'',
           variables:[
             {
               "varName": "",
@@ -322,18 +322,18 @@
       updateTempApiDetailInfo(obj){
           this.tempApiDetailInfo = JSON.stringify(obj);
           this.tempApiDetailInfo = JSON.parse(this.tempApiDetailInfo);
-          if(this.tempApiDetailInfo.api_type == 0){
-            this.tempApiDetailInfo.api_type = 'Http'
-          }else if(this.tempApiDetailInfo.api_type == 1){
-            this.tempApiDetailInfo.api_type = 'Https'
-          }else if(this.tempApiDetailInfo.api_type === 2){
-            this.tempApiDetailInfo.api_type = 'MQ'
+          if(this.tempApiDetailInfo.apiType == 0){
+            this.tempApiDetailInfo.apiType = 'Http'
+          }else if(this.tempApiDetailInfo.apiType == 1){
+            this.tempApiDetailInfo.apiType = 'Https'
+          }else if(this.tempApiDetailInfo.apiType === 2){
+            this.tempApiDetailInfo.apiType = 'MQ'
           }
 
-        if(this.tempApiDetailInfo.post_way == 0){
-          this.tempApiDetailInfo.api_type = 'get'
-        }else if(this.tempApiDetailInfo.post_way == 1){
-          this.tempApiDetailInfo.api_type = 'post'
+        if(this.tempApiDetailInfo.postWay == 0){
+          this.tempApiDetailInfo.postWay = 'get'
+        }else if(this.tempApiDetailInfo.postWay == 1){
+          this.tempApiDetailInfo.postWay = 'post'
         }
 //        this.tempApiDetailInfo.step = obj.step;
 //        this.tempApiDetailInfo.urlAddress = obj.urlAddress;
@@ -418,13 +418,13 @@
         if(this.tempApiDetailInfo.requestBody === null){
           ifRequestBodyNull = true;
         }else if(this.tempApiDetailInfo.requestBody.trim() === ''){
-          ifFill = false;
+          ifRequestBodyNull = true;
         }
         //判断预期结果是否为空
         if(this.tempApiDetailInfo.responseBody === null){
           ifResponseBodyNull = true;
         }else if(this.tempApiDetailInfo.responseBody.trim() === ''){
-          ifFill = false;
+          ifResponseBodyNull = true;
         }
 
         //判断 自定义变量 是否为空

@@ -129,6 +129,7 @@
         :visible.sync="dialog.visible"
         :width="dialog.width"
         :before-close="handleClose"
+
       >
         <!--搜索弹窗-->
         <search-api-dialog-component ref="searchApiDetailInfo" v-if="dialog.contentType === 5" ></search-api-dialog-component>

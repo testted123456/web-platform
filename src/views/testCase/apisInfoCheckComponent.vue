@@ -38,91 +38,93 @@
         </div>
       </el-col>
     </el-row>
-    <el-row>
-      <div id="separate" style="width:100%;height:1;border-bottom:1px solid #ccc;margin:40px 0;"></div>
-      <p style="text-align: center;font-size:16px;font-weight:bolder;padding:10px 0;">已选接口对比信息<p/>
-      <div style="">
-        <el-row :gutter="20">
-          <el-col :span="3"><div class="grid-content font-blod"></div></el-col>
-          <el-col :span="7"><div class="grid-content font-blod font-center">最新分支</div></el-col>
-          <el-col :span="7"><div class="grid-content font-blod font-center">当前分支</div></el-col>
-          <el-col :span="7"><div class="grid-content font-blod font-center">对比结果</div></el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="3"><div class="grid-content font-center">接口请求</div></el-col>
-          <el-col :span="7">
-            <div class="grid-content">
-              <textarea class="json-box">{{jsonData.lastRequestBody}}</textarea>
-            </div>
-          </el-col>
-          <el-col :span="7">
-            <div class="grid-content">
-              <textarea class="json-box">{{jsonData.currentRequestBody}}</textarea>
-            </div>
-          </el-col>
-          <el-col :span="7">
-            <div class="grid-content">
-              <textarea class="json-box">{{jsonData.compareRequest}}</textarea>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="3"><div class="grid-content font-center">接口响应</div></el-col>
-          <el-col :span="7">
-            <div class="grid-content">
-              <textarea class="json-box">{{jsonData.lastResponseBody}}</textarea>
-            </div>
-          </el-col>
-          <el-col :span="7">
-            <div class="grid-content">
-              <textarea class="json-box">{{jsonData.currentResponseBody}}</textarea>
-            </div>
-          </el-col>
-          <el-col :span="7">
-            <div class="grid-content">
-              <textarea class="json-box">{{jsonData.compareApiResponse}}</textarea>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="3"><div class="grid-content font-center">实际请求</div></el-col>
-          <el-col :span="7">
-            <div class="grid-content">
-              <textarea class="json-box">{{jsonData.requestBody}}</textarea>
-            </div>
-          </el-col>
-          <el-col :span="7">
-            <div class="grid-content">
+    <div ref = "separate">
+        <el-row>
+            <div  style="width:100%;height:1;border-bottom:1px solid #ccc;margin:40px 0;"></div>
+            <p style="text-align: center;font-size:16px;font-weight:bolder;padding:10px 0;">已选接口对比信息<p/>
+            <div style="">
+                <el-row :gutter="20">
+                    <el-col :span="3"><div class="grid-content font-blod"></div></el-col>
+                    <el-col :span="7"><div class="grid-content font-blod font-center">最新分支</div></el-col>
+                    <el-col :span="7"><div class="grid-content font-blod font-center">当前分支</div></el-col>
+                    <el-col :span="7"><div class="grid-content font-blod font-center">对比结果</div></el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="3"><div class="grid-content font-center">接口请求</div></el-col>
+                    <el-col :span="7">
+                        <div class="grid-content">
+                            <textarea class="json-box">{{jsonData.lastRequestBody}}</textarea>
+                        </div>
+                    </el-col>
+                    <el-col :span="7">
+                        <div class="grid-content">
+                            <textarea class="json-box">{{jsonData.currentRequestBody}}</textarea>
+                        </div>
+                    </el-col>
+                    <el-col :span="7">
+                        <div class="grid-content">
+                            <textarea class="json-box">{{jsonData.compareRequest}}</textarea>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="3"><div class="grid-content font-center">接口响应</div></el-col>
+                    <el-col :span="7">
+                        <div class="grid-content">
+                            <textarea class="json-box">{{jsonData.lastResponseBody}}</textarea>
+                        </div>
+                    </el-col>
+                    <el-col :span="7">
+                        <div class="grid-content">
+                            <textarea class="json-box">{{jsonData.currentResponseBody}}</textarea>
+                        </div>
+                    </el-col>
+                    <el-col :span="7">
+                        <div class="grid-content">
+                            <textarea class="json-box">{{jsonData.compareApiResponse}}</textarea>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="3"><div class="grid-content font-center">实际请求</div></el-col>
+                    <el-col :span="7">
+                        <div class="grid-content">
+                            <textarea class="json-box">{{jsonData.requestBody}}</textarea>
+                        </div>
+                    </el-col>
+                    <el-col :span="7">
+                        <div class="grid-content">
 
-            </div>
-          </el-col>
-          <el-col :span="7">
-            <div class="grid-content">
-              <textarea class="json-box">{{jsonData.compareRequest}}</textarea>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="3"><div class="grid-content font-center">预期结果</div></el-col>
-          <el-col :span="7">
-            <div class="grid-content">
-              <textarea class="json-box">{{jsonData.responseBody}}</textarea>
-            </div>
-          </el-col>
-          <el-col :span="7">
-            <div class="grid-content">
+                        </div>
+                    </el-col>
+                    <el-col :span="7">
+                        <div class="grid-content">
+                            <textarea class="json-box">{{jsonData.compareRequest}}</textarea>
+                        </div>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="3"><div class="grid-content font-center">预期结果</div></el-col>
+                    <el-col :span="7">
+                        <div class="grid-content">
+                            <textarea class="json-box">{{jsonData.responseBody}}</textarea>
+                        </div>
+                    </el-col>
+                    <el-col :span="7">
+                        <div class="grid-content">
 
-            </div>
-          </el-col>
-          <el-col :span="7">
-            <div class="grid-content">
-              <textarea class="json-box">{{jsonData.compareResponse}}</textarea>
-            </div>
-          </el-col>
+                        </div>
+                    </el-col>
+                    <el-col :span="7">
+                        <div class="grid-content">
+                            <textarea class="json-box">{{jsonData.compareResponse}}</textarea>
+                        </div>
+                    </el-col>
 
+                </el-row>
+            </div>
         </el-row>
-      </div>
-    </el-row>
+    </div>
   </div>
 </template>
 
@@ -135,7 +137,17 @@
     name: 'apisInfoCheckComponent',
     data(){
       return {
-        apisInfoCheck:[],
+        apisInfoCheck:[
+            {
+                'name':'1',
+                'currentBranch':'12',
+                'lastBranch':[
+                    {
+                        'branch':'dev'
+                    }
+                ]
+            }
+        ],
         jsonData:{}
       }
     },
@@ -159,12 +171,12 @@
             this.apisInfoCheck = res.data.data;
           }
         },function (res) {
-
         });
       },
 
       getCheckInfo(data,branch){
-
+        var separate = this.$refs.separate;
+          separate.scrollIntoView();
         this.$http.get(this.testCaseServer + "testCaseInterface/checkApi?id="+ data.id +"&apiId="+ data.apiId + "&lastBranch="+ branch).then(function (res) {
           if(res.data.code === 10000){
             console.log(res.data.data)

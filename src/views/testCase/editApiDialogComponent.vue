@@ -45,7 +45,9 @@
                   </el-table-column>
                   <el-table-column label="Value" class-name="cell-input" >
                     <template slot-scope="scope">
-                      <el-input v-model="tempApiDetailInfo.variables[scope.$index].varValue"></el-input>
+                        <hd-input v-model = "tempApiDetailInfo.variables[scope.$index].varValue"></hd-input>
+
+                        <!--<el-input v-model.trim="tempApiDetailInfo.variables[scope.$index].varValue"></el-input>-->
                     </template>
                   </el-table-column>
 
@@ -69,7 +71,8 @@
                   </el-table-column>
                   <el-table-column label="Value" class-name="cell-input">
                     <template slot-scope="scope">
-                      <el-input v-model="tempApiDetailInfo.requestHead[scope.$index].Value"></el-input>
+                      <hd-input v-model = "tempApiDetailInfo.requestHead[scope.$index].Value"></hd-input>
+                      <!--<el-input v-model="tempApiDetailInfo.requestHead[scope.$index].Value"></el-input>-->
                     </template>
                   </el-table-column>
 
@@ -206,12 +209,12 @@
 
 <script>
   import {formatJson, isJson} from "@/assets/js/formatJson.js";
-
+  import hdInput from '@/components/ele-extend/hd-input'
 
   export default {
     name: 'ApiInCase',
     props: ['testCaseInterface'],
-    components: {},
+    components: {hdInput},
     data(){
       return {
         'stepName': '',
@@ -427,21 +430,23 @@
         //判断 自定义变量 是否为空
         if(this.tempApiDetailInfo.variables.length>1){
           for(var i =0;i<this.tempApiDetailInfo.variables.length;i++){
-            if(this.tempApiDetailInfo.variables[i].varName.trim() === '' || this.tempApiDetailInfo.variables[i].varValue.trim() === ''){
+              if(this.tempApiDetailInfo.variables[i].varName.trim() === '' || this.tempApiDetailInfo.variables[i].varValue.trim() === ''){
               ifFill = false;
             }
           }
+
         }else if(this.tempApiDetailInfo.variables[0].varName.trim() === '' && this.tempApiDetailInfo.variables[0].varValue.trim() === ''){
           ifVariablesNull = true;
           console.log("自定义变量为空")
         }else if(this.tempApiDetailInfo.variables[0].varName.trim() === '' || this.tempApiDetailInfo.variables[0].varValue.trim() === ''){
           ifFill = false;
         }
+          console.log("消息头为空",this.tempApiDetailInfo.requestHead)
 
         //判断 消息头 是否为空
         if(this.tempApiDetailInfo.requestHead.length>1){
-          for(var i =0;i<this.tempApiDetailInfo.requestHead.length;i++){
-            if( this.tempApiDetailInfo.requestHead[i].Key.trim() === '' || this.tempApiDetailInfo.requestHead[i].Value.trim() === ''){
+            for(var i =0;i<this.tempApiDetailInfo.requestHead.length;i++){
+              if( this.tempApiDetailInfo.requestHead[i].Key.trim() === '' || this.tempApiDetailInfo.requestHead[i].Value.trim() === ''){
               ifFill = false;
             }
           }
@@ -449,7 +454,8 @@
           ifRequestHeadNull = true;
           console.log("消息头为空")
         }else if(this.tempApiDetailInfo.requestHead[0].Key.trim() === '' || this.tempApiDetailInfo.requestHead[0].Value.trim() === ''){
-          ifFill = false;
+            console.log("11")
+            ifFill = false;
         }
 
         //判断 响应消息头 是否为空
@@ -582,5 +588,4 @@
   .el-row {
     margin-top: 10px;
   }
-
 </style>

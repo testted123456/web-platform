@@ -40,12 +40,12 @@
 
                   <el-table-column label="Key" class-name="cell-input" >
                     <template slot-scope="scope">
-                      <el-input v-model="tempApiDetailInfo.variables[scope.$index].varName"></el-input>
+                      <el-input v-model.trim="tempApiDetailInfo.variables[scope.$index].varName"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column label="Value" class-name="cell-input" >
                     <template slot-scope="scope">
-                        <hd-input v-model = "tempApiDetailInfo.variables[scope.$index].varValue"></hd-input>
+                        <hd-input editorID="variables" v-model = "tempApiDetailInfo.variables[scope.$index].varValue"></hd-input>
 
                         <!--<el-input v-model.trim="tempApiDetailInfo.variables[scope.$index].varValue"></el-input>-->
                     </template>
@@ -71,7 +71,7 @@
                   </el-table-column>
                   <el-table-column label="Value" class-name="cell-input">
                     <template slot-scope="scope">
-                      <hd-input v-model = "tempApiDetailInfo.requestHead[scope.$index].Value"></hd-input>
+                      <hd-input editorID="reqHeaders" v-model = "tempApiDetailInfo.requestHead[scope.$index].Value"></hd-input>
                       <!--<el-input v-model="tempApiDetailInfo.requestHead[scope.$index].Value"></el-input>-->
                     </template>
                   </el-table-column>

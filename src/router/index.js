@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Login from '@/views/login'
 import Home from './home/homeRouter.js'
 import ApisInfoCheck from '@/views/testCase/apisInfoCheckComponent.vue'
+import AceTest from '@/views/AceTest'
 
 Vue.use(Router)
 
@@ -18,6 +19,11 @@ export default new Router({
       path:'/apisInfoCheck',
       name:'ApisInfoCheck',
       component:ApisInfoCheck
+    },
+    {
+      path:'/ace',
+      name:'AceTest',
+      component:AceTest
     }
   ]
 })

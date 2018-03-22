@@ -409,7 +409,6 @@
 
       saveApi(){
         let validResult = this.validHeadersRow(this.api.requestHead);
-
         let tempApi = JSON.stringify(this.api);
         tempApi = JSON.parse(tempApi);
 
@@ -462,6 +461,7 @@
   }
   .el-col {
     text-align: left;
+
   }
 
   .el-table__header {

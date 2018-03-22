@@ -37,7 +37,6 @@
             <el-tabs v-model="apiInCaseTab" @tab-click="handleClick">
               <el-tab-pane label="自定义变量" name="variables">
                 <el-table :data="tempApiDetailInfo.variables" >
-
                   <el-table-column label="Key" class-name="cell-input" >
                     <template slot-scope="scope">
                       <el-input v-model.trim="tempApiDetailInfo.variables[scope.$index].varName"></el-input>

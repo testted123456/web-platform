@@ -1,9 +1,10 @@
 <template>
     <div class="hd-input">
-        <div :id="editorID" style="width: 100%;height: 40px">
-            <!--<input type="text" placeholder="asdf" v-model="inputMode" style="width: 100%;height:40px"/>-->
-        </div>
-        <!--放大按钮-->
+        <!--<div :id="editorID" style="width: 100%;height: 40px">-->
+        <!--</div>-->
+      <el-input v-model="inputMode" ></el-input>
+
+      <!--放大按钮-->
         <div class="hd-input-btn" @click="enlarge">
             <i class="el-icon-circle-plus-outline hd-input-icon"></i>
         </div>
@@ -16,15 +17,10 @@
             @close="dialogClose"
             append-to-body
         >
-            <div :id="editorID + '1'" style="width: 100%;height: 100px; border: 1px solid #ccc;">
-                <!--<el-input-->
-                    <!--placeholder="请输入内容"-->
-                    <!--v-model="inputMode"-->
-                <!--&gt;</el-input>-->
-            </div>
-
+            <div :id="editorID + '1'" class="ace-textarea"> </div>
 
         </el-dialog>
+
     </div>
 </template>
 
@@ -55,8 +51,8 @@
             // 初始默认值
             this.inputMode = this.value
 
-            this.aceEditor =  this.initAce(this.editorID)
-            this.aceEditor.setValue(this.inputMode)
+//            this.aceEditor =  this.initAce(this.editorID)
+//            this.aceEditor.setValue(this.inputMode)
 
         },
 
@@ -71,7 +67,7 @@
                 })
             },
             dialogClose(){
-                this.aceEditor.setValue(this.inputMode)
+//                this.aceEditor.setValue(this.inputMode)
             },
             initAce(eleID){
                 //初始化对象
@@ -91,7 +87,7 @@
                 editor.setReadOnly(false);
 
                 //自动换行,设置为off关闭
-//            editor.setOption("wrap", "free")
+           // editor.setOption("wrap", "free")
 
                 //启用提示菜单
                 var languageTools = hdAce.require("ace/ext/language_tools");
@@ -145,7 +141,7 @@
                     highlightActiveLine: false
                 })
                 editor.session.setUseSoftTabs(true);
-                document.getElementById(this.editorID).style.fontSize = '17px';
+//                document.getElementById(this.editorID).style.fontSize = '17px';
                 editor.session.setUseWrapMode(false);
                 editor.setHighlightActiveLine(false);
                 editor.renderer.setShowGutter(false)
@@ -166,11 +162,16 @@
 </script>
 
 <style scope>
+  .ace-textarea{
+    width:100%;
+    height:100px;
+    border:1px solid #ccc;
+  }
   .hd-input {
     position: relative;
     width:100%;
     height:40px;
-    border:1px solid #dcdfe6;
+    /*border:1px solid #dcdfe6;*/
     border-radius: 4px;
     overflow: hidden;
   }

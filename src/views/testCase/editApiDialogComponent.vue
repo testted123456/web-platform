@@ -70,8 +70,7 @@
                   </el-table-column>
                   <el-table-column label="Value" class-name="cell-input">
                     <template slot-scope="scope">
-                      <hd-input editorID="reqHeaders" v-model = "tempApiDetailInfo.requestHead[scope.$index].Value"></hd-input>
-                      <!--<el-input v-model="tempApiDetailInfo.requestHead[scope.$index].Value"></el-input>-->
+                      <el-input v-model="tempApiDetailInfo.requestHead[scope.$index].Value"></el-input>
                     </template>
                   </el-table-column>
 
@@ -101,13 +100,14 @@
                 </el-row>
                 <el-row>
                   <el-col>
-                    <el-input
-                      type="textarea"
-                      :autosize="{ minRows: 8, maxRows: 20}"
-                      placeholder="请输入请求消息体"
-                      v-model="tempApiDetailInfo.requestBody"
-                    >
-                    </el-input>
+                    <!--<el-input-->
+                      <!--type="textarea"-->
+                      <!--:autosize="{ minRows: 8, maxRows: 20}"-->
+                      <!--placeholder="请输入请求消息体"-->
+                      <!--v-model="tempApiDetailInfo.requestBody"-->
+                    <!--&gt;-->
+                    <!--</el-input>-->
+                    <div id="reqBody" style="width:96%;height:300px;border:1px solid #ccc;"></div>
                   </el-col>
                 </el-row>
               </el-tab-pane>
@@ -160,12 +160,12 @@
                   </el-col>
                 </el-row>
               </el-tab-pane>
-
               <el-tab-pane label="断言" name="assertions">
                 <el-table :data="tempApiDetailInfo.assertions">
                   <el-table-column label="预期结果" class-name="cell-input">
                     <template slot-scope="scope">
-                      <el-input v-model="tempApiDetailInfo.assertions[scope.$index].actualResult"></el-input>
+                      <hd-input editorID="actualResult" v-model = "tempApiDetailInfo.assertions[scope.$index].actualResult"></hd-input>
+                      <!--<el-input v-model="tempApiDetailInfo.assertions[scope.$index].actualResult"></el-input>-->
                     </template>
                   </el-table-column>
                   <el-table-column label="比较符" class-name="cell-input">
@@ -183,7 +183,8 @@
                   </el-table-column>
                   <el-table-column label="实际结果" class-name="cell-input">
                     <template slot-scope="scope">
-                      <el-input v-model="tempApiDetailInfo.assertions[scope.$index].expectResult"></el-input>
+                      <hd-input editorID="expectResult" v-model = "tempApiDetailInfo.assertions[scope.$index].expectResult"></hd-input>
+                      <!--<el-input v-model="tempApiDetailInfo.assertions[scope.$index].expectResult"></el-input>-->
                     </template>
                   </el-table-column>
                   <el-table-column class-name="cell-input" label="" width="120px">
@@ -295,7 +296,8 @@
               "expectResult":""
             }
           ]
-        }
+        },
+        reqBodyEditor:null,
       }
     },
     created(){
@@ -303,6 +305,9 @@
       console.log(json)
       var obj = JSON.parse(json);
       this.updateTempApiDetailInfo(obj)
+    },
+    mounted(){
+
     },
     destroyed(){
       console.log('api edit dialog destroyed')
@@ -316,7 +321,92 @@
       intellCheck(){
         window.open('https://www.baidu.com')
       },
+      initAce(eleID){
+        //初始化对象
+        // console.log(ace);
+        var hdAce = ace
+        var editor = hdAce.edit(eleID)
+        //设置风格和语言
+        var theme = "clouds"
+        var language = "text"
+        editor.setTheme("ace/theme/" + theme);
+        editor.session.setMode("ace/mode/" + language);
 
+        //字体大小
+        editor.setFontSize(14);
+
+        //设置只读（true时只读，用于展示代码）
+        editor.setReadOnly(false);
+
+        //自动换行,设置为off关闭
+        // editor.setOption("wrap", "free")
+
+        //启用提示菜单
+        var languageTools = hdAce.require("ace/ext/language_tools");
+        languageTools.addCompleter({
+          getCompletions: function (editor, session, pos, prefix, callback) {
+            callback(null, [{
+              name: "test",
+              value: "test",
+              caption: "test",
+              meta: "test",
+              type: "local",
+              score: 1000
+            }, {
+              name: "abc",
+              value: "abc",
+              caption: "abc",
+              meta: "abc",
+              type: "abc",
+              score: 999
+            }, {
+              name: "090f",
+              value: "090f",
+              caption: "090f",
+              meta: "090f",
+              type: "090f",
+              score: 998
+            }, {
+              name: "190f",
+              value: "190f",
+              caption: "190f",
+              meta: "190f",
+              type: "190f",
+              score: 994
+            }, {
+              name: "6764",
+              value: "6764",
+              caption: "6764",
+              meta: "6764",
+              type: "6764",
+              score: 100
+            }]);
+          }
+        });
+
+        editor.setOptions({
+          enableBasicAutocompletion: true,
+          enableSnippets: false,
+          enableLiveAutocompletion: true,
+          showPrintMargin: false,
+          ShowGutter: false,
+          highlightActiveLine: false
+        })
+        editor.session.setUseSoftTabs(true);
+        editor.session.setUseWrapMode(false);
+        editor.setHighlightActiveLine(false);
+        editor.renderer.setShowGutter(false)
+        editor.setShowPrintMargin(false);
+        editor.setReadOnly(false);  // false to make it editable
+        var that = this;
+        editor.getSession().on('change', function(e) {
+          // e.type, etc
+          console.log(editor.getValue())
+          var valuef = editor.getValue()
+          that.inputMode = valuef
+        });
+        return editor
+      },
       // tempApiDetailInfo 页面赋值
       updateTempApiDetailInfo(obj){
           this.tempApiDetailInfo = JSON.stringify(obj);
@@ -334,10 +424,6 @@
         }else if(this.tempApiDetailInfo.postWay == 1){
           this.tempApiDetailInfo.postWay = 'post'
         }
-//        this.tempApiDetailInfo.step = obj.step;
-//        this.tempApiDetailInfo.urlAddress = obj.urlAddress;
-//        this.tempApiDetailInfo.apiType = obj.apiType;
-//        this.tempApiDetailInfo.postWay = obj.postWay;
 
         //消息体
         if(this.tempApiDetailInfo.requestBody){
@@ -391,6 +477,9 @@
           ]
         }
         console.log(JSON.stringify(this.tempApiDetailInfo))
+        //初始化ace
+        this.reqBodyEditor = this.initAce(this.reqBody);
+        this.reqBodyEditor.setValue(this.tempApiDetailInfo.requestBody)
       },
 
       //确定按钮

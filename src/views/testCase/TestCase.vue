@@ -64,7 +64,7 @@
             </el-table-column>
 
             <el-table-column
-              prop="testCase.name"
+              prop="name"
               label="接口名称"
               align="left"
             >

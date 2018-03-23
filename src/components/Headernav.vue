@@ -4,8 +4,8 @@
 
     <el-menu :default-active="portalActiveIndex" class="el-menu-demo header-operations" mode="horizontal"
              @select="handleSelect">
-      <el-menu-item index="1"><a>接口</a></el-menu-item>
-      <el-menu-item index="2"><a>测试用例</a></el-menu-item>
+      <el-menu-item index="1">接口</el-menu-item>
+      <el-menu-item index="2">测试用例</el-menu-item>
       <el-menu-item index="3">测试集</el-menu-item>
       <el-menu-item index="4">配置</el-menu-item>
       <el-menu-item index="5">监控</el-menu-item>
@@ -26,7 +26,8 @@
         routers: [
             '/home/api',
             '/home/case',
-            '/home/group'
+            '/home/group',
+            '/home/cfg'
         ]
     };
   },
@@ -37,7 +38,7 @@
 
     handleSelect(key, keyPath) {
         var index = key;
-        if(index > 3){return}
+        if(index > 4){return}
         var routerName = this.routers[index - 1];
         this.$router.push(routerName);
     }

@@ -3,6 +3,7 @@ import Welcome from '@/views/welcome'
 import Api from './api/apiRouter'
 import TestCase from './testCase/testCaseRouter'
 import Group from './group/groupRouter'
+import Cfg from './cfg/cfgRouter'
 
 export default {
   path: '/home',
@@ -12,6 +13,7 @@ export default {
     Api,
     TestCase,
     Group,
+    Cfg,
     {
       path: 'welcome',
       name: 'Welcome',

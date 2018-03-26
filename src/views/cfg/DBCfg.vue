@@ -106,7 +106,15 @@
         }
       },
 
+      created(){
+        this.init();
+      },
+
       methods: {
+        init(){
+
+        },
+
         showAdd(index, rows){
           if(rows.length == index + 1 && (rows[index].name != '' && rows[index].value != '')){
             return true;

@@ -1,5 +1,5 @@
 <template>
-  <el-container id="gVar">
+  <el-container id="env">
     <el-main>
       <div style="width: 60%;padding-left: 20%;border: 1px">
       <el-table
@@ -18,12 +18,11 @@
           label="数据库分组"
         >
           <template slot-scope="scope">
-            <el-select v-model="appearENVs[scope.$index].dbGroup" placeholder="请选择">
+            <el-select v-model="appearENVs[scope.$index].dbGroup.groupName" placeholder="请选择">
               <el-option
                 v-for="item in dbGroups"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                :key="item.groupName"
+                :value="item.groupName">
               </el-option>
             </el-select>
           </template>
@@ -59,19 +58,17 @@
 <script>
   export default{
       name: 'ENV',
+
       data() {
           return {
-              envs:[{
-                  name:''
-              },
-                {
-                  name:''
-                }
+              envs:[
               ],
               dbGroups:[
                 {
-                    value: 'xxx',
-                    label:'xxx'
+                  groupName: 'xxx'
+                },
+                {
+                  groupName: 'yyy'
                 }
               ],
               currentPage: 1,
@@ -87,7 +84,23 @@
         }
       },
 
+      created(){
+        this.init();
+      },
+
       methods: {
+        init(){
+          var vueThis = this;
+          this.testCaseAxios({
+            method: 'get',
+            url: 'env/getAllEnvs'
+          }).then(function (res) {
+              if(res.data.code === 10000){
+                vueThis.envs = res.data.data;
+              }
+          })
+        },
+
         showAdd(index, rows){
           if(rows.length == index + 1 && (rows[index].name != '')){
             return true;

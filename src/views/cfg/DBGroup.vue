@@ -20,8 +20,13 @@
             <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">
               <el-button @click.native.prevent="deleteRow(scope.$index, dbGroups)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
             </el-tooltip>
+
             <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAdd(scope.$index, dbGroups)">
               <el-button @click.native.prevent="addRow(scope.$index, dbGroups)"  type="text" size="small"><i class="el-icon-plus"></i></el-button>
+            </el-tooltip>
+
+            <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="保存" placement="top">
+              <el-button @click.native.prevent="deleteRow(scope.$index, dbGroups)" type="text" size="small"><i class="el-icon-location-outline"></i></el-button>
             </el-tooltip>
           </template>
         </el-table-column>

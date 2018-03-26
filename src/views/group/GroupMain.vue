@@ -135,6 +135,20 @@
                 type: true
               }
           ]);
+//          var vueThis = this;
+//          this.axios.get(vueThis.groupServer+'testCase/getCaseTreeByPId?pId='+node.data.id)
+//            .then(function(res){
+//              if (res.data.code === 10000 ) {
+//                var tempApi = res.data.data;
+//                return resolve(res.data.data);
+//              }else{
+//                vueThis.$message.error('抱歉，获取信息失败：' + err.data.msg);
+//              }
+//            })
+//            .catch(function(err){
+//              vueThis.$message.error('抱歉，获取信息失败：' + err.data.msg);
+//            })
+
             /**
           this.$http.get(this.testCaseServer+"testCase/getCaseTreeByPId?pId=" + node.data.id).then(function (res) {
             if (res.data.code === 10000 ) {
@@ -198,6 +212,7 @@
         const nodeId = node.data.id;
 
         if(node.isLeaf === false){//删除case目录
+
           this.$http.get(this.testCaseServer + "testCase/deleteTestCaseDir?id=" + nodeId).then(function (res) {
             if(res.data.code == '10000'){
               this.delItemNode(node);

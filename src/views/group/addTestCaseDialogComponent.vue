@@ -26,7 +26,7 @@
             @row-click="rowClick"
             ref="singleTable"
             highlight-current-row
-            :data="cases"
+            :data="tempCases"
             style="width: 100%; margin-top: 2px">
             <el-table-column
               prop="name"
@@ -45,7 +45,7 @@
               label="操作">
               <template slot-scope="scope">
                 <el-button
-                  @click.native.prevent="deleteRow(scope.$index, tempApis)"
+                  @click.native.prevent="deleteRow(scope.$index, tempCases)"
                   type="text" size="mini"
                   >
                   <i class="el-icon-minus"></i>
@@ -72,31 +72,13 @@
           isLeaf: 'type',
           children: 'children'
         },
-        case:{
-           id:'',
-           testCase:{},
-           interfaceId:'',
-            apiType: '0',
-            postWay: '1',
-           orderNo:'',
-           step:'',
-           name:'',
-           branch:'',
-           system:'',
-           urlAddress:'',
-           variables:null,
-           requestHead:null,
-           requestBody:null,
-           responseHead:null,
-           responseBody:null,
-           assertions:null
-        },
-        cases:[]
+        case:{},
+        tempCases:[]
       }
     },
 
     created(){
-      this.cases = this.selectedCases.concat()
+      this.tempCases = this.selectedCases.concat()
     },
 
     methods: {
@@ -105,12 +87,12 @@
       },
       loadNode(node, resolve) {
         if(node.level === 0){
-          return resolve([{ name:  'Root', id: 0 , type: false}]);
+          return resolve([{ name:  '测试用例', id: 0 , type: false}]);
         }else if(node.isLeaf === true){
           return;
         }else{
 
-          this.$http.get(this.testCaseServer + "testCase/getCaseTreeByPId?pId=" + node.data.id).then(function (res) {
+          this.$http.get(this.groupServer + "testCase/getCaseTreeByPId?pId=" + node.data.id).then(function (res) {
             if(res.data.code === 10000){
               var apiTreeInfo = res.data.data;
               return resolve(res.data.data);
@@ -124,7 +106,7 @@
         this.case = node.data;
 
         if(node.data.type){
-          this.cases.push(this.case);
+          this.tempCases.push(this.case);
         }else{
           this.$message({
             message: '文件夹不能添加',
@@ -136,16 +118,15 @@
       },
       rowClick(row, event, column){
         this.$refs.singleTable.setCurrentRow(row);
-        //  console.log(column)
       },
       deleteRow(index, rows) {
         rows.splice(index, 1);
       },
       getCases(){
-        return this.cases.concat();
+        return this.tempCases.concat();
       },
-      resetApis(){
-        this.tempApis = this.selectedApis.concat()
+      resetCases(){
+        this.tempCases = this.selectedCases.concat()
       }
     }
   }

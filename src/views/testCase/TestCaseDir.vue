@@ -12,7 +12,7 @@
       </el-main>
       <el-footer style="text-align: right;">
         <el-button type="primary" @click="saveApi">确认</el-button>
-        <el-button>取消</el-button>
+        <!--<el-button>取消</el-button>-->
       </el-footer>
   </el-container>
 

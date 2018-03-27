@@ -84,37 +84,37 @@
               this.$http.post(this.groupServer+"testCase/addCaseDir",this.groupDirInfo).then(function (res) {
                 if(res.data.code === 10000){
                   this.$message({
-                    message: '恭喜你，新增用例目录成功',
+                    message: '恭喜你，新增测试集目录成功',
                     type: 'success'
                   });
-                  // 跳转到当且caseDir的详情页
+                  // 跳转到当且groupDir的详情页
                   //存数据  树节点刷新
-                  this.$store.commit('changeTestCaseStatus', 1);
+                  this.$store.commit('changeGroupStatus', 1);
                   this.groupDirInfo.id = res.data.data.id;
-                  this.$store.commit('setNewTestCase', this.groupDirInfo);
-                  this.$router.push({name: 'TestCaseDir', query: {id: res.data.data.id}});
+                  this.$store.commit('setNewGroup', this.groupDirInfo);
+                  this.$router.push({name: 'GroupDir', query: {id: res.data.data.id}});
                 }else{
-                  this.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
+                  this.$message.error('抱歉，新增测试集目录失败：' + res.data.msg);
                 }
               },function (res) {
-                this.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
+                this.$message.error('抱歉，新增测试集目录失败：' + res.data.msg);
               });
             }else{     /////////////////////////编辑界面 确认按钮事件
               this.$http.post(this.groupServer+"testCase/addCaseDir",this.groupDirInfo).then(function (res) {
                 if(res.data.code === 10000){
                   this.$message({
-                    message: '恭喜你，更新用例目录成功',
+                    message: '恭喜你，更新测试集目录成功',
                     type: 'success'
                   });
                   //存数据  树节点刷新
-                  this.$store.commit('changeTestCaseStatus', 1);
+                  this.$store.commit('changeGroupStatus', 1);
                   this.groupDirInfo.id = res.data.data.id;
-                  this.$store.commit('setNewTestCase', this.groupDirInfo);
+                  this.$store.commit('setNewGroup', this.groupDirInfo);
                 }else{
-                  this.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
+                  this.$message.error('抱歉，新增测试集目录失败：' + res.data.msg);
                 }
               },function (res) {
-                this.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
+                this.$message.error('抱歉，新增测试集目录失败：' + res.data.msg);
               });
             }
           } else {

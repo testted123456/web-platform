@@ -611,7 +611,6 @@
             }else{
               this.$message.error('请先选择要执行的接口');
             }
-
         }else{
           this.$message.error('抱歉，选中的某些接口是新增的，请先清除新增的接口');
         }

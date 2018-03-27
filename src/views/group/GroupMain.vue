@@ -217,11 +217,11 @@
             if(res.data.code == '10000'){
               this.delItemNode(node);
               this.$message({
-                message: '恭喜你，删除用例目录成功！',
+                message: '恭喜你，删除测试集目录成功！',
                 type: 'success'
               });
             }else{
-              this.$message.error('抱歉，删除用例目录失败：' + res.data.msg);
+              this.$message.error('抱歉，删除测试集目录失败：' + res.data.msg);
             }
           },function (res) {
             this.$message.error('抱歉，服务器异常。');
@@ -231,11 +231,11 @@
             if(res.data.code == '10000'){
               this.delItemNode(node);
               this.$message({
-                message: '恭喜你，删除用例成功！',
+                message: '恭喜你，删除测试集成功！',
                 type: 'success'
               });
             }else{
-              this.$message.error('抱歉，删除用例失败：' + res.data.msg);
+              this.$message.error('抱歉，删除测试集失败：' + res.data.msg);
             }
           },function (res) {
             this.$message.error('抱歉，服务器异常。');

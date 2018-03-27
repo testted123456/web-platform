@@ -47,7 +47,10 @@
         <el-row style="padding-top:30px;">
           <el-table v-show="casesInGroup.length>0"
                     :data="casesInGroup"
-                    style="width: 100%">
+                    style="width: 100%"
+                    @selection-change="handleSelectionChange"
+                    ref="multipleTable">
+
             <el-table-column
               prop="isCheck"
               label="批量执行/全选"
@@ -115,15 +118,10 @@
          <!--删除接口弹窗-->
         <span v-if="dialog.contentType === 2" >是否删除此用例？</span>
         <!--执行弹窗-->
-        <div v-if="dialog.contentType === 3" ref="executeCase">
-          <el-input
-            type="textarea"
-            :rows="1"
-            v-model="excResult"
-            v-show="false"
-          >
-          </el-input>
-          <div v-html="compiledMarkdown" class="markDown"></div>
+        <div v-if="dialog.contentType === 3" ref="executeCase" :selectedCheckBox="selectedCaseArr">
+             <div style="text-align: center">
+               <el-progress type="circle" :percentage="percentageNum"></el-progress>
+             </div>
         </div>
         <!--弹窗footer-->
         <span v-if="dialog.footerVisible" slot="footer" class="dialog-footer">
@@ -154,6 +152,10 @@
     name: 'Group',
     data () {
       return {
+        percentageNum:0,
+        checkboxExecutable:true,
+        multipleSelection:[],
+        selectedCaseArr:[],
         labelPosition:"right",
         executeDialogVisible: false,
         executeBtnShow:false,
@@ -200,8 +202,25 @@
     methods: {
       moveup,
       movedown,
+      handleSelectionChange(val) {
+        console.log("选择发生改变")
+        this.multipleSelection = val;
+        this.checkboxExecutable = true;
+        var tempArr=[];
+        var tempThis = this;
+        this.multipleSelection.forEach(function(val,index,arr){
+          tempArr.push(val.id);
+          if(val.id === '' || val.id === null){
+            console.log('某个选择的id为空或者null');
+            tempThis.checkboxExecutable = false;
+          }
+        })
+        if(this.checkboxExecutable){
+          this.selectedCaseArr = tempArr.concat();
+        }
+      },
       getData() {
-        this.executeBtnShow = false;//执行按钮隐藏
+        this.executeBtnShow = true;//执行按钮隐藏
         var groupID = this.$route.query.id;
         var vueThis = this;
         //获取环境列表select
@@ -312,6 +331,12 @@
             this.$refs.caseSelectView.resetCases();
           }
           break;
+          case 3: {
+            this.$refs.executeCase.clearInterval(serverSendMsg)
+          }
+            break;
+          default:
+            break;
         }
       },
 
@@ -347,12 +372,51 @@
           visible: true,
           footerVisible: false,
           contentType: 3,
-          width: '60%',
+          width: '30%',
           extend: {
           }
         }
 
-        this.excResult = '';
+        this.percentageNum = 0;
+        var perThis = this;
+
+        var serverSendMsg = setInterval(function(){
+          perThis.percentageNum++;
+          perThis.axios.post(perThis.groupServer+"testCaseInterface/addCaseInterfaces",perThis.selectedCaseArr)
+            .then(function (res) {
+              if(res.data.code === 10000){
+
+              }else{
+                perThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
+              }
+            })
+            .catch(function(err){
+              //  vueThis.$message.error('服务器请求失败！');
+
+              if(perThis.percentageNum >= 60){
+                clearInterval(serverSendMsg)
+              }
+              perThis.percentageNum = perThis.percentageNum +10;
+            });
+        }, 1000);
+
+
+
+
+
+
+
+        if(this.checkboxExecutable){
+          if(this.selectedCaseArr.length > 0){
+
+            //this.selectedCaseArr
+          }else{
+            this.$message.error('请先选择要执行的用例');
+          }
+        }else{
+          this.$message.error('抱歉，选中的某些用例是新增的，请先清除新增的用例');
+        }
+
       },
 
       //弹窗 右上角关闭事件

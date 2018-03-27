@@ -54,7 +54,9 @@
         <el-row style="padding-top:30px;">
           <el-table v-show="apisInCase.length>0"
                     :data="apisInCase"
-                    style="width: 100%">
+                    style="width: 100%"
+                    @selection-change="handleSelectionChange"
+                    ref="multipleTable">
             <el-table-column
               prop="isCheck"
               label="批量执行/全选"
@@ -187,6 +189,10 @@
 
     data () {
       return {
+        checkboxExecutable:true,
+        multipleSelection:[],
+        selectedApiArr:[],
+        copyAddIndex:0,
         labelPosition:"right",
         executeDialogVisible: false,
         executeBtnShow:false,
@@ -247,12 +253,52 @@
     methods: {
       moveup,
       movedown,
+      toggleSelection(rows) {
+        if (rows) {
+          rows.forEach(row => {
+            this.$refs.multipleTable.toggleRowSelection(row);
+          });
+        } else {
+          //this.$refs.multipleTable.clearSelection();
+        }
+      },
+      handleSelectionChange(val) {
+          console.log("选择发生改变")
+        this.multipleSelection = val;
+        this.checkboxExecutable = true;
+        var tempArr=[];
+        var tempThis = this;
+        this.multipleSelection.forEach(function(val,index,arr){
+            tempArr.push(val.id);
+          if(val.id === '' || val.id === null){
+            console.log('某个选择的id为空或者null');
+            tempThis.checkboxExecutable = false;
+          }
+        })
+        if(this.checkboxExecutable){
+          this.selectedApiArr = tempArr.concat();
+        }
+      },
       //////////复制接口
       copyApi(data, Index) {
         this.ApiCopyId = data.id;
         this.ApiCopyData = data;
         this.copyIndex = Index;
       },
+      ////////粘贴复制的接口
+      pastApi() {
+        if(this.ApiCopyId === 0){
+          this.$message.error('请先点击复制按钮');
+        }else{
+          this.copyAddIndex++;
+          var temp = JSON.stringify(this.ApiCopyData);
+          this.ApiCopyData = JSON.parse(temp);
+          this.ApiCopyData.id = null;
+//          this.ApiCopyData.name = this.ApiCopyData.name+'_copy'+this.copyAddIndex;
+          this.apisInCase.splice(this.copyIndex+1,0,this.ApiCopyData);
+        }
+      },
+      //获取数据
       getData() {
         this.executeBtnShow = false;//执行按钮隐藏
         var caseID = this.$route.query.id;
@@ -335,15 +381,7 @@
         });
 
       },
-      ////////粘贴复制的接口
-      pastApi() {
-          if(this.ApiCopyId === 0){
-            this.$message.error('请先点击复制按钮');
-          }else{
-            this.ApiCopyData.id = null;
-            this.apisInCase.splice(this.copyIndex,0,this.ApiCopyData);
-          }
-      },
+
 
       // ------- 按钮事件  -------
       /*弹框确定*/
@@ -518,48 +556,49 @@
       //执行弹窗方法
       execCase: function () {
 
-        this.dialog = {
-          title: '执行结果',
-          visible: true,
-          footerVisible: false,
-          contentType: 7,
-          width: '60%',
-          extend: {
-          }
-        }
 
-        this.excResult = '';
-        var textArea_this = this;
-        if ("WebSocket" in window) {
-          this.ws = new WebSocket("ws://192.168.32.49:8083/case/webSocket/123");
-//          this.ws = new Object();
-          this.ws.onopen = function () {
-            textArea_this.$http.get(textArea_this.testCaseServer+"testCase/execute?id="+textArea_this.$route.query.id).then(function (res) {
-              if(res.data.code === 10000){
-                console.log("传送caseId成功")
+        if(this.checkboxExecutable){
+            if(this.selectedApiArr.length > 0){
+              this.dialog = {
+                title: '执行结果',
+                visible: true,
+                footerVisible: false,
+                contentType: 7,
+                width: '60%',
+                extend: {
+                }
               }
-            },function (res) {});
 
-            textArea_this.ws.send("");
-          };
+              this.excResult = '';
+              var textArea_this = this;
+              if ("WebSocket" in window) {
+                this.ws = new WebSocket("ws://192.168.32.49:8083/case/webSocket/123");
+//          this.ws = new Object();
+                this.ws.onopen = function () {
+                  textArea_this.$http.get(textArea_this.testCaseServer+"testCase/execute?id="+textArea_this.selectedApiArr).then(function (res) {
+                    if(res.data.code === 10000){
+                      console.log("传送caseId成功")
+                    }
+                  },function (res) {});
 
-          // 接收数据
-          this.ws.onmessage = function (evt) {
-            // 注意evt的数据类型
-            console.log('接收到的数据：', evt)
-            textArea_this.excResult =  textArea_this.excResult +  '\n' + evt.data;
-            // ws.broadcast('resultChanged', evt.data)
-          };
+                  textArea_this.ws.send("");
+                };
 
-          this.ws.onclose = function(){
-            console.log("close")
-          };
+                // 接收数据
+                this.ws.onmessage = function (evt) {
+                  // 注意evt的数据类型
+                  console.log('接收到的数据：', evt)
+                  textArea_this.excResult =  textArea_this.excResult +  '\n' + evt.data;
+                  // ws.broadcast('resultChanged', evt.data)
+                };
 
-        } else {
-          this.excResult = '浏览器不支持websocket，无法显示case执行结果。';
-        }
+                this.ws.onclose = function(){
+                  console.log("close")
+                };
 
-//          模拟socket推送
+              } else {
+                this.excResult = '浏览器不支持websocket，无法显示case执行结果。';
+                //  模拟socket推送
 //        var msgNumber = 0;
 //        var serverSendMsg = function () {
 //          msgNumber ++;
@@ -567,7 +606,15 @@
 //          textArea_this.ws.onmessage(newMsg);
 //        }
 //        setInterval(serverSendMsg, 1000);
+              }
 
+            }else{
+              this.$message.error('请先选择要执行的接口');
+            }
+
+        }else{
+          this.$message.error('抱歉，选中的某些接口是新增的，请先清除新增的接口');
+        }
       },
       // 关闭webscoket
       closeWebSocket(){

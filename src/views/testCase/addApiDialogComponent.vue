@@ -72,30 +72,11 @@
           isLeaf: 'type',
           children: 'children'
         },
-        tempApi:{
-           id:'',
-           testCase:{},
-           interfaceId:'',
-            apiType: '0',
-            postWay: '1',
-           orderNo:'',
-           step:'',
-           name:'',
-           branch:'',
-           system:'',
-           urlAddress:'',
-           variables:null,
-           requestHead:null,
-           requestBody:null,
-           responseHead:null,
-           responseBody:null,
-           assertions:null
-        },
         tempApis:[]
       }
     },
 
-  created(){
+    created(){
       this.tempApis = this.selectedApis.concat()
     },
 
@@ -186,25 +167,29 @@
         var data = node.data;
 
         if(node.data.type){
-          this.tempApi.testCase = data.testCase;
-          this.tempApi.interfaceId = data.id;
-          this.tempApi.name = data.name;
-          this.tempApi.branch = data.branch;
-          this.tempApi.system = data.system;
-          this.tempApi.urlAddress = data.urlAddress;
-          this.tempApi.requestHead = data.requestHead;
-          this.tempApi.requestBody = data.requestBody;
-          this.tempApi.responseHead = data.responseHead;
-          this.tempApi.responseBody  = data.responseBody;
-          this.tempApi.apiType = data.apiType;
-          this.tempApi.postWay = data.postWay;
-          this.tempApis.push(this.tempApi);
 
+          var newApiData = {
+            id:'',
+            testCase:data.testCase,
+            interfaceId: data.id,
+            apiType: data.apiType,
+            postWay: data.postWay,
+            orderNo:'',
+            step:'',
+            name:data.name,
+            branch:data.branch,
+            system:data.system,
+            urlAddress:data.urlAddress,
+            variables:null,
+            requestHead:data.requestHead,
+            requestBody:data.requestBody,
+            responseHead:data.responseHead,
+            responseBody:data.responseBody,
+            assertions:null
+          }
 
+          this.tempApis.push(newApiData);
 
-
-
-          console.log(this.tempApis);
         }else{
           this.$message({
             message: '文件夹不能添加',

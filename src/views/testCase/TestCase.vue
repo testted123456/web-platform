@@ -340,6 +340,7 @@
           if(this.ApiCopyId === 0){
             this.$message.error('请先点击复制按钮');
           }else{
+            this.ApiCopyData.id = null;
             this.apisInCase.splice(this.copyIndex,0,this.ApiCopyData);
           }
       },

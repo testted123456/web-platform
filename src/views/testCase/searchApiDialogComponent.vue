@@ -279,7 +279,7 @@
       }
     },
     created(){
-
+//      testCaseInterface/getSameCasesByApiId?apiId=
     },
     methods: {
       formatJson,

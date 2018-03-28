@@ -89,7 +89,7 @@
 
           if(newChild.type === "undefined"){
               return;
-          }else if(newChild.type === false){
+          }else if(!newChild.type){
             newChild.children = [];
           }
 
@@ -123,31 +123,29 @@
         } else if (node.isLeaf === true) {
           return;
         } else {
-          return resolve([
-              {
-                name: '测试集1',
-                id: 1,
-                type: true
-              },
-              {
-                name: '测试集2',
-                id: 2,
-                type: true
-              }
-          ]);
-//          var vueThis = this;
-//          this.axios.get(vueThis.groupServer+'testCase/getCaseTreeByPId?pId='+node.data.id)
-//            .then(function(res){
-//              if (res.data.code === 10000 ) {
-//                var tempApi = res.data.data;
-//                return resolve(res.data.data);
-//              }else{
-//                vueThis.$message.error('抱歉，获取信息失败：' + err.data.msg);
+//          return resolve([
+//              {
+//                name: '测试集1',
+//                id: 1,
+//                type: true
+//              },
+//              {
+//                name: '测试集2',
+//                id: 2,
+//                type: true
 //              }
-//            })
-//            .catch(function(err){
-//              vueThis.$message.error('抱歉，获取信息失败：' + err.data.msg);
-//            })
+//          ]);
+          var vueThis = this;
+          this.axios.get(vueThis.groupServer+'getByPid?pid='+node.data.id)
+            .then(function(res){
+              if (res.data.code === 10000 ) {
+                var tempApi = res.data.data;
+                return resolve(res.data.data);
+              }else{
+                vueThis.$message.error('抱歉，获取信息失败：' + err.data.msg);
+              }
+            })
+
 
 
         }
@@ -204,7 +202,7 @@
         var vueThis = this;
         if(node.isLeaf === false){//删除case目录
 
-          this.axios.get(vueThis.testCaseServer + "testCase/deleteTestCaseDir?id=" + nodeId)
+          this.axios.get(vueThis.testCaseServer + "deleteFolder?id=0" + nodeId)
           .then(function (res) {
             if(res.data.code == '10000'){
               vueThis.delItemNode(node);
@@ -216,11 +214,9 @@
               vueThis.$message.error('抱歉，删除测试集目录失败：' + res.data.msg);
             }
           })
-          .catch(function(err){
-            vueThis.$message.error('服务器请求失败！');
-          });
+
         }else{ //删除某个case
-          this.axios.get(vueThis.testCaseServer + "testCase/deleteCase?id=" + nodeId)
+          this.axios.get(vueThis.testCaseServer + "deleteGroup?id" + nodeId)
           .then(function (res) {
             if(res.data.code == '10000'){
               vueThis.delItemNode(node);
@@ -232,9 +228,7 @@
               vueThis.$message.error('抱歉，删除测试集失败：' + res.data.msg);
             }
           })
-          .catch(function(err){
-            vueThis.$message.error('服务器请求失败！');
-          });
+
         }
       },
       delItemNode(node){

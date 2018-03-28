@@ -32,7 +32,7 @@
           name: '',
           description: '',
           pId: '',
-          type:false
+          type:0
         }
       }
     },
@@ -54,10 +54,10 @@
                 name: '',
                 description: '',
                 pId: '',
-                type:false
+                type:0
             }
         }else{
-          this.axios.get(this.groupServer+"testCase/getCase?id="+ groupDirID)
+          this.axios.get(this.groupServer+"/getByPid?pid"+ groupDirID)
           .then(function (res) {
             if(res.data.code === 10000){
                 console.log(res.data.data);
@@ -72,9 +72,9 @@
               this.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
           })
-          .catch(function(err){
-            vueThis.$message.error('服务器请求失败！');
-          });
+//          .catch(function(err){
+//            vueThis.$message.error('服务器请求失败！');
+//          });
         }
       },
       saveGroup(){
@@ -84,9 +84,10 @@
           if (valid) {
             if(groupDirID == 0){    /////////////////////////////////新增界面 确认按钮事件
               this.groupDirInfo.pId = this.$route.query.pId;
-              this.axios.post(groupDirThis.groupServer+"testCase/addCaseDir",groupDirThis.groupDirInfo)
+              this.axios.post(groupDirThis.groupServer+"save",groupDirThis.groupDirInfo)
               .then(function (res) {
                 if(res.data.code === 10000){
+                  console.log(1)
                   groupDirThis.$message({
                     message: '恭喜你，新增测试集目录成功',
                     type: 'success'
@@ -101,11 +102,12 @@
                   groupDirThis.$message.error('抱歉，新增测试集目录失败：' + res.data.msg);
                 }
               })
-              .catch(function(err){
-                groupDirThis.$message.error('服务器请求失败！');
-              });
+//              .catch(function(err){
+//                  console.log(2)
+//                groupDirThis.$message.error('服务器请求失败！');
+//              });
             }else{     /////////////////////////编辑界面 确认按钮事件
-              this.axios.post(groupDirThis.groupServer+"testCase/addCaseDir",groupDirThis.groupDirInfo)
+              this.axios.post(groupDirThis.groupServer+"save",groupDirThis.groupDirInfo)
               .then(function (res) {
                 if(res.data.code === 10000){
                   groupDirThis.$message({
@@ -120,9 +122,9 @@
                   groupDirThis.$message.error('抱歉，新增测试集目录失败：' + res.data.msg);
                 }
               })
-              .catch(function(err){
-                groupDirThis.$message.error('服务器请求失败！');
-              });
+//              .catch(function(err){
+//                groupDirThis.$message.error('服务器请求失败！');
+//              });
             }
           } else {
             return false;

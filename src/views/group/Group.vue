@@ -45,8 +45,8 @@
         </div>
         <!--用例列表-->
         <el-row style="padding-top:30px;">
-          <el-table v-show="casesInGroup.length>0"
-                    :data="casesInGroup"
+          <el-table v-show="group.testCaseList.length>0"
+                    :data="group.testCaseList"
                     style="width: 100%"
                     @selection-change="handleSelectionChange"
                     ref="multipleTable">
@@ -89,10 +89,10 @@
               align="left" width="280px">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="上移" placement="top">
-                  <el-button  type="text" size="mini" @click.native.prevent="moveup(scope.$index, scope.row, casesInGroup)"  ><i class="el-icon-arrow-up"></i></el-button>
+                  <el-button  type="text" size="mini" @click.native.prevent="moveup(scope.$index, scope.row, group.testCaseList)"  ><i class="el-icon-arrow-up"></i></el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="下移" placement="top">
-                  <el-button  type="text" size="mini" @click.native.prevent="movedown(scope.$index, scope.row, casesInGroup)" ><i class="el-icon-arrow-down"></i></el-button>
+                  <el-button  type="text" size="mini" @click.native.prevent="movedown(scope.$index, scope.row, group.testCaseList)" ><i class="el-icon-arrow-down"></i></el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">
                   <el-button  type="text" size="mini" @click="removeApi(scope.$index)"><i class="el-icon-minus"></i></el-button>
@@ -114,7 +114,7 @@
         :before-close="handleClose"
       >
         <!--添加接口弹窗-->
-        <add-test-case-dialog-component ref="caseSelectView" v-if="dialog.contentType === 1"  :selectedCases="casesInGroup"></add-test-case-dialog-component>
+        <add-test-case-dialog-component ref="caseSelectView" v-if="dialog.contentType === 1"  :selectedCases="group.testCaseList"></add-test-case-dialog-component>
         <!--删除接口弹窗-->
         <span v-if="dialog.contentType === 2" >是否删除此用例？</span>
         <!--执行弹窗-->
@@ -163,7 +163,7 @@
         excResult: '',
         enviornment:[],
         group: {
-          type:false,
+          type:0,
           createdBy:null,
           createdTime:null,
           description:null,
@@ -174,12 +174,13 @@
           pId:0,
           updatedBy:null,
           updatedTime:null,
-          jobTime:''
+          jobTime:'',
+          testCaseList:[]
         },
         envs: [],
         system: '',
         systems: [],
-        casesInGroup: [],
+//        testCaseList: [],
         dialog: {
           title: '',
           visible:false,
@@ -234,56 +235,29 @@
               });
               vueThis.enviornment = tempEnviornment;
               ///////////////////////获取环境信息成功之后 再去获取页面其他信息
-
               if (groupID == 0){   //新增group页面
-                vueThis.group = {
-                  caseType:'false',
-                  env:this.enviornment[0].value,
-                  type:true
-                }
-                vueThis.casesInGroup = []
+                vueThis.group.env = this.enviornment[0].value;
+
               }else{ // group编辑页面
                 // 获取group详情信息内容
                 vueThis.executeBtnShow = true;//执行按钮显示
-//                this.axios.get(vueThis.groupServer+'testCase/getCase?id='+groupID)
+//                this.axios.get(vueThis.groupServer+'getById?id'+groupID)
 //                .then(function(res){
 //                  if (res.data.code === 10000 ) {
 //                    vueThis.group = res.data.data;
-//                    if(vueThis.group.caseType){
-//                      vueThis.group.caseType = "true"
-//                      console.log("true")
-//                    }else{
-//                      vueThis.group.caseType = "false"
-//                      console.log("false")
-//                    }
 //                  }else{
 //                    vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
 //                  }
 //                })
+                this.group.name="新增";
 
-                this.group = {
-                  type:false,
-                  createdBy:null,
-                  createdTime:null,
-                  description:'desc',
-                  env:'SIT',
-                  id:0,
-                  name:'xxx',
-                  optstatus:0,
-                  pId:0,
-                  updatedBy:null,
-                  updatedTime:null,
-                  jobTime:'xxx'
-                }
               }
 
             }else{
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
           })
-          .catch(function(err){
-            vueThis.$message.error('服务器请求失败！');
-          })
+
 
       },
       //check 定时任务
@@ -297,9 +271,7 @@
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
           })
-          .catch(function(err){
-            vueThis.$message.error('服务器请求失败！');
-          })
+
       },
 
       // ------- 按钮事件  -------
@@ -307,13 +279,13 @@
       dialogDone() {
         switch (this.dialog.contentType) {
           case 1: {   //1=添加接口
-            this.casesInGroup = this.$refs.caseSelectView.getCases();
+            this.group.testCaseList = this.$refs.caseSelectView.getCases();
             this.dialog.visible = false;
           }
             break;
           case 2: { //2=删除用例
             this.dialog.visible = false;
-            this.casesInGroup.splice(this.removeApiIndex, 1)
+            this.group.testCaseList.splice(this.removeApiIndex, 1)
           }
             break;
           case 3: { //3=执行
@@ -439,107 +411,38 @@
         var caseID = this.$route.query.id;
         this.$refs['group'].validate((valid) => {
           if (valid) {
-            var vueThis = this;
             if(caseID == 0){    /////////////////////////////////新增界面 确认按钮事件
               this.group.pId = this.$route.query.pId;
-
-              this.axios.post(vueThis.groupServer+'testCase/addCase',vueThis.group)
-                .then(function(res){
-                  if (res.data.code === 10000 ) {
-                    var receiveCase = res.data.data;
-                    if(vueThis.casesInGroup.length>0){
-                      for(var i=0;i<vueThis.casesInGroup.length;i++){
-                        vueThis.casesInGroup[i].testCase = receiveCase;
-                      }
-                      // 请求接口
-                      vueThis.axios.post(vueThis.groupServer+"testCaseInterface/addCaseInterfaces",vueThis.casesInGroup)
-                        .then(function (res) {
-                          if(res.data.code === 10000){
-                            vueThis.$message({
-                              message: '恭喜你，新增测试集成功',
-                              type: 'success'
-                            });
-                            // 跳转到当且case的详情页
-                            //存数据  树节点刷新
-                            vueThis.$store.commit('changeGroupStatus', 1);
-                            vueThis.group.id = res.data.data.id;
-                            vueThis.$store.commit('setNewGroup', vueThis.group);
-                            vueThis.$router.push({name: 'Group', query: {id: res.data.data.id}});
-                          }else{
-                            vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
-                          }
-                        })
-                        .catch(function(err){
-                          vueThis.$message.error('服务器请求失败！');
-                        });
-                    }else{    //case列表数为0  且case信息提交成功  tip提示   并且跳转到当且case的详情页
-                      vueThis.$message({
-                        message: '恭喜你，新增用例成功',
-                        type: 'success'
-                      });
-                      //存数据  树节点刷新
-                      vueThis.$store.commit('changeGroupStatus', 1);
-                      vueThis.group.id = res.data.data.id;
-                      vueThis.$store.commit('setNewGroup', vueThis.group);
-                      vueThis.$router.push({name: 'Group', query: {id: res.data.data.id}});
-                    }
-                  }else{
-                    vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
-                  }
-                })
-                .catch(function(err){
-                  vueThis.$message.error('服务器请求失败！');
-                })
-
+              submitGetData()
             }else{     /////////////////////////编辑界面 确认按钮事件
-              this.axios.post(vueThis.groupServer+'testCase/updateCase',vueThis.group)
-                .then(function(res){
-                  if (res.data.code === 10000 ) {
-                    var receiveCase = res.data.data;
-                    if(vueThis.casesInGroup.length>0){
-                      for(var i=0;i<vueThis.casesInGroup.length;i++){
-                        vueThis.casesInGroup[i].testCase = receiveCase;
-                      }
-                      console.log(vueThis.casesInGroup);
-                      // 请求接口
-                      vueThis.axios.post(this.groupServer+"testCaseInterface/updateCaseInterfaces",vueThis.casesInGroup).then(function (res) {
-                        if(res.data.code === 10000){
-                          vueThis.$message({
-                            message: '恭喜你，更新用例成功',
-                            type: 'success'
-                          });
-                          //把case列表数据更新  防止新增的某条case数据没有id
-                          vueThis.casesInGroup = res.data.data;
-                          //存数据  树节点刷新
-                          vueThis.$store.commit('changeGroupStatus', 1);
-                          vueThis.$store.commit('setNewGroup', vueThis.group);
-                        }else{
-                          vueThis.$message.error('抱歉，更新用例失败：' + res.data.msg);
-                        }
-                      })
-                        .catch(function(err){
-                          vueThis.$message.error('服务器请求失败！');
-                        });
-                    }else{   //case列表数为0  且case信息更新成功  tip提示
-                      vueThis.$message({
-                        message: '恭喜你，更新用例成功',
-                        type: 'success'
-                      });
-                      vueThis.$store.commit('changeGroupStatus', 1);
-                      vueThis.$store.commit('setNewGroup', vueThis.group);
-                    }
-                  }else{
-                    vueThis.$message.error('抱歉，更新失败：' + res.data.msg);
-                  }
-                })
-                .catch(function(err){
-                  vueThis.$message.error('服务器请求失败！');
-                })
+              submitGetData()
             }
           } else {
             return false;
           }
         });
+      },
+
+      //确认按钮  请求ajax
+      submitGetData(){
+        var vueThis = this;
+        vueThis.axios.post(vueThis.groupServer+"save",vueThis.group)
+          .then(function (res) {
+            if(res.data.code === 10000){
+              vueThis.$message({
+                message: '恭喜你，新增测试集成功',
+                type: 'success'
+              });
+              // 跳转到当且case的详情页
+              //存数据  树节点刷新
+              vueThis.$store.commit('changeGroupStatus', 1);
+              vueThis.group.id = res.data.data.id;
+              vueThis.$store.commit('setNewGroup', vueThis.group);
+              vueThis.$router.push({name: 'Group', query: {id: res.data.data.id}});
+            }else{
+              vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
+            }
+          })
       }
     }
   }

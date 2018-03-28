@@ -92,15 +92,13 @@
           return;
         }else{
 
-          this.$http.get(this.groupServer + "testCase/getCaseTreeByPId?pId=" + node.data.id).then(function (res) {
+          this.$http.get(this.testCaseServer + "testCase/getCaseTreeByPId?pId=" + node.data.id).then(function (res) {
             if(res.data.code === 10000){
               var apiTreeInfo = res.data.data;
               return resolve(res.data.data);
             }
             return;
           },function (res) { });
-
-
         }
       },
       addCase(){
@@ -163,7 +161,7 @@
     overflow-x: auto;
   }
   .vue-transfer-label{
-    width: 98%;
+    width: 100%;
     background:#f5f7fa;
     display: inline-block;
     border-top-left-radius: 5px;

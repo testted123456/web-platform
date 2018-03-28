@@ -115,13 +115,13 @@
       >
         <!--添加接口弹窗-->
         <add-test-case-dialog-component ref="caseSelectView" v-if="dialog.contentType === 1"  :selectedCases="casesInGroup"></add-test-case-dialog-component>
-         <!--删除接口弹窗-->
+        <!--删除接口弹窗-->
         <span v-if="dialog.contentType === 2" >是否删除此用例？</span>
         <!--执行弹窗-->
         <div v-if="dialog.contentType === 3" ref="executeCase" :selectedCheckBox="selectedCaseArr">
-             <div style="text-align: center">
-               <el-progress type="circle" :percentage="percentageNum"></el-progress>
-             </div>
+          <div style="text-align: center">
+            <el-progress type="circle" :percentage="percentageNum"></el-progress>
+          </div>
         </div>
         <!--弹窗footer-->
         <span v-if="dialog.footerVisible" slot="footer" class="dialog-footer">
@@ -133,8 +133,8 @@
     </el-main>
     <!--页面最底部 footer-->
     <el-footer style="text-align: right">
-        <el-button type="primary" @click="saveCase" >确认</el-button>
-        <el-button type="success" @click="execCase()" v-if="executeBtnShow">执行</el-button>
+      <el-button type="primary" @click="saveCase" >确认</el-button>
+      <el-button type="success" @click="execCase()" v-if="executeBtnShow">执行</el-button>
     </el-footer>
   </el-container>
 </template>
@@ -152,6 +152,7 @@
     name: 'Group',
     data () {
       return {
+        serverSendMsg:null,
         percentageNum:0,
         checkboxExecutable:true,
         multipleSelection:[],
@@ -289,16 +290,16 @@
       checkTask(){
         var vueThis = this;
         this.axios.get(vueThis.groupServer+'testCase/getCaseTreeByPId?jobtime='+vueThis.group.jobTime)
-        .then(function(res){
-          if (res.data.code === 10000 ) {
-            vueThis.$message.success('恭喜，格式合法');
-          }else{
-            vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
-          }
-        })
-        .catch(function(err){
-          vueThis.$message.error('服务器请求失败！');
-        })
+          .then(function(res){
+            if (res.data.code === 10000 ) {
+              vueThis.$message.success('恭喜，格式合法');
+            }else{
+              vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
+            }
+          })
+          .catch(function(err){
+            vueThis.$message.error('服务器请求失败！');
+          })
       },
 
       // ------- 按钮事件  -------
@@ -309,18 +310,18 @@
             this.casesInGroup = this.$refs.caseSelectView.getCases();
             this.dialog.visible = false;
           }
-          break;
+            break;
           case 2: { //2=删除用例
             this.dialog.visible = false;
             this.casesInGroup.splice(this.removeApiIndex, 1)
           }
-          break;
+            break;
           case 3: { //3=执行
             this.dialog.visible = false;
           }
-          break;
+            break;
           default:
-          break;
+            break;
         }
       },
       /*弹框取消*/
@@ -330,9 +331,9 @@
           case 1: {
             this.$refs.caseSelectView.resetCases();
           }
-          break;
+            break;
           case 3: {
-            this.$refs.executeCase.clearInterval(serverSendMsg)
+            clearInterval(this.serverSendMsg)
           }
             break;
           default:
@@ -366,7 +367,7 @@
       },
 
       //执行弹窗方法
-      execCase: function () {
+      execCase() {
         this.dialog = {
           title: '执行结果',
           visible: true,
@@ -376,16 +377,13 @@
           extend: {
           }
         }
-
+        console.log(this.selectedCaseArr);
         this.percentageNum = 0;
         var perThis = this;
-
-        var serverSendMsg = setInterval(function(){
-          perThis.percentageNum++;
+        this.serverSendMsg = setInterval(function(){
           perThis.axios.post(perThis.groupServer+"testCaseInterface/addCaseInterfaces",perThis.selectedCaseArr)
             .then(function (res) {
               if(res.data.code === 10000){
-
               }else{
                 perThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
               }
@@ -393,11 +391,13 @@
             .catch(function(err){
               //  vueThis.$message.error('服务器请求失败！');
 
-              if(perThis.percentageNum >= 60){
-                clearInterval(serverSendMsg)
+              if(perThis.percentageNum >= 100){
+                clearInterval(perThis.serverSendMsg)
+              }else{
+                perThis.percentageNum = perThis.percentageNum +10;
               }
-              perThis.percentageNum = perThis.percentageNum +10;
             });
+          console.log(1);
         }, 1000);
 
 
@@ -443,7 +443,7 @@
             if(caseID == 0){    /////////////////////////////////新增界面 确认按钮事件
               this.group.pId = this.$route.query.pId;
 
-              this.axios.post(vueThis.groupServer+'testCase/addCase',this.group)
+              this.axios.post(vueThis.groupServer+'testCase/addCase',vueThis.group)
                 .then(function(res){
                   if (res.data.code === 10000 ) {
                     var receiveCase = res.data.data;
@@ -452,7 +452,7 @@
                         vueThis.casesInGroup[i].testCase = receiveCase;
                       }
                       // 请求接口
-                      this.axios.post(vueThis.groupServer+"testCaseInterface/addCaseInterfaces",vueThis.casesInGroup)
+                      vueThis.axios.post(vueThis.groupServer+"testCaseInterface/addCaseInterfaces",vueThis.casesInGroup)
                         .then(function (res) {
                           if(res.data.code === 10000){
                             vueThis.$message({
@@ -492,49 +492,49 @@
                 })
 
             }else{     /////////////////////////编辑界面 确认按钮事件
-              this.axios.post(vueThis.groupServer+'testCase/updateCase',this.group)
-              .then(function(res){
-                if (res.data.code === 10000 ) {
-                  var receiveCase = res.data.data;
-                  if(vueThis.casesInGroup.length>0){
-                    for(var i=0;i<vueThis.casesInGroup.length;i++){
-                      vueThis.casesInGroup[i].testCase = receiveCase;
-                    }
-                    console.log(vueThis.casesInGroup);
-                    // 请求接口
-                    this.$http.post(this.groupServer+"testCaseInterface/updateCaseInterfaces",this.casesInGroup).then(function (res) {
-                      if(res.data.code === 10000){
-                        vueThis.$message({
-                          message: '恭喜你，更新用例成功',
-                          type: 'success'
-                        });
-                        //把case列表数据更新  防止新增的某条case数据没有id
-                        vueThis.casesInGroup = res.data.data;
-                        //存数据  树节点刷新
-                        vueThis.$store.commit('changeGroupStatus', 1);
-                        vueThis.$store.commit('setNewGroup', vueThis.group);
-                      }else{
-                        vueThis.$message.error('抱歉，更新用例失败：' + res.data.msg);
+              this.axios.post(vueThis.groupServer+'testCase/updateCase',vueThis.group)
+                .then(function(res){
+                  if (res.data.code === 10000 ) {
+                    var receiveCase = res.data.data;
+                    if(vueThis.casesInGroup.length>0){
+                      for(var i=0;i<vueThis.casesInGroup.length;i++){
+                        vueThis.casesInGroup[i].testCase = receiveCase;
                       }
-                    })
-                    .catch(function(err){
-                      vueThis.$message.error('服务器请求失败！');
-                    });
-                  }else{   //case列表数为0  且case信息更新成功  tip提示
-                    vueThis.$message({
-                      message: '恭喜你，更新用例成功',
-                      type: 'success'
-                    });
-                    vueThis.$store.commit('changeGroupStatus', 1);
-                    vueThis.$store.commit('setNewGroup', vueThis.group);
+                      console.log(vueThis.casesInGroup);
+                      // 请求接口
+                      vueThis.axios.post(this.groupServer+"testCaseInterface/updateCaseInterfaces",vueThis.casesInGroup).then(function (res) {
+                        if(res.data.code === 10000){
+                          vueThis.$message({
+                            message: '恭喜你，更新用例成功',
+                            type: 'success'
+                          });
+                          //把case列表数据更新  防止新增的某条case数据没有id
+                          vueThis.casesInGroup = res.data.data;
+                          //存数据  树节点刷新
+                          vueThis.$store.commit('changeGroupStatus', 1);
+                          vueThis.$store.commit('setNewGroup', vueThis.group);
+                        }else{
+                          vueThis.$message.error('抱歉，更新用例失败：' + res.data.msg);
+                        }
+                      })
+                        .catch(function(err){
+                          vueThis.$message.error('服务器请求失败！');
+                        });
+                    }else{   //case列表数为0  且case信息更新成功  tip提示
+                      vueThis.$message({
+                        message: '恭喜你，更新用例成功',
+                        type: 'success'
+                      });
+                      vueThis.$store.commit('changeGroupStatus', 1);
+                      vueThis.$store.commit('setNewGroup', vueThis.group);
+                    }
+                  }else{
+                    vueThis.$message.error('抱歉，更新失败：' + res.data.msg);
                   }
-                }else{
-                  vueThis.$message.error('抱歉，更新失败：' + res.data.msg);
-                }
-              })
-              .catch(function(err){
-                vueThis.$message.error('服务器请求失败！');
-              })
+                })
+                .catch(function(err){
+                  vueThis.$message.error('服务器请求失败！');
+                })
             }
           } else {
             return false;

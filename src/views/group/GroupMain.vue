@@ -149,16 +149,7 @@
 //              vueThis.$message.error('抱歉，获取信息失败：' + err.data.msg);
 //            })
 
-            /**
-          this.$http.get(this.testCaseServer+"testCase/getCaseTreeByPId?pId=" + node.data.id).then(function (res) {
-            if (res.data.code === 10000 ) {
-              var tempApi = res.data.data;
-              return resolve(res.data.data);
-            }
-            return;
 
-          }, function (res) {
-          });*/
         }
       },
       handleRightClick(data, node, instance, x, y){ //右键接口树
@@ -210,35 +201,39 @@
         this.delDialogVisible = false;
         const node = this.$refs.tree.currentNode.node;
         const nodeId = node.data.id;
-
+        var vueThis = this;
         if(node.isLeaf === false){//删除case目录
 
-          this.$http.get(this.testCaseServer + "testCase/deleteTestCaseDir?id=" + nodeId).then(function (res) {
+          this.axios.get(vueThis.testCaseServer + "testCase/deleteTestCaseDir?id=" + nodeId)
+          .then(function (res) {
             if(res.data.code == '10000'){
-              this.delItemNode(node);
-              this.$message({
+              vueThis.delItemNode(node);
+              vueThis.$message({
                 message: '恭喜你，删除测试集目录成功！',
                 type: 'success'
               });
             }else{
-              this.$message.error('抱歉，删除测试集目录失败：' + res.data.msg);
+              vueThis.$message.error('抱歉，删除测试集目录失败：' + res.data.msg);
             }
-          },function (res) {
-            this.$message.error('抱歉，服务器异常。');
+          })
+          .catch(function(err){
+            vueThis.$message.error('服务器请求失败！');
           });
         }else{ //删除某个case
-          this.$http.get(this.testCaseServer + "testCase/deleteCase?id=" + nodeId).then(function (res) {
+          this.axios.get(vueThis.testCaseServer + "testCase/deleteCase?id=" + nodeId)
+          .then(function (res) {
             if(res.data.code == '10000'){
-              this.delItemNode(node);
-              this.$message({
+              vueThis.delItemNode(node);
+              vueThis.$message({
                 message: '恭喜你，删除测试集成功！',
                 type: 'success'
               });
             }else{
-              this.$message.error('抱歉，删除测试集失败：' + res.data.msg);
+              vueThis.$message.error('抱歉，删除测试集失败：' + res.data.msg);
             }
-          },function (res) {
-            this.$message.error('抱歉，服务器异常。');
+          })
+          .catch(function(err){
+            vueThis.$message.error('服务器请求失败！');
           });
         }
       },

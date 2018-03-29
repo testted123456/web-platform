@@ -538,12 +538,7 @@
           ]
         }
         console.log(JSON.stringify(this.tempApiDetailInfo))
-        //初始化ace
-//                this.reqBodyEditor = this.initAce(this.reqBody);
-//                this.reqBodyEditor.setValue(this.tempApiDetailInfo.requestBody);
-//
-//                this.expectResultsEditor = this.initAce(this.expectResults);
-//                this.expectResultsEditor.setValue(this.tempApiDetailInfo.responseBody);
+
       },
       //判断接口信息填写是否有空
       checkEmpty(){

@@ -334,7 +334,7 @@
           visible: true,   //整个弹窗显示与否
           footerVisible: true,
           contentType: 1,  //弹窗内容显示什么
-          width: '90%',
+          width: '80%',
           extend: {}
         }
       },
@@ -354,48 +354,39 @@
 
       //执行弹窗方法
       execCase() {
-        this.dialog = {
-          title: '执行结果',
-          visible: true,
-          footerVisible: false,
-          contentType: 3,
-          width: '30%',
-          extend: {
-          }
-        }
-        console.log(this.selectedCaseArr);
-        this.percentageNum = 0;
-        var perThis = this;
-        this.serverSendMsg = setInterval(function(){
-          perThis.axios.post(perThis.groupServer+"testCaseInterface/addCaseInterfaces",perThis.selectedCaseArr)
-            .then(function (res) {
-              if(res.data.code === 10000){
-              }else{
-                perThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
-              }
-            })
-            .catch(function(err){
-              //  vueThis.$message.error('服务器请求失败！');
-
-              if(perThis.percentageNum >= 100){
-                clearInterval(perThis.serverSendMsg)
-              }else{
-                perThis.percentageNum = perThis.percentageNum +10;
-              }
-            });
-          console.log(1);
-        }, 1000);
-
-
-
-
-
-
 
         if(this.checkboxExecutable){
           if(this.selectedCaseArr.length > 0){
+            this.dialog = {
+              title: '执行结果',
+              visible: true,
+              footerVisible: false,
+              contentType: 3,
+              width: '30%',
+              extend: {
+              }
+            }
+            console.log(this.selectedCaseArr);
+            this.percentageNum = 0;
+            var perThis = this;
+            this.serverSendMsg = setInterval(function(){
+              perThis.axios.post(perThis.groupServer+"testCaseInterface/addCaseInterfaces",perThis.selectedCaseArr)
+                .then(function (res) {
+                  if(res.data.code === 10000){
+                  }else{
+                    perThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
+                  }
+                })
+                .catch(function(err){
+                  //  vueThis.$message.error('服务器请求失败！');
 
-            //this.selectedCaseArr
+                  if(perThis.percentageNum >= 100){
+                    clearInterval(perThis.serverSendMsg)
+                  }else{
+                    perThis.percentageNum = perThis.percentageNum +10;
+                  }
+                });
+            }, 1000);
           }else{
             this.$message.error('请先选择要执行的用例');
           }
@@ -444,7 +435,7 @@
           .then(function (res) {
             if(res.data.code === 10000){
               vueThis.$message({
-                message: '恭喜你，新增测试集成功',
+                message: '恭喜你，保存测试集成功',
                 type: 'success'
               });
               // 跳转到当且case的详情页
@@ -453,10 +444,11 @@
               vueThis.group.id = res.data.data.id;
               vueThis.$store.commit('setNewGroup', vueThis.group);
               if(vueThis.$route.query.id == 0){
-                  console.log('新增界面 需要路由跳转')
+                console.log('新增界面 需要路由跳转')
                 vueThis.$router.push({name: 'Group', query: {id: res.data.data.id}});
               }else{
                 vueThis.group = res.data.data;
+                console.log('改变group内容')
               }
             }else{
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);

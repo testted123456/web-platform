@@ -134,7 +134,7 @@
 
       >
         <!--搜索弹窗-->
-        <search-api-dialog-component ref="searchApiDetailInfo" v-if="dialog.contentType === 5" ></search-api-dialog-component>
+        <search-api-dialog-component ref="searchApiDetailInfo" v-if="dialog.contentType === 5" :searchInfo="dialog.extend.data"></search-api-dialog-component>
         <!--添加接口弹窗-->
         <add-api-dialog-component ref="apiSelectView" v-if="dialog.contentType === 1"  :selectedApis="apisInCase"></add-api-dialog-component>
         <!--动态库查询弹窗-->

@@ -57,79 +57,56 @@
                 type:0
             }
         }else{
-          this.axios.get(this.groupServer+"/getByPid?pid"+ groupDirID)
+          this.axios.get(vueThis.groupServer+"getById?id="+ groupDirID)
           .then(function (res) {
             if(res.data.code === 10000){
-                console.log(res.data.data);
-              this.groupDirInfo= {
+              vueThis.groupDirInfo= {
                 id: res.data.data.id,
                 name: res.data.data.name,
                 description: res.data.data.description,
                 pId: res.data.data.pId,
-                type:false
+                type:res.data.data.type
               }
             }else{
-              this.$message.error('抱歉，获取信息失败：' + res.data.msg);
+              vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
           })
-//          .catch(function(err){
-//            vueThis.$message.error('服务器请求失败！');
-//          });
         }
       },
       saveGroup(){
         var groupDirID = this.$route.query.id;
-        var groupDirThis = this;
         this.$refs['groupDir'].validate((valid) => {
           if (valid) {
             if(groupDirID == 0){    /////////////////////////////////新增界面 确认按钮事件
               this.groupDirInfo.pId = this.$route.query.pId;
-              this.axios.post(groupDirThis.groupServer+"save",groupDirThis.groupDirInfo)
-              .then(function (res) {
-                if(res.data.code === 10000){
-                  console.log(1)
-                  groupDirThis.$message({
-                    message: '恭喜你，新增测试集目录成功',
-                    type: 'success'
-                  });
-                  // 跳转到当且groupDir的详情页
-                  //存数据  树节点刷新
-                  groupDirThis.$store.commit('changeGroupStatus', 1);
-                  groupDirThis.groupDirInfo.id = res.data.data.id;
-                  groupDirThis.$store.commit('setNewGroup', groupDirThis.groupDirInfo);
-                  groupDirThis.$router.push({name: 'GroupDir', query: {id: res.data.data.id}});
-                }else{
-                  groupDirThis.$message.error('抱歉，新增测试集目录失败：' + res.data.msg);
-                }
-              })
-//              .catch(function(err){
-//                  console.log(2)
-//                groupDirThis.$message.error('服务器请求失败！');
-//              });
+              this.submitAjax();
             }else{     /////////////////////////编辑界面 确认按钮事件
-              this.axios.post(groupDirThis.groupServer+"save",groupDirThis.groupDirInfo)
-              .then(function (res) {
-                if(res.data.code === 10000){
-                  groupDirThis.$message({
-                    message: '恭喜你，更新测试集目录成功',
-                    type: 'success'
-                  });
-                  //存数据  树节点刷新
-                  groupDirThis.$store.commit('changeGroupStatus', 1);
-                  groupDirThis.groupDirInfo.id = res.data.data.id;
-                  groupDirThis.$store.commit('setNewGroup', groupDirThis.groupDirInfo);
-                }else{
-                  groupDirThis.$message.error('抱歉，新增测试集目录失败：' + res.data.msg);
-                }
-              })
-//              .catch(function(err){
-//                groupDirThis.$message.error('服务器请求失败！');
-//              });
+              this.submitAjax();
             }
           } else {
             return false;
           }
         });
+      },
+      //确认按钮ajax事件
+      submitAjax(){
+        var groupDirThis = this;
+        this.axios.post(groupDirThis.groupServer+"save",groupDirThis.groupDirInfo)
+          .then(function (res) {
+            if(res.data.code === 10000){
+              groupDirThis.$message({
+                message: '恭喜你，更新测试集目录成功',
+                type: 'success'
+              });
+              //存数据  树节点刷新
+              groupDirThis.$store.commit('changeGroupStatus', 1);
+              groupDirThis.groupDirInfo.id = res.data.data.id;
+              groupDirThis.$store.commit('setNewGroup', groupDirThis.groupDirInfo);
+              groupDirThis.$router.push({name: 'GroupDir', query: {id: res.data.data.id}});
+            }else{
+              groupDirThis.$message.error('抱歉，新增测试集目录失败：' + res.data.msg);
+            }
+          })
       }
     }
   }

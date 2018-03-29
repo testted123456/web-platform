@@ -88,8 +88,8 @@
           var newChild = this.$store.state.group.newGroup;
 
           if(newChild.type === "undefined"){
-              return;
-          }else if(!newChild.type){
+            return;
+          }else if(newChild.type === false){
             newChild.children = [];
           }
 
@@ -202,7 +202,7 @@
         var vueThis = this;
         if(node.isLeaf === false){//删除case目录
 
-          this.axios.get(vueThis.testCaseServer + "deleteFolder?id=0" + nodeId)
+          this.axios.get(vueThis.groupServer + "deleteGroup?id=" + nodeId)
           .then(function (res) {
             if(res.data.code == '10000'){
               vueThis.delItemNode(node);
@@ -216,7 +216,7 @@
           })
 
         }else{ //删除某个case
-          this.axios.get(vueThis.testCaseServer + "deleteGroup?id" + nodeId)
+          this.axios.get(vueThis.groupServer + "deleteGroup?id=" + nodeId)
           .then(function (res) {
             if(res.data.code == '10000'){
               vueThis.delItemNode(node);

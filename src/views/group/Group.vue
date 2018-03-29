@@ -24,7 +24,7 @@
               </el-col>
             </el-form-item>
             <!--环境-->
-            <el-form-item label="环境" prop="env" :rules="[{ required: true, message: '环境不能为空'} ]">
+            <el-form-item label="环境" prop="env" :rules="[{ required: false, message: '环境不能为空'} ]">
               <el-col :span="8">
                 <el-select v-model="group.env" placeholder="请选择">
                   <el-option
@@ -163,12 +163,12 @@
         excResult: '',
         enviornment:[],
         group: {
-          type:0,
+          type:true,
           createdBy:null,
           createdTime:null,
           description:null,
           env:'',
-          id:0,
+          id:null,
           name:'',
           optstatus:0,
           pId:0,
@@ -235,35 +235,49 @@
               });
               vueThis.enviornment = tempEnviornment;
               ///////////////////////获取环境信息成功之后 再去获取页面其他信息
-              if (groupID == 0){   //新增group页面
-                vueThis.group.env = this.enviornment[0].value;
 
-              }else{ // group编辑页面
-                // 获取group详情信息内容
-                vueThis.executeBtnShow = true;//执行按钮显示
-//                this.axios.get(vueThis.groupServer+'getById?id'+groupID)
-//                .then(function(res){
-//                  if (res.data.code === 10000 ) {
-//                    vueThis.group = res.data.data;
-//                  }else{
-//                    vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
-//                  }
-//                })
-                this.group.name="新增";
-
-              }
 
             }else{
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
           })
 
+        if (groupID == 0){   //新增group页面
+          vueThis.group ={
+            type:true,
+            createdBy:null,
+            createdTime:null,
+            description:null,
+//            env:vueThis.enviornment[0].value,
+            env:'tttttt',
+            id:null,
+            name:'',
+            optstatus:0,
+            pId:this.$route.query.pId,
+            updatedBy:null,
+            updatedTime:null,
+            jobTime:'',
+            testCaseList:[]
+          }
+        }else{ // group编辑页面
+          // 获取group详情信息内容
+          vueThis.executeBtnShow = true;//执行按钮显示
+          vueThis.axios.get(vueThis.groupServer+'getById?id='+groupID)
+            .then(function(res){
+              if (res.data.code === 10000 ) {
+                vueThis.group = res.data.data;
+              }else{
+                vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
+              }
+            })
+        }
+
 
       },
       //check 定时任务
       checkTask(){
         var vueThis = this;
-        this.axios.get(vueThis.groupServer+'testCase/getCaseTreeByPId?jobtime='+vueThis.group.jobTime)
+        vueThis.axios.get(vueThis.groupServer+'checkJobTime?jobTime='+vueThis.group.jobTime)
           .then(function(res){
             if (res.data.code === 10000 ) {
               vueThis.$message.success('恭喜，格式合法');
@@ -413,9 +427,9 @@
           if (valid) {
             if(caseID == 0){    /////////////////////////////////新增界面 确认按钮事件
               this.group.pId = this.$route.query.pId;
-              submitGetData()
+              this.submitGetData()
             }else{     /////////////////////////编辑界面 确认按钮事件
-              submitGetData()
+              this.submitGetData()
             }
           } else {
             return false;
@@ -438,7 +452,12 @@
               vueThis.$store.commit('changeGroupStatus', 1);
               vueThis.group.id = res.data.data.id;
               vueThis.$store.commit('setNewGroup', vueThis.group);
-              vueThis.$router.push({name: 'Group', query: {id: res.data.data.id}});
+              if(vueThis.$route.query.id == 0){
+                  console.log('新增界面 需要路由跳转')
+                vueThis.$router.push({name: 'Group', query: {id: res.data.data.id}});
+              }else{
+                vueThis.group = res.data.data;
+              }
             }else{
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }

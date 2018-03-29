@@ -91,7 +91,7 @@
           var newChild = this.$store.state.testCase.newTestCase;
 
           if(newChild.type === "undefined"){
-              return;
+            return;
           }else if(newChild.type === false){
             newChild.children = [];
           }

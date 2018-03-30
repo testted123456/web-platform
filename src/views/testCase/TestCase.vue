@@ -368,6 +368,9 @@
               this.$http.get(this.testCaseServer + "testCaseInterface/getByTestCaseId?testCaseId=" + caseID).then(function (res) {
                 if(res.data.code === 10000){
                   this.apisInCase = res.data.data;
+                  if(this.apisInCase.length>0){
+//                    this.$refs.multipleTable.toggleRowSelection(this.apisInCase[0],true);
+                  }
                 }
               },function (res) {
 
@@ -381,8 +384,6 @@
         });
 
       },
-
-
       // ------- 按钮事件  -------
       /*弹框确定*/
       dialogDone() {
@@ -633,8 +634,6 @@
 
           });
       },
-
-
       //新增，编辑 确认按钮事件
       saveCase() {
         var caseID = this.$route.query.id;
@@ -659,12 +658,7 @@
                           message: '恭喜你，新增用例成功',
                           type: 'success'
                         });
-                        // 跳转到当且case的详情页
-                        //存数据  树节点刷新
-                        this.$store.commit('changeTestCaseStatus', 1);
-                        this.testCase.id = res.data.data.id;
-                        this.$store.commit('setNewTestCase', this.testCase);
-                        this.$router.push({name: 'TestCase', query: {id: res.data.data.id}});
+
                       }
                     },function (res) {
                       this.$message.error('抱歉，新增用例失败：' + res.data.msg);
@@ -674,13 +668,14 @@
                       message: '恭喜你，新增用例成功',
                       type: 'success'
                     });
-                    //存数据  树节点刷新
-                    this.$store.commit('changeTestCaseStatus', 1);
-                    this.testCase.id = res.data.data.id;
-                    this.$store.commit('setNewTestCase', this.testCase);
-                    this.$router.push({name: 'TestCase', query: {id: res.data.data.id}});
-                  }
 
+                  }
+                  // 跳转到当且case的详情页
+                  //存数据  树节点刷新
+                  this.$store.commit('changeTestCaseStatus', 1);
+                  this.testCase.id = res.data.data.id;
+                  this.$store.commit('setNewTestCase', this.testCase);
+                  this.$router.push({name: 'TestCase', query: {id: res.data.data.id}});
                 }else{
                   this.$message.error('抱歉，新增用例失败：' + res.data.msg);
                 }

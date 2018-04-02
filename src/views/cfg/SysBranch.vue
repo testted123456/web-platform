@@ -1,5 +1,5 @@
 <template>
-  <el-container id="gVar">
+  <el-container id="sysBranch">
     <el-main>
       <div>
         <el-table
@@ -59,6 +59,16 @@
           :total="sysBranch.length">
         </el-pagination>
       </div>
+      <el-dialog
+        :visible.sync="delDialogVisible"
+        width="25%"
+      >
+        <span>确认删除？</span>
+        <span slot="footer" class="dialog-footer">
+                    <el-button @click="delDialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="delSysBranch">确 定</el-button>
+                  </span>
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
@@ -68,22 +78,12 @@
       name: 'SysGit',
       data() {
           return {
-            sysBranch:[
-                {
-                  system:'',
-                  branch:'',
-                  version:'',
-                  last: true
-                },
-                {
-                  system:'',
-                  branch:'',
-                  version:'',
-                  last: true
-                }
-              ],
-              currentPage: 1,
-              pageSize: 1
+            sysBranch:[],
+            currentPage: 1,
+            pageSize: 1,
+            delIndex: '',
+            delSysBranch:'',
+            delDialogVisible: false
           }
       },
 
@@ -95,9 +95,42 @@
         }
       },
 
+      created(){
+        this.init();
+      },
+
       methods: {
+        init(){
+          var vueThis = this;
+
+          this.testCaseAxios({
+            method: 'get',
+            url: 'sysBranch/getAll'
+          }).then(function (res) {
+            if(res.data.code === 10000){
+              vueThis.sysBranch = res.data.data;
+
+              if(vueThis.sysBranch === null || vueThis.sysBranch.length === 0){
+                vueThis.sysBranch =[{
+                  system:'',
+                  branch:'',
+                  version:'',
+                  last:''
+                }]
+              }
+            }else{
+              vueThis.$message({
+                message: '抱歉，获取系统分支失败' + res.data.msg,
+                type: 'error'
+              });
+            }
+          }).catch(function (err) {
+            vueThis.$message.error('服务器请求失败！');
+          })
+        },
+
         showAdd(index, rows){
-          if(rows.length == index + 1 && (rows[index].name != '' && rows[index].value != '')){
+          if(rows.length == index + 1 && (rows[index].system != '' && rows[index].branch != '' && rows[index].version != '' && rows[index].last != '')){
             return true;
           }else{
             return false;
@@ -106,23 +139,24 @@
 
         //新增消息头一行
         addRow(index, rows){
-          if(rows.length == index + 1 && (rows[index].name != '' || rows[index].value != '' )){
-            rows.push({
-              name: '',
-              value: ''
-            })
-          }
+          rows.push({
+            system:'',
+            branch:'',
+            version:'',
+            last:''
+          })
         },
 
         //删除消息头中的一行
         deleteRow(index, rows) {
-          if(index == 0 && rows.length == 1){
-            rows[index].name = '';
-            rows[index].value = '';
-            rows[index].description = '';
-          }else {
-            rows.splice(index, 1);
-          }
+          this.delDialogVisible = true;
+          this.delIndex = index;
+          this.delSysBranch = rows;
+        },
+
+        delSysBranch(){
+          let index = this.delIndex;
+          let rows = this.delSysBranch;
         },
 
         handleSizeChange(val) {

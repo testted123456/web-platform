@@ -332,7 +332,7 @@
 //              this.apisInCase = [];
               this.apisInCase = [
                 {
-                  "id": 1,
+                  "id": '',
                   "name": "1",
                   "description": "",
                   "pId": 0,
@@ -672,17 +672,17 @@
                     ifQualified = false;
                   }
                   if(this.apisInCase[i].apiType == 'Http'){
-                    this.apisInCase[i].apiType = 0;
+                    this.apisInCase[i].apiType = '0';
                   }else if(this.apisInCase[i].apiType == 'Https'){
-                    this.apisInCase[i].apiType = 1;
+                    this.apisInCase[i].apiType = '1';
                   }else if(this.apisInCase[i].apiType == 'MQ'){
-                    this.apisInCase[i].apiType = 2;
+                    this.apisInCase[i].apiType = '2';
                   }
 
                   if(this.apisInCase[i].postWay == 'get'){
-                    this.apisInCase[i].postWay = 0;
+                    this.apisInCase[i].postWay = '0';
                   }else if(this.apisInCase[i].postWay == 'post') {
-                    this.apisInCase[i].postWay = 1;
+                    this.apisInCase[i].postWay = '1';
                   }
                 }
             }
@@ -716,36 +716,16 @@
                   console.log(res.data.data);
                   if(res.data.code === 10000){
                     var receiveCase = res.data.data;
-                    if(this.apisInCase.length>0){
-                      for(var i=0;i<this.apisInCase.length;i++){
-                        this.apisInCase[i].testCase = receiveCase;
-                      }
-                      // 请求接口
-                      this.$http.post(this.testCaseServer+"testCaseInterface/updateCaseInterfaces",this.apisInCase).then(function (res) {
-                        if(res.data.code === 10000){
-                          this.$message({
-                            message: '恭喜你，更新用例成功',
-                            type: 'success'
-                          });
-                          //把case列表数据更新  防止新增的某条case数据没有id
-                          this.apisInCase = res.data.data;
-                          //存数据  树节点刷新
-                          this.$store.commit('changeTestCaseStatus', 1);
-                          this.$store.commit('setNewTestCase', this.testCase);
-                        }else{
-                          this.$message.error('抱歉，更新用例失败：' + res.data.msg);
-                        }
-                      },function (res) {
-                        this.$message.error('抱歉，更新用例失败：' + res.data.msg);
-                      });
-                    }else{   //case列表数为0  且case信息更新成功  tip提示
-                      this.$message({
-                        message: '恭喜你，更新用例成功',
-                        type: 'success'
-                      });
-                      this.$store.commit('changeTestCaseStatus', 1);
-                      this.$store.commit('setNewTestCase', this.testCase);
-                    }
+                    this.$message({
+                      message: '恭喜你，更新用例成功',
+                      type: 'success'
+                    });
+                    /////////////////////////////////////////////////////////////////////////////////
+                    this.apisInCase = res.data.data.testCaseInterfaces;
+                    this.testCase = res.data.data;
+                    this.$store.commit('changeTestCaseStatus', 1);
+                    this.$store.commit('setNewTestCase', this.testCase);
+
                   }else{
                     this.$message.error('抱歉，更新用例失败：' + res.data.msg);
                   }

@@ -38,7 +38,7 @@
                   <el-button type="text" @click="addApiClick">添加接口</el-button>
                 </div>
                 <!--<div class="pd12">-->
-                  <!--<el-button type="text" @click="intellQueryClick">动态库查询</el-button>-->
+                <!--<el-button type="text" @click="intellQueryClick">动态库查询</el-button>-->
                 <!--</div>-->
                 <div class="pd12">
                   <el-button type="text" @click="apiInfoCheck" v-if="executeBtnShow">校验</el-button>
@@ -55,6 +55,7 @@
           <el-table v-show="apisInCase.length>0"
                     :data="apisInCase"
                     style="width: 100%"
+                    @select-all = "selectAll"
                     @selection-change="handleSelectionChange"
                     ref="multipleTable">
             <el-table-column
@@ -248,36 +249,18 @@
       }
     },
     mounted() {
-      this.getData()
+      this.getData();
     },
     methods: {
       moveup,
       movedown,
-      toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
-        } else {
-          //this.$refs.multipleTable.clearSelection();
-        }
+      selectAll(selection){
+          console.log(selection)
       },
       handleSelectionChange(val) {
-          console.log("选择发生改变")
+        console.log("选择发生改变")
+        console.log(val);
         this.multipleSelection = val;
-        this.checkboxExecutable = true;
-        var tempArr=[];
-        var tempThis = this;
-        this.multipleSelection.forEach(function(val,index,arr){
-            tempArr.push(val.id);
-          if(val.id === '' || val.id === null){
-            console.log('某个选择的id为空或者null');
-            tempThis.checkboxExecutable = false;
-          }
-        })
-        if(this.checkboxExecutable){
-          this.selectedApiArr = tempArr.concat();
-        }
       },
       //////////复制接口
       copyApi(data, Index) {
@@ -346,7 +329,38 @@
                 env:this.enviornment[0].value,
                 type:true
               }
-              this.apisInCase = []
+//              this.apisInCase = [];
+              this.apisInCase = [
+                {
+                  "id": 1,
+                  "name": "1",
+                  "description": "",
+                  "pId": 0,
+                  "module": "1",
+                  "branch": "1",
+                  "urlAddress": "1",
+                  "apiType": "0",
+                  "type": true,
+                  "postWay": "1",
+                  "requestHead":null,
+                  "requestBodyType": "2",
+                  "requestBodyRowType": "2",
+                  "requestBody": null,
+                  "responseHead": null,
+                  "responseBodyType": "0",
+                  "responseBody": null,
+                  "createdBy": "",
+                  "createdTime": null,
+                  "updatedBy": "",
+                  "updatedTime": null,
+                  "optstatus": 0,
+                  "system": "usr",
+                  "variables":[{"varName":'ddd',"varValue":'dsfdsf'}],
+                  "assertions":[{actualResult:"${term}",comparator:"=",expectResult:"19"}],
+                  "step":'1'
+                }
+              ]
+              this.$refs.multipleTable.toggleRowSelection(this.apisInCase[0],true);
             }else{
               // case编辑页面
               // 获取测试用例详情信息内容
@@ -517,7 +531,7 @@
       /*校验*/
       apiInfoCheck() {
         window.open(this.address+'apisInfoCheck?testCaseId='+this.$route.query.id)
-     //   this.dialog = {
+        //   this.dialog = {
 //          title: '校验接口',
 //          visible: true,
 //          footerVisible: false,
@@ -553,53 +567,64 @@
         }
         this.removeApiIndex = index;
       },
-
       //执行弹窗方法
       execCase: function () {
-
+        this.checkboxExecutable = true;
+        var tempArr=[];
+        var tempThis = this;
+        this.multipleSelection.forEach(function(val,index,arr){ //过滤出选择的api  Id
+          tempArr.push(val.id);
+          if(val.id === '' || val.id === null){
+            console.log('某个选择的id为空或者null');
+            tempThis.checkboxExecutable = false;
+          }
+        })
 
         if(this.checkboxExecutable){
-            if(this.selectedApiArr.length > 0){
-              this.dialog = {
-                title: '执行结果',
-                visible: true,
-                footerVisible: false,
-                contentType: 7,
-                width: '60%',
-                extend: {
-                }
+          this.selectedApiArr = tempArr.concat();
+          if(this.selectedApiArr.length > 0){
+            this.dialog = {
+              title: '执行结果',
+              visible: true,
+              footerVisible: false,
+              contentType: 7,
+              width: '60%',
+              extend: {
               }
-
-              this.excResult = '';
-              var textArea_this = this;
-              if ("WebSocket" in window) {
-                this.ws = new WebSocket("ws://192.168.32.49:8083/case/webSocket/123");
+            }
+            var exectData = this.testCase;
+            exectData.testCaseInterfaces = this.selectedApiArr;
+            console.log(exectData);
+            this.excResult = '';
+            var textArea_this = this;
+            if ("WebSocket" in window) {
+              this.ws = new WebSocket("ws://192.168.32.49:8083/case/webSocket/123");
 //          this.ws = new Object();
-                this.ws.onopen = function () {
-                  textArea_this.$http.get(textArea_this.testCaseServer+"testCase/execute?id="+textArea_this.selectedApiArr).then(function (res) {
-                    if(res.data.code === 10000){
-                      console.log("传送caseId成功")
-                    }
-                  },function (res) {});
+              this.ws.onopen = function () {
+                textArea_this.$http.get(textArea_this.testCaseServer+"testCase/execute?id="+exectData).then(function (res) {
+                  if(res.data.code === 10000){
+                    console.log("传送caseId成功")
+                  }
+                },function (res) {});
 
-                  textArea_this.ws.send("");
-                };
+                textArea_this.ws.send("");
+              };
 
-                // 接收数据
-                this.ws.onmessage = function (evt) {
-                  // 注意evt的数据类型
-                  console.log('接收到的数据：', evt)
-                  textArea_this.excResult =  textArea_this.excResult +  '\n' + evt.data;
-                  // ws.broadcast('resultChanged', evt.data)
-                };
+              // 接收数据
+              this.ws.onmessage = function (evt) {
+                // 注意evt的数据类型
+                console.log('接收到的数据：', evt)
+                textArea_this.excResult =  textArea_this.excResult +  '\n' + evt.data;
+                // ws.broadcast('resultChanged', evt.data)
+              };
 
-                this.ws.onclose = function(){
-                  console.log("close")
-                };
+              this.ws.onclose = function(){
+                console.log("close")
+              };
 
-              } else {
-                this.excResult = '浏览器不支持websocket，无法显示case执行结果。';
-                //  模拟socket推送
+            } else {
+              this.excResult = '浏览器不支持websocket，无法显示case执行结果。';
+              //  模拟socket推送
 //        var msgNumber = 0;
 //        var serverSendMsg = function () {
 //          msgNumber ++;
@@ -607,11 +632,11 @@
 //          textArea_this.ws.onmessage(newMsg);
 //        }
 //        setInterval(serverSendMsg, 1000);
-              }
-
-            }else{
-              this.$message.error('请先选择要执行的接口');
             }
+
+          }else{
+            this.$message.error('请先选择要执行的接口');
+          }
         }else{
           this.$message.error('抱歉，选中的某些接口是新增的，请先清除新增的接口');
         }
@@ -640,92 +665,98 @@
 
         this.$refs['testCase'].validate((valid) => {
           if (valid) {
-            if(caseID == 0){    /////////////////////////////////新增界面 确认按钮事件
-              this.testCase.pId = this.$route.query.pId;
+            var ifQualified = true;
+            if(this.apisInCase.length>0){
+                for(var i=0;i<this.apisInCase.length;i++){
+                  if(this.apisInCase[i].step.trim() === ''){
+                    ifQualified = false;
+                  }
+                  if(this.apisInCase[i].apiType == 'Http'){
+                    this.apisInCase[i].apiType = 0;
+                  }else if(this.apisInCase[i].apiType == 'Https'){
+                    this.apisInCase[i].apiType = 1;
+                  }else if(this.apisInCase[i].apiType == 'MQ'){
+                    this.apisInCase[i].apiType = 2;
+                  }
 
-              this.$http.post(this.testCaseServer+"testCase/addCase",this.testCase).then(function (res) {
-                if(res.data.code === 10000){
-
-                  var receiveCase = res.data.data;
-                  if(this.apisInCase.length>0){
-                    for(var i=0;i<this.apisInCase.length;i++){
-                      this.apisInCase[i].testCase = receiveCase;
-                    }
-                    // 请求接口
-                    this.$http.post(this.testCaseServer+"testCaseInterface/addCaseInterfaces",this.apisInCase).then(function (res) {
-                      if(res.data.code === 10000){
-                        this.$message({
-                          message: '恭喜你，新增用例成功',
-                          type: 'success'
-                        });
-
-                      }
-                    },function (res) {
-                      this.$message.error('抱歉，新增用例失败：' + res.data.msg);
-                    });
-                  }else{    //case列表数为0  且case信息提交成功  tip提示   并且跳转到当且case的详情页
+                  if(this.apisInCase[i].postWay == 'get'){
+                    this.apisInCase[i].postWay = 0;
+                  }else if(this.apisInCase[i].postWay == 'post') {
+                    this.apisInCase[i].postWay = 1;
+                  }
+                }
+            }
+            if(ifQualified){//必填信息全部填写完整了 再请求保存接口
+              if(caseID == 0){    /////////////////////////////////新增界面 确认按钮事件
+                this.testCase.pId = this.$route.query.pId;
+                this.testCase.testCaseInterfaces = this.apisInCase;
+                this.$http.post(this.testCaseServer+"testCase/addCase",this.testCase).then(function (res) {
+                  if(res.data.code === 10000){
+                    var receiveCase = res.data.data;
                     this.$message({
                       message: '恭喜你，新增用例成功',
                       type: 'success'
                     });
-
-                  }
-                  // 跳转到当且case的详情页
-                  //存数据  树节点刷新
-                  this.$store.commit('changeTestCaseStatus', 1);
-                  this.testCase.id = res.data.data.id;
-                  this.$store.commit('setNewTestCase', this.testCase);
-                  this.$router.push({name: 'TestCase', query: {id: res.data.data.id}});
-                }else{
-                  this.$message.error('抱歉，新增用例失败：' + res.data.msg);
-                }
-              },function (res) {
-                this.$message.error('服务器请求失败！');
-              });
-
-            }else{     /////////////////////////编辑界面 确认按钮事件
-              this.$http.post(this.testCaseServer+"testCase/updateCase",this.testCase).then(function (res) {
-                console.log(res.data.data);
-                if(res.data.code === 10000){
-                  var receiveCase = res.data.data;
-                  if(this.apisInCase.length>0){
-                    for(var i=0;i<this.apisInCase.length;i++){
-                      this.apisInCase[i].testCase = receiveCase;
-                    }
-                    console.log(this.apisInCase);
-                    // 请求接口
-                    this.$http.post(this.testCaseServer+"testCaseInterface/updateCaseInterfaces",this.apisInCase).then(function (res) {
-                      if(res.data.code === 10000){
-                        this.$message({
-                          message: '恭喜你，更新用例成功',
-                          type: 'success'
-                        });
-                        //把case列表数据更新  防止新增的某条case数据没有id
-                        this.apisInCase = res.data.data;
-                        //存数据  树节点刷新
-                        this.$store.commit('changeTestCaseStatus', 1);
-                        this.$store.commit('setNewTestCase', this.testCase);
-                      }else{
-                        this.$message.error('抱歉，更新用例失败：' + res.data.msg);
-                      }
-                    },function (res) {
-                      this.$message.error('抱歉，更新用例失败：' + res.data.msg);
-                    });
-                  }else{   //case列表数为0  且case信息更新成功  tip提示
-                    this.$message({
-                      message: '恭喜你，更新用例成功',
-                      type: 'success'
-                    });
+                    // 跳转到当且case的详情页
+                    //存数据  树节点刷新
                     this.$store.commit('changeTestCaseStatus', 1);
+                    this.testCase.id = res.data.data.id;
                     this.$store.commit('setNewTestCase', this.testCase);
+                    this.$router.push({name: 'TestCase', query: {id: res.data.data.id}});
+                  }else{
+                    this.$message.error('抱歉，新增用例失败：' + res.data.msg);
                   }
-                }else{
-                  this.$message.error('抱歉，更新用例失败：' + res.data.msg);
-                }
-              },function (res) {
-                this.$message.error('服务器请求失败！');
-              });
+                },function (res) {
+                  this.$message.error('服务器请求失败！');
+                });
+
+              }else{     /////////////////////////编辑界面 确认按钮事件
+                this.testCase.testCaseInterfaces = this.apisInCase;
+                this.$http.post(this.testCaseServer+"testCase/updateCase",this.testCase).then(function (res) {
+                  console.log(res.data.data);
+                  if(res.data.code === 10000){
+                    var receiveCase = res.data.data;
+                    if(this.apisInCase.length>0){
+                      for(var i=0;i<this.apisInCase.length;i++){
+                        this.apisInCase[i].testCase = receiveCase;
+                      }
+                      // 请求接口
+                      this.$http.post(this.testCaseServer+"testCaseInterface/updateCaseInterfaces",this.apisInCase).then(function (res) {
+                        if(res.data.code === 10000){
+                          this.$message({
+                            message: '恭喜你，更新用例成功',
+                            type: 'success'
+                          });
+                          //把case列表数据更新  防止新增的某条case数据没有id
+                          this.apisInCase = res.data.data;
+                          //存数据  树节点刷新
+                          this.$store.commit('changeTestCaseStatus', 1);
+                          this.$store.commit('setNewTestCase', this.testCase);
+                        }else{
+                          this.$message.error('抱歉，更新用例失败：' + res.data.msg);
+                        }
+                      },function (res) {
+                        this.$message.error('抱歉，更新用例失败：' + res.data.msg);
+                      });
+                    }else{   //case列表数为0  且case信息更新成功  tip提示
+                      this.$message({
+                        message: '恭喜你，更新用例成功',
+                        type: 'success'
+                      });
+                      this.$store.commit('changeTestCaseStatus', 1);
+                      this.$store.commit('setNewTestCase', this.testCase);
+                    }
+                  }else{
+                    this.$message.error('抱歉，更新用例失败：' + res.data.msg);
+                  }
+                },function (res) {
+                  this.$message.error('服务器请求失败！');
+                });
+              }
+            }else{
+              this.$message.error('请填写完整api内容');
             }
+
           } else {
             return false;
           }

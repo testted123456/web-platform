@@ -55,6 +55,16 @@
         >
       </el-pagination>
       </div>
+      <el-dialog
+        :visible.sync="delDialogVisible"
+        width="25%"
+      >
+        <span>确认删除？</span>
+        <span slot="footer" class="dialog-footer">
+                    <el-button @click="delDialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="del">确 定</el-button>
+                  </span>
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
@@ -70,7 +80,10 @@
               dbGroups:[
               ],
               currentPage: 1,
-              pageSize: 1
+              pageSize: 1,
+              delDialogVisible: false,
+              delIndex: '',
+              delEnv: {}
           }
       },
 
@@ -166,6 +179,10 @@
           }
         },
 
+        del(){
+
+        },
+
         //删除消息头中的一行
         deleteRow(index, rows) {
           if(typeof(rows[index].id) != 'undefined' ){
@@ -178,7 +195,7 @@
             }).then(function (res) {
               if(res.data.code === 10000){
 
-                if(index == 0 && rows.length == 1 && this.currentPage === 1 && vueThis.envs.length <= vueThis.pageSize){
+                if(index == 0 && rows.length == 1 && vueThis.currentPage === 1 && vueThis.envs.length <= vueThis.pageSize){
                   rows[index].name = '';
                   rows[index].dbGroup = {};
                 }else {

@@ -61,7 +61,7 @@
         <span>确认删除？</span>
         <span slot="footer" class="dialog-footer">
                     <el-button @click="delDialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="delSysGit">确 定</el-button>
+                    <el-button type="primary" @click="del">确 定</el-button>
                   </span>
       </el-dialog>
     </el-main>
@@ -148,7 +148,8 @@
         },
 
         //删除消息头中的一行
-        delSysGit() {
+        del() {
+          this.delDialogVisible = false;
           let index = this.delIndex;
           let rows = this.delSysGit;
 

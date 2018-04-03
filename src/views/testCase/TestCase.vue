@@ -280,15 +280,13 @@
         }
       },
       reCheck(){
-        this.$nextTick(()=>{
-          var that = this;
-          this.testCase.testCaseInterfaces.forEach(function(e,index){
-            that.$refs.multipleTable.toggleRowSelection(e,true);
-          });
-          this.multipleSelection = this.testCase.testCaseInterfaces;
-          this.filterExecteId();
-        })
-
+        console.log('multipleSelection='+this.multipleSelection.length);
+        var that = this;
+        this.multipleSelection.forEach(function(e,index){
+          that.$refs.multipleTable.toggleRowSelection(e,true);
+          console.log('遍历')
+        });
+        this.filterExecteId();
       },
       //////////复制接口
       copyApi(data, Index) {
@@ -354,19 +352,6 @@
                 }
               },function (res) {
               });
-//              // 获取接口列表内容
-//              this.$http.get(this.testCaseServer + "testCaseInterface/getByTestCaseId?testCaseId=" + caseID).then(function (res) {
-//                if(res.data.code === 10000){
-//                  this.testCase.testCaseInterfaces = res.data.data;
-//                  this.$nextTick(()=>{
-//                      var that = this;
-//                      this.apisInCase.forEach(function(e,index){
-//                        that.$refs.multipleTable.toggleRowSelection(e,true);
-//                      })
-//                  })
-//                }
-//              },function (res) {
-//              });
             }
           }else{
             this.$message.error('抱歉，获取环境信息失败：' + res.data.msg);
@@ -467,12 +452,7 @@
           case 1: {   //1=添加接口
             this.testCase.testCaseInterfaces = this.$refs.apiSelectView.getApis();
             this.dialog.visible = false;
-            console.log('multipleSelection='+this.multipleSelection.length);
-            var that = this;
-            this.multipleSelection.forEach(function(e,index){
-              that.$refs.multipleTable.toggleRowSelection(e,true);
-            });
-            this.filterExecteId();
+            this.reCheck();
           }
             break;
           case 2: { //2=动态库查询
@@ -485,14 +465,8 @@
             if(data){  // 编辑窗口必填参数合格之后 进行的操作
               this.$set(this.testCase.testCaseInterfaces, index, data)
               this.dialog.visible = false;
-              console.log('multipleSelection='+this.multipleSelection.length);
-              var that = this;
-              this.multipleSelection.forEach(function(e,index){
-                that.$refs.multipleTable.toggleRowSelection(e,true);
-              });
-              this.filterExecteId();
+              this.reCheck();
             }
-
           }
             break;
           case 4: { //4=删除接口
@@ -507,7 +481,7 @@
             var index = this.dialog.extend.index;
             var partData = this.$refs.searchApiDetailInfo.rewrite();
             console.log(partData);
-
+            
             data.step = partData.step;
             data.urlAddress = partData.urlAddress;
             data.variables = partData.variables;
@@ -562,7 +536,7 @@
         this.dialog = {
           title: '搜索接口',
           visible: true,
-          footerVisible: true,
+          footerVisible: false,
           contentType: 5,
           width: '80%',
           extend: {

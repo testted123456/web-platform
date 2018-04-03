@@ -180,7 +180,6 @@
         envs: [],
         system: '',
         systems: [],
-//        testCaseList: [],
         dialog: {
           title: '',
           visible:false,
@@ -207,6 +206,9 @@
       handleSelectionChange(val) {
         console.log("选择发生改变")
         this.multipleSelection = val;
+        this.filterExecteId();
+      },
+      filterExecteId(){
         this.checkboxExecutable = true;
         var tempArr=[];
         var tempThis = this;
@@ -235,44 +237,46 @@
               });
               vueThis.enviornment = tempEnviornment;
               ///////////////////////获取环境信息成功之后 再去获取页面其他信息
-
-
+              if (groupID == 0){   //新增group页面
+                vueThis.group ={
+                  type:true,
+                  createdBy:null,
+                  createdTime:null,
+                  description:null,
+                  env:vueThis.enviornment[0].value,
+                  id:null,
+                  name:'',
+                  optstatus:0,
+                  pId:this.$route.query.pId,
+                  updatedBy:null,
+                  updatedTime:null,
+                  jobTime:'',
+                  testCaseList:[]
+                }
+              }else{ // group编辑页面
+                // 获取group详情信息内容
+                vueThis.executeBtnShow = true;//执行按钮显示
+                vueThis.axios.get(vueThis.groupServer+'getById?id='+groupID)
+                  .then(function(res){
+                    if (res.data.code === 10000 ) {
+                      vueThis.group = res.data.data;
+                      this.$nextTick(()=>{
+                        var that = this;
+                        this.group.testCaseList.forEach(function(e,index){
+                          that.$refs.multipleTable.toggleRowSelection(e,true);
+                        })
+                        this.multipleSelection = this.group.testCaseList;
+                        this.filterExecteId();
+                      })
+                    }else{
+                      vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
+                    }
+                  })
+              }
             }else{
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
           })
-
-        if (groupID == 0){   //新增group页面
-          vueThis.group ={
-            type:true,
-            createdBy:null,
-            createdTime:null,
-            description:null,
-//            env:vueThis.enviornment[0].value,
-            env:'tttttt',
-            id:null,
-            name:'',
-            optstatus:0,
-            pId:this.$route.query.pId,
-            updatedBy:null,
-            updatedTime:null,
-            jobTime:'',
-            testCaseList:[]
-          }
-        }else{ // group编辑页面
-          // 获取group详情信息内容
-          vueThis.executeBtnShow = true;//执行按钮显示
-          vueThis.axios.get(vueThis.groupServer+'getById?id='+groupID)
-            .then(function(res){
-              if (res.data.code === 10000 ) {
-                vueThis.group = res.data.data;
-              }else{
-                vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
-              }
-            })
-        }
-
-
       },
       //check 定时任务
       checkTask(){
@@ -369,23 +373,26 @@
             console.log(this.selectedCaseArr);
             this.percentageNum = 0;
             var perThis = this;
+            var exectData = {
+                id : this.group.id,
+                testCaseList:this.selectedCaseArr
+            }
             this.serverSendMsg = setInterval(function(){
-              perThis.axios.post(perThis.groupServer+"testCaseInterface/addCaseInterfaces",perThis.selectedCaseArr)
+              perThis.axios.post(perThis.groupServer+"testCaseInterface/addCaseInterfaces",exectData)
                 .then(function (res) {
                   if(res.data.code === 10000){
+//                    if(perThis.percentageNum >= 100){
+//                      clearInterval(perThis.serverSendMsg)
+//                    }else{
+//                      perThis.percentageNum = perThis.percentageNum +10;
+//                    }
                   }else{
                     perThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
                   }
                 })
-                .catch(function(err){
-                  //  vueThis.$message.error('服务器请求失败！');
-
-                  if(perThis.percentageNum >= 100){
-                    clearInterval(perThis.serverSendMsg)
-                  }else{
-                    perThis.percentageNum = perThis.percentageNum +10;
-                  }
-                });
+//                .catch(function(err){
+//                  //  vueThis.$message.error('服务器请求失败！');
+//                });
             }, 1000);
           }else{
             this.$message.error('请先选择要执行的用例');

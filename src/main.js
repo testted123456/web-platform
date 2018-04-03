@@ -21,6 +21,7 @@ Vue.prototype.ApiCopyId = 0;
 Vue.prototype.ApiCopyData = {};
 Vue.prototype.apiServer = 'http://192.168.32.128:8082/inter/';
 Vue.prototype.testCaseServer = 'http://192.168.32.128:8083/case/';
+Vue.prototype.wsServer = '192.168.32.128:8083';
 Vue.prototype.groupServer = 'http://192.168.32.150:8082/group/';
 Vue.prototype.address = 'http://192.168.32.100:8083/#/';
 Vue.prototype.aceManager = aceManager

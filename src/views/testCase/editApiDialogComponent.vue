@@ -371,7 +371,6 @@
 
     },
     destroyed(){
-      console.log('api edit dialog destroyed')
     },
     methods: {
       formatJson,
@@ -451,8 +450,6 @@
             }
           ]
         }
-        console.log(JSON.stringify(this.tempApiDetailInfo))
-
       },
       //判断接口信息填写是否有空
       checkEmpty(){

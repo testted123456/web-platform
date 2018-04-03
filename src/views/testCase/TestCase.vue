@@ -52,8 +52,8 @@
         </div>
         <!--用例列表-->
         <el-row style="padding-top:30px;">
-          <el-table v-show="apisInCase.length>0"
-                    :data="apisInCase"
+          <el-table v-show="testCase.testCaseInterfaces.length>0"
+                    :data="testCase.testCaseInterfaces"
                     style="width: 100%"
                     @select-all = "selectAll"
                     @selection-change="handleSelectionChange"
@@ -109,10 +109,10 @@
                   <el-button  type="text" size="mini" @click="copyApi(scope.row,scope.$index)"><i class="el-icon-tickets"></i></el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="上移" placement="top">
-                  <el-button  type="text" size="mini" @click.native.prevent="moveup(scope.$index, scope.row, apisInCase)"  ><i class="el-icon-arrow-up"></i></el-button>
+                  <el-button  type="text" size="mini" @click.native.prevent="moveup(scope.$index, scope.row, testCase.testCaseInterfaces)"  ><i class="el-icon-arrow-up"></i></el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="下移" placement="top">
-                  <el-button  type="text" size="mini" @click.native.prevent="movedown(scope.$index, scope.row, apisInCase)" ><i class="el-icon-arrow-down"></i></el-button>
+                  <el-button  type="text" size="mini" @click.native.prevent="movedown(scope.$index, scope.row, testCase.testCaseInterfaces)" ><i class="el-icon-arrow-down"></i></el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除接口" placement="top">
                   <el-button  type="text" size="mini" @click="removeApi(scope.$index)"><i class="el-icon-minus"></i></el-button>
@@ -137,11 +137,11 @@
         <!--搜索弹窗-->
         <search-api-dialog-component ref="searchApiDetailInfo" v-if="dialog.contentType === 5" :searchInfo="dialog.extend.data"></search-api-dialog-component>
         <!--添加接口弹窗-->
-        <add-api-dialog-component ref="apiSelectView" v-if="dialog.contentType === 1"  :selectedApis="apisInCase"></add-api-dialog-component>
+        <add-api-dialog-component ref="apiSelectView" v-if="dialog.contentType === 1"  :selectedApis="testCase.testCaseInterfaces"></add-api-dialog-component>
         <!--动态库查询弹窗-->
         <intell-check-dialog-component ref="intellCheck" v-if="dialog.contentType === 2" :intellQuery="intellCheckData" ></intell-check-dialog-component>
         <!--校验弹窗-->
-        <apis-info-check-component ref="apisInfoCheck" v-if="dialog.contentType === 6" :apisInfoCheck="apisInCase" ></apis-info-check-component>
+        <apis-info-check-component ref="apisInfoCheck" v-if="dialog.contentType === 6" :apisInfoCheck="testCase.testCaseInterfaces" ></apis-info-check-component>
         <!--编辑接口弹窗-->
         <edit-api-dialog-component ref="editApiDetailInfo" v-if="dialog.contentType === 3" :testCaseInterface="dialog.extend.data"></edit-api-dialog-component>
         <!--删除接口弹窗-->
@@ -212,7 +212,8 @@
           projectName:null,
           updatedBy:null,
           updatedTime:null,
-          type:true
+          type:true,
+          testCaseInterfaces:[]
         },
         copyIndex:0,
         apisInCase: [],
@@ -259,8 +260,35 @@
       },
       handleSelectionChange(val) {
         console.log("选择发生改变")
-        console.log(val);
         this.multipleSelection = val;
+        this.filterExecteId();
+      },
+      //得到选中的有id的 接口数据并且过滤出id数组
+      filterExecteId(){
+        this.checkboxExecutable = true;
+        var tempArr=[];
+        var tempThis = this;
+        this.multipleSelection.forEach(function(val,index,arr){
+          tempArr.push(val.id);
+          if(val.id === '' || val.id === null){
+            console.log('某个选择的id为空或者null');
+            tempThis.checkboxExecutable = false;
+          }
+        })
+        if(this.checkboxExecutable){
+          this.selectedApiArr = tempArr.concat();
+        }
+      },
+      reCheck(){
+        this.$nextTick(()=>{
+          var that = this;
+          this.testCase.testCaseInterfaces.forEach(function(e,index){
+            that.$refs.multipleTable.toggleRowSelection(e,true);
+          });
+          this.multipleSelection = this.testCase.testCaseInterfaces;
+          this.filterExecteId();
+        })
+
       },
       //////////复制接口
       copyApi(data, Index) {
@@ -278,41 +306,14 @@
           this.ApiCopyData = JSON.parse(temp);
           this.ApiCopyData.id = null;
 //          this.ApiCopyData.name = this.ApiCopyData.name+'_copy'+this.copyAddIndex;
-          this.apisInCase.splice(this.copyIndex+1,0,this.ApiCopyData);
+          this.testCase.testCaseInterfaces.splice(this.copyIndex+1,0,this.ApiCopyData);
         }
       },
       //获取数据
       getData() {
         this.executeBtnShow = false;//执行按钮隐藏
         var caseID = this.$route.query.id;
-
-        this.intellCheckData = [
-          {
-            name: 'abc',
-            desc: 'sdfaf'
-          }, {
-            name: 'abc1',
-            desc: 'sdfaf1'
-          }, {
-            name: 'abc2',
-            desc: 'sdfaf2'
-          }, {
-            name: 'ab3c',
-            desc: 'sdfaf3'
-          }, {
-            name: 'abc4',
-            desc: 'sdfaf4'
-          }, {
-            name: 'abc5',
-            desc: 'sdfaf5'
-          }, {
-            name: 'abc6',
-            desc: 'sdfaf6'
-          }, {
-            name: 'abc7',
-            desc: 'sdfaf7'
-          },];
-
+        this.intellCheckData = [];
         //获取环境列表select
         this.$http.get(this.testCaseServer+"env/getAllEnvs").then(function (res) {
           if(res.data.code === 10000){
@@ -329,66 +330,43 @@
                 env:this.enviornment[0].value,
                 type:true
               }
-//              this.apisInCase = [];
-              this.apisInCase = [
-                {
-                  "id": '',
-                  "name": "1",
-                  "description": "",
-                  "pId": 0,
-                  "module": "1",
-                  "branch": "1",
-                  "urlAddress": "1",
-                  "apiType": "0",
-                  "type": true,
-                  "postWay": "1",
-                  "requestHead":null,
-                  "requestBodyType": "2",
-                  "requestBodyRowType": "2",
-                  "requestBody": null,
-                  "responseHead": null,
-                  "responseBodyType": "0",
-                  "responseBody": null,
-                  "createdBy": "",
-                  "createdTime": null,
-                  "updatedBy": "",
-                  "updatedTime": null,
-                  "optstatus": 0,
-                  "system": "usr",
-                  "variables":[{"varName":'ddd',"varValue":'dsfdsf'}],
-                  "assertions":[{actualResult:"${term}",comparator:"=",expectResult:"19"}],
-                  "step":'1'
-                }
-              ]
-              this.$refs.multipleTable.toggleRowSelection(this.apisInCase[0],true);
+              this.testCase.testCaseInterfaces = [];
             }else{
               // case编辑页面
               // 获取测试用例详情信息内容
               this.executeBtnShow = true;//执行按钮显示
-              this.$http.get(this.testCaseServer+"testCase/getCase?id=" + caseID).then(function (res) {
+              this.$http.get(this.testCaseServer+"testCase/getCaseById?id=" + caseID).then(function (res) {
                 if(res.data.code === 10000){
                   this.testCase = res.data.data;
                   if(this.testCase.caseType){
                     this.testCase.caseType = "true"
-                    console.log("true")
                   }else{
                     this.testCase.caseType = "false"
-                    console.log("false")
                   }
+                  this.$nextTick(()=>{
+                      var that = this;
+                      this.testCase.testCaseInterfaces.forEach(function(e,index){
+                        that.$refs.multipleTable.toggleRowSelection(e,true);
+                      });
+                      this.multipleSelection = this.testCase.testCaseInterfaces;
+                      this.filterExecteId();
+                  })
                 }
               },function (res) {
               });
-              // 获取接口列表内容
-              this.$http.get(this.testCaseServer + "testCaseInterface/getByTestCaseId?testCaseId=" + caseID).then(function (res) {
-                if(res.data.code === 10000){
-                  this.apisInCase = res.data.data;
-                  if(this.apisInCase.length>0){
-//                    this.$refs.multipleTable.toggleRowSelection(this.apisInCase[0],true);
-                  }
-                }
-              },function (res) {
-
-              });
+//              // 获取接口列表内容
+//              this.$http.get(this.testCaseServer + "testCaseInterface/getByTestCaseId?testCaseId=" + caseID).then(function (res) {
+//                if(res.data.code === 10000){
+//                  this.testCase.testCaseInterfaces = res.data.data;
+//                  this.$nextTick(()=>{
+//                      var that = this;
+//                      this.apisInCase.forEach(function(e,index){
+//                        that.$refs.multipleTable.toggleRowSelection(e,true);
+//                      })
+//                  })
+//                }
+//              },function (res) {
+//              });
             }
           }else{
             this.$message.error('抱歉，获取环境信息失败：' + res.data.msg);
@@ -398,15 +376,103 @@
         });
 
       },
+      //新增，编辑 确认按钮事件
+      saveCase() {
+        var caseID = this.$route.query.id;
+
+        this.$refs['testCase'].validate((valid) => {
+          if (valid) {
+            var ifQualified = true;
+            if(this.testCase.testCaseInterfaces.length>0){
+              for(var i=0;i<this.testCase.testCaseInterfaces.length;i++){
+                if(this.testCase.testCaseInterfaces[i].step.trim() === ''){
+                  ifQualified = false;
+                }
+                if(this.testCase.testCaseInterfaces[i].apiType == 'Http'){
+                  this.testCase.testCaseInterfaces[i].apiType = '0';
+                }else if(this.testCase.testCaseInterfaces[i].apiType == 'Https'){
+                  this.testCase.testCaseInterfaces[i].apiType = '1';
+                }else if(this.testCase.testCaseInterfaces[i].apiType == 'MQ'){
+                  this.testCase.testCaseInterfaces[i].apiType = '2';
+                }
+
+                if(this.testCase.testCaseInterfaces[i].postWay == 'get'){
+                  this.testCase.testCaseInterfaces[i].postWay = '0';
+                }else if(this.testCase.testCaseInterfaces[i].postWay == 'post') {
+                  this.testCase.testCaseInterfaces[i].postWay = '1';
+                }
+              }
+            }
+            if(ifQualified){//必填信息全部填写完整了 再请求保存接口
+              if(caseID == 0){    /////////////////////////////////新增界面 确认按钮事件
+                this.testCase.pId = this.$route.query.pId;
+//                this.testCase.testCaseInterfaces = this.apisInCase;
+                this.$http.post(this.testCaseServer+"testCase/addCase",this.testCase).then(function (res) {
+                  if(res.data.code === 10000){
+                    var receiveCase = res.data.data;
+                    this.$message({
+                      message: '恭喜你，新增用例成功',
+                      type: 'success'
+                    });
+                    // 跳转到当且case的详情页
+                    //存数据  树节点刷新
+                    this.$store.commit('changeTestCaseStatus', 1);
+                    this.testCase.id = res.data.data.id;
+                    this.$store.commit('setNewTestCase', this.testCase);
+                    this.$router.push({name: 'TestCase', query: {id: res.data.data.id}});
+                  }else{
+                    this.$message.error('抱歉，新增用例失败：' + res.data.msg);
+                  }
+                },function (res) {
+                  this.$message.error('服务器请求失败！');
+                });
+
+              }else{     /////////////////////////编辑界面 确认按钮事件
+//                this.testCase.testCaseInterfaces = this.apisInCase;
+                this.$http.post(this.testCaseServer+"testCase/updateCase",this.testCase).then(function (res) {
+                  console.log(res.data.data);
+                  if(res.data.code === 10000){
+                    var receiveCase = res.data.data;
+                    this.$message({
+                      message: '恭喜你，更新用例成功',
+                      type: 'success'
+                    });
+                    /////////////////////////////////////////////////////////////////////////////////
+//                    this.apisInCase = res.data.data.testCaseInterfaces;
+                    this.testCase = res.data.data;
+                    this.$store.commit('changeTestCaseStatus', 1);
+                    this.$store.commit('setNewTestCase', this.testCase);
+
+                  }else{
+                    this.$message.error('抱歉，更新用例失败：' + res.data.msg);
+                  }
+                },function (res) {
+                  this.$message.error('服务器请求失败！');
+                });
+              }
+            }else{
+              this.$message.error('请填写完整api内容');
+            }
+
+          } else {
+            return false;
+          }
+        });
+      },
       // ------- 按钮事件  -------
       /*弹框确定*/
       dialogDone() {
 
         switch (this.dialog.contentType) {
           case 1: {   //1=添加接口
-            this.apisInCase = this.$refs.apiSelectView.getApis();
-            console.log(this.apisInCase)
+            this.testCase.testCaseInterfaces = this.$refs.apiSelectView.getApis();
             this.dialog.visible = false;
+            console.log('multipleSelection='+this.multipleSelection.length);
+            var that = this;
+            this.multipleSelection.forEach(function(e,index){
+              that.$refs.multipleTable.toggleRowSelection(e,true);
+            });
+            this.filterExecteId();
           }
             break;
           case 2: { //2=动态库查询
@@ -416,18 +482,22 @@
           case 3: { //3=编辑接口
             var data = this.$refs.editApiDetailInfo.saveApiDetailInfo()
             var index = this.dialog.extend.index;
-            if(data){
-              this.$set(this.apisInCase, index, data)
+            if(data){  // 编辑窗口必填参数合格之后 进行的操作
+              this.$set(this.testCase.testCaseInterfaces, index, data)
               this.dialog.visible = false;
-            }else{
-
+              console.log('multipleSelection='+this.multipleSelection.length);
+              var that = this;
+              this.multipleSelection.forEach(function(e,index){
+                that.$refs.multipleTable.toggleRowSelection(e,true);
+              });
+              this.filterExecteId();
             }
 
           }
             break;
           case 4: { //4=删除接口
             this.dialog.visible = false;
-            this.apisInCase.splice(this.removeApiIndex, 1)
+            this.testCase.testCaseInterfaces.splice(this.removeApiIndex, 1)
 
           }
             break;
@@ -446,7 +516,7 @@
             data.responseBody = partData.responseBody;
             data.assertions = partData.assertions;
 
-            this.$set(this.apisInCase, index, data)
+            this.$set(this.testCase.testCaseInterfaces, index, data)
 
           }
             break;
@@ -487,7 +557,6 @@
             break;
         }
       },
-
       /*搜索接口*/
       searchApi(data, index) {
         this.dialog = {
@@ -556,7 +625,7 @@
       },
       // 删除接口
       removeApi(index) {
-        //this.apisInCase.splice(index,1)
+        //this.testCase.testCaseInterfaces.splice(index,1)
         this.dialog = {
           title: '删除接口',
           visible: true,   //整个弹窗显示与否
@@ -569,19 +638,8 @@
       },
       //执行弹窗方法
       execCase: function () {
-        this.checkboxExecutable = true;
-        var tempArr=[];
-        var tempThis = this;
-        this.multipleSelection.forEach(function(val,index,arr){ //过滤出选择的api  Id
-          tempArr.push(val.id);
-          if(val.id === '' || val.id === null){
-            console.log('某个选择的id为空或者null');
-            tempThis.checkboxExecutable = false;
-          }
-        })
 
         if(this.checkboxExecutable){
-          this.selectedApiArr = tempArr.concat();
           if(this.selectedApiArr.length > 0){
             this.dialog = {
               title: '执行结果',
@@ -592,16 +650,18 @@
               extend: {
               }
             }
-            var exectData = this.testCase;
-            exectData.testCaseInterfaces = this.selectedApiArr;
-            console.log(exectData);
+
             this.excResult = '';
             var textArea_this = this;
+            var exectData = {
+              apiIds:this.selectedApiArr,
+              tcId:this.testCase.id
+            }
             if ("WebSocket" in window) {
-              this.ws = new WebSocket("ws://192.168.32.49:8083/case/webSocket/123");
-//          this.ws = new Object();
+              this.ws = new WebSocket("ws://"+ this.wsServer +"/case/webSocket/123");
+              //this.ws = new Object();
               this.ws.onopen = function () {
-                textArea_this.$http.get(textArea_this.testCaseServer+"testCase/execute?id="+exectData).then(function (res) {
+                textArea_this.$http.post(textArea_this.testCaseServer+"testCase/executeApis",exectData).then(function (res) {
                   if(res.data.code === 10000){
                     console.log("传送caseId成功")
                   }
@@ -658,90 +718,8 @@
             // 取消
 
           });
-      },
-      //新增，编辑 确认按钮事件
-      saveCase() {
-        var caseID = this.$route.query.id;
-
-        this.$refs['testCase'].validate((valid) => {
-          if (valid) {
-            var ifQualified = true;
-            if(this.apisInCase.length>0){
-                for(var i=0;i<this.apisInCase.length;i++){
-                  if(this.apisInCase[i].step.trim() === ''){
-                    ifQualified = false;
-                  }
-                  if(this.apisInCase[i].apiType == 'Http'){
-                    this.apisInCase[i].apiType = '0';
-                  }else if(this.apisInCase[i].apiType == 'Https'){
-                    this.apisInCase[i].apiType = '1';
-                  }else if(this.apisInCase[i].apiType == 'MQ'){
-                    this.apisInCase[i].apiType = '2';
-                  }
-
-                  if(this.apisInCase[i].postWay == 'get'){
-                    this.apisInCase[i].postWay = '0';
-                  }else if(this.apisInCase[i].postWay == 'post') {
-                    this.apisInCase[i].postWay = '1';
-                  }
-                }
-            }
-            if(ifQualified){//必填信息全部填写完整了 再请求保存接口
-              if(caseID == 0){    /////////////////////////////////新增界面 确认按钮事件
-                this.testCase.pId = this.$route.query.pId;
-                this.testCase.testCaseInterfaces = this.apisInCase;
-                this.$http.post(this.testCaseServer+"testCase/addCase",this.testCase).then(function (res) {
-                  if(res.data.code === 10000){
-                    var receiveCase = res.data.data;
-                    this.$message({
-                      message: '恭喜你，新增用例成功',
-                      type: 'success'
-                    });
-                    // 跳转到当且case的详情页
-                    //存数据  树节点刷新
-                    this.$store.commit('changeTestCaseStatus', 1);
-                    this.testCase.id = res.data.data.id;
-                    this.$store.commit('setNewTestCase', this.testCase);
-                    this.$router.push({name: 'TestCase', query: {id: res.data.data.id}});
-                  }else{
-                    this.$message.error('抱歉，新增用例失败：' + res.data.msg);
-                  }
-                },function (res) {
-                  this.$message.error('服务器请求失败！');
-                });
-
-              }else{     /////////////////////////编辑界面 确认按钮事件
-                this.testCase.testCaseInterfaces = this.apisInCase;
-                this.$http.post(this.testCaseServer+"testCase/updateCase",this.testCase).then(function (res) {
-                  console.log(res.data.data);
-                  if(res.data.code === 10000){
-                    var receiveCase = res.data.data;
-                    this.$message({
-                      message: '恭喜你，更新用例成功',
-                      type: 'success'
-                    });
-                    /////////////////////////////////////////////////////////////////////////////////
-                    this.apisInCase = res.data.data.testCaseInterfaces;
-                    this.testCase = res.data.data;
-                    this.$store.commit('changeTestCaseStatus', 1);
-                    this.$store.commit('setNewTestCase', this.testCase);
-
-                  }else{
-                    this.$message.error('抱歉，更新用例失败：' + res.data.msg);
-                  }
-                },function (res) {
-                  this.$message.error('服务器请求失败！');
-                });
-              }
-            }else{
-              this.$message.error('请填写完整api内容');
-            }
-
-          } else {
-            return false;
-          }
-        });
       }
+
     }
   }
 </script>

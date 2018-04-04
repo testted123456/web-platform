@@ -138,7 +138,7 @@
     }
 
     .ace_text-layer, .ace_line {
-        background-color: white !important;
+        /*background-color: white !important;*/
         color: #606266;
     }
 

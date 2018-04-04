@@ -49,7 +49,7 @@
                     enableLiveAutocompletion: true,
                     showPrintMargin: false,
                     ShowGutter: false,
-                    highlightActiveLine: false
+                    highlightActiveLine:false
                 })
                 editor.session.setUseSoftTabs(true);
                 editor.session.setUseWrapMode(false);
@@ -63,6 +63,9 @@
                     that.$emit('aceTextChange', valuef)
                 });
                 return editor
+            },
+            resetAceContent(text){
+                this.aceEditor.setValue(text ? text : '')
             }
 
         }

@@ -108,7 +108,7 @@
                 <el-row>
                   <el-col :span="4" style="text-align: right">
                     <el-button size="small" v-if="isJson(tempApiDetailInfo.requestBody)"
-                               @click.native.prevent="tempApiDetailInfo.requestBody = formatJson(tempApiDetailInfo.requestBody)"
+                               @click.native.prevent="formatRequsetJSON()"
                                round>格式化Json
                     </el-button>
                     <el-button style="color: red"
@@ -129,7 +129,7 @@
                     <!--&gt;-->
                     <!--</el-input>-->
                     <div style="border: 1px solid #cccccc; padding-top: 10px">
-                      <hd-ace style="width: 100%;height: 200px" editorID="reqBody" @aceTextChange="reqBodyTextChange" :value="tempApiDetailInfo.requestBody"></hd-ace>
+                      <hd-ace ref="reqBody" style="width: 100%;height: 200px" editorID="reqBody" @aceTextChange="reqBodyTextChange" :value="tempApiDetailInfo.requestBody"></hd-ace>
                     </div>
                     <!--<div id="reqBody" style="width:96%;height:300px;border:1px solid #ccc;"></div>-->
                   </el-col>
@@ -172,7 +172,7 @@
                 <el-row>
                   <el-col :span="4" style="text-align: right">
                     <el-button size="small" v-if="isJson(tempApiDetailInfo.responseBody)"
-                               @click.native.prevent="tempApiDetailInfo.responseBody = formatJson(tempApiDetailInfo.responseBody)"
+                               @click.native.prevent="formatResponseJSON()"
                                round>格式化Json
                     </el-button>
                     <el-button style="color: red"
@@ -189,7 +189,7 @@
                     <!--style="width:96%;height:300px;border:1px solid #ccc;"></div>-->
 
                     <div style="border: 1px solid #cccccc; padding-top: 10px">
-                      <hd-ace style="width: 100%;height: 200px" editorID="expectResults" @aceTextChange="resBodyTextChange" :value="tempApiDetailInfo.responseBody"></hd-ace>
+                      <hd-ace  ref="expectResults" style="width: 100%;height: 200px" editorID="expectResults" @aceTextChange="resBodyTextChange" :value="tempApiDetailInfo.responseBody"></hd-ace>
                     </div>
                     <!--<el-input-->
                     <!--type="textarea"-->
@@ -680,7 +680,16 @@
           score: 1000 + this.aceManager.completions.length
         }
         this.aceManager.getCompletions(1).push(keyWord)
-      }
+      },
+        formatRequsetJSON(){
+            this.tempApiDetailInfo.requestBody = formatJson(this.tempApiDetailInfo.requestBody)
+            this.$refs.reqBody.resetAceContent(this.tempApiDetailInfo.requestBody)
+        },
+        formatResponseJSON(){
+            this.tempApiDetailInfo.responseBody = formatJson(this.tempApiDetailInfo.responseBody)
+            //expectResults
+            this.$refs.expectResults.resetAceContent(this.tempApiDetailInfo.responseBody)
+        }
     }
   }
 

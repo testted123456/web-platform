@@ -2,9 +2,10 @@ import CfgMain from '@/views/cfg/CfgMain'
 import GVar from '@/views/cfg/GVar'
 import DBCfg from '@/views/cfg/DBCfg'
 import DBGroup from '@/views/cfg/DBGroup'
-import ENV from '@/views/cfg/ENV'
+import EnvDB from '@/views/cfg/EnvDB'
 import SysGit from '@/views/cfg/SysGit'
 import SysBranch from '@/views/cfg/SysBranch'
+import EnvSys from '@/views/cfg/EnvSys'
 
 export default {
   path: 'cfg',
@@ -27,9 +28,14 @@ export default {
       component: DBGroup
     },
     {
-      path: 'env',
-      name: 'ENV',
-      component: ENV
+      path: 'envDB',
+      name: 'EnvDB',
+      component: EnvDB
+    },
+    {
+      path: 'envSys',
+      name: 'EnvSys',
+      component: EnvSys
     },
     {
       path: 'sysGit',

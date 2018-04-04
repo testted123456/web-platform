@@ -1,5 +1,5 @@
 <template>
-  <el-container id="env">
+  <el-container id="envDB">
     <el-main>
       <div style="width: 60%;padding-left: 20%;border: 1px">
       <el-table
@@ -71,7 +71,7 @@
 
 <script>
   export default{
-      name: 'ENV',
+      name: 'EnvDB',
 
       data() {
           return {

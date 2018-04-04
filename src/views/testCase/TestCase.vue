@@ -474,14 +474,6 @@
             var data = this.$refs.editApiDetailInfo.saveApiDetailInfo()
             var index = this.dialog.extend.index;
             if(data){  // 编辑窗口必填参数合格之后 进行的操作
-//                var oldValue =  this.testCase.testCaseInterfaces[index]
-//                for (var i=0; i<this.multipleSelection.length ;i++){
-//                    var value =  this.multipleSelection[i]
-//                    if(oldValue === value){
-//                        this.multipleSelection[i] = data;
-//                      break;
-//                    }
-//                }
               this.$set(this.testCase.testCaseInterfaces, index, data)
               this.dialog.visible = false;
               this.changeState = true;
@@ -555,7 +547,7 @@
         this.dialog = {
           title: '搜索接口',
           visible: true,
-          footerVisible: false,
+          footerVisible: true,
           contentType: 5,
           width: '80%',
           extend: {

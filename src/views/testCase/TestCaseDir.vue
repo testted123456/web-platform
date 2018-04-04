@@ -56,7 +56,7 @@
                 type:false
             }
         }else{
-          this.$http.get(this.testCaseServer+"testCase/getCase?id="+ caseDirID).then(function (res) {
+          this.$http.get(this.testCaseServer+"testCase/getCaseById?id="+ caseDirID).then(function (res) {
             if(res.data.code === 10000){
                 console.log(res.data.data);
               this.testCaseDirInfo= {

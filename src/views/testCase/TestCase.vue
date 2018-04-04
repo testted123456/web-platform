@@ -592,7 +592,7 @@
       },
       /*校验*/
       apiInfoCheck() {
-        window.open(this.address+'apisInfoCheck?testCaseId='+this.$route.query.id)
+        window.open(this.apisInfoCheckaddress+'apisInfoCheck?testCaseId='+this.$route.query.id)
         //   this.dialog = {
 //          title: '校验接口',
 //          visible: true,

@@ -23,10 +23,23 @@
               </el-menu-item-group>
 
             </el-submenu>
-            <el-menu-item index="3">
-              <i class="el-icon-setting"></i>
-              <span slot="title">环境配置</span>
-            </el-menu-item>
+
+            <!--<el-menu-item index="3">-->
+              <!--<i class="el-icon-setting"></i>-->
+              <!--<span slot="title">环境配置</span>-->
+            <!--</el-menu-item>-->
+
+            <el-submenu index="3">
+              <template slot="title">
+                <i class="el-icon-setting"></i>
+                <span>环境配置</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="3-1">数据库</el-menu-item>
+                <el-menu-item index="3-2">系统</el-menu-item>
+              </el-menu-item-group>
+
+            </el-submenu>
 
             <el-submenu index="4">
               <template slot="title">
@@ -89,10 +102,14 @@
               this.$router.push({name: 'DBCfg'});
             }
             break;
-            case '3':{
-              this.$router.push({name: 'ENV'});
+            case '3-1':{
+              this.$router.push({name: 'EnvDB'});
             }
-             break;
+            break;
+            case '3-2':{
+              this.$router.push({name: 'EnvSys'});
+            }
+              break;
             case '4-1':{
               this.$router.push({name: 'SysGit'});
             }

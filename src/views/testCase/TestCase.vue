@@ -493,15 +493,18 @@
             var partData = this.$refs.searchApiDetailInfo.rewrite();
             console.log(partData);
 
-            data.step = partData.step;
-            data.urlAddress = partData.urlAddress;
-            data.variables = partData.variables;
-            data.requestHead = partData.requestHead;
-            data.requestBody = partData.requestBody;
-            data.responseBody = partData.responseBody;
-            data.assertions = partData.assertions;
+            var fData = partData;
+            fData.id = data.id;
 
-            this.$set(this.testCase.testCaseInterfaces, index, data)
+            this.$set(this.testCase.testCaseInterfaces, index, fData)
+
+//            data.step = partData.step;
+//            data.urlAddress = partData.urlAddress;
+//            data.variables = partData.variables;
+//            data.requestHead = partData.requestHead;
+//            data.requestBody = partData.requestBody;
+//            data.responseBody = partData.responseBody;
+//            data.assertions = partData.assertions;
 
           }
             break;

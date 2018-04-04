@@ -293,35 +293,6 @@
           console.log('parent');
         }
       },
-      loadNode(node, resolve) {
-        if(node.level === 0){
-          return resolve([{ name:  'Root', id: 0 , type: false}]);
-        }else if(node.isLeaf === true){
-          return;
-        }else{
-          //先注释 用本地数据
-          this.$http.get(this.testCaseServer+"testCaseInterface/getSameCasesByApiId?apiId=" + node.data.id).then(function (res) {
-            if(res.data.succeed){
-              var apiTreeInfo = res.data.data;
-              return resolve(res.data.data);
-            }
-            return;
-          },function (res) {
-
-          });
-
-
-        }
-      },
-      addApi(){
-        console.log(this)
-        var node = this.$refs.tree.currentNode.node;
-        var data = node.data;
-
-        if(node.isLeaf){
-
-        }
-      },
 
       rewrite(){
         var reData = this.tempApiDetailInfo;

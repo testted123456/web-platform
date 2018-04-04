@@ -208,7 +208,7 @@
       isJson,
       getTreeData(){
         var This = this;
-        this.axios.get(This.testCaseServer+"testCaseInterface/getSameCasesByApiId?apiId=" + This.searchInfo.id).then(function (res) {
+        this.axios.get(This.testCaseServer+"testCaseInterface/getSameCasesByApiId?apiId=" + This.searchInfo.interfaceId).then(function (res) {
           if(res.data.code === 10000){
             This.treeData = res.data.data;
             console.log(This.treeData)

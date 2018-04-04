@@ -49,6 +49,7 @@
                     :data="group.testCaseList"
                     style="width: 100%"
                     @selection-change="handleSelectionChange"
+                    @select="selectOne"
                     ref="multipleTable">
 
             <el-table-column
@@ -152,6 +153,7 @@
     name: 'Group',
     data () {
       return {
+        changeState:false,
         serverSendMsg:null,
         percentageNum:0,
         checkboxExecutable:true,
@@ -203,11 +205,23 @@
     methods: {
       moveup,
       movedown,
+      selectOne(selection, row){
+        if(row.checked){
+          row.checked = false;
+        }else{
+          row.checked = true;
+        }
+      },
       handleSelectionChange(val) {
         console.log("选择发生改变")
         this.multipleSelection = val;
+        if(this.changeState){
+          this.reCheck();
+          this.changeState = false;
+        }
         this.filterExecteId();
       },
+      //得到选中的有id的 接口数据并且过滤出id数组
       filterExecteId(){
         this.checkboxExecutable = true;
         var tempArr=[];
@@ -222,6 +236,16 @@
         if(this.checkboxExecutable){
           this.selectedCaseArr = tempArr.concat();
         }
+      },
+      //因存储地址变了  复选之前已经选中的复选框
+      reCheck(){
+        console.log('multipleSelection='+this.multipleSelection.length);
+        var that = this;
+        this.group.testCaseList.forEach(function(e,index){
+          if(e.checked){
+            that.$refs.multipleTable.toggleRowSelection(e,true);
+          }
+        });
       },
       getData() {
         this.executeBtnShow = true;//执行按钮隐藏
@@ -260,13 +284,13 @@
                   .then(function(res){
                     if (res.data.code === 10000 ) {
                       vueThis.group = res.data.data;
-                      this.$nextTick(()=>{
-                        var that = this;
-                        this.group.testCaseList.forEach(function(e,index){
+                      vueThis.$nextTick(()=>{
+                        var that = vueThis;
+                        vueThis.group.testCaseList.forEach(function(e,index){
+                          e.checked = true;
                           that.$refs.multipleTable.toggleRowSelection(e,true);
                         })
-                        this.multipleSelection = this.group.testCaseList;
-                        this.filterExecteId();
+                        vueThis.filterExecteId();
                       })
                     }else{
                       vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
@@ -299,6 +323,7 @@
           case 1: {   //1=添加接口
             this.group.testCaseList = this.$refs.caseSelectView.getCases();
             this.dialog.visible = false;
+            this.changeState = true;
           }
             break;
           case 2: { //2=删除用例

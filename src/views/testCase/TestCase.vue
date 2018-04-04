@@ -56,6 +56,7 @@
                     :data="testCase.testCaseInterfaces"
                     style="width: 100%"
                     @select-all = "selectAll"
+                    @select = "selectOne"
                     @selection-change="handleSelectionChange"
                     ref="multipleTable">
             <el-table-column
@@ -190,6 +191,7 @@
 
     data () {
       return {
+        changeState:false,
         checkboxExecutable:true,
         multipleSelection:[],
         selectedApiArr:[],
@@ -258,9 +260,20 @@
       selectAll(selection){
           console.log(selection)
       },
+      selectOne(selection, row){
+          if(row.checked){
+            row.checked = false;
+          }else{
+            row.checked = true;
+          }
+      },
       handleSelectionChange(val) {
         console.log("选择发生改变")
         this.multipleSelection = val;
+        if(this.changeState){
+          this.reCheck();
+          this.changeState = false;
+        }
         this.filterExecteId();
       },
       //得到选中的有id的 接口数据并且过滤出id数组
@@ -279,14 +292,15 @@
           this.selectedApiArr = tempArr.concat();
         }
       },
+      //因存储地址变了  复选之前已经选中的复选框
       reCheck(){
         console.log('multipleSelection='+this.multipleSelection.length);
         var that = this;
-        this.multipleSelection.forEach(function(e,index){
-          that.$refs.multipleTable.toggleRowSelection(e,true);
-          console.log('遍历')
+        this.testCase.testCaseInterfaces.forEach(function(e,index){
+          if(e.checked){
+            that.$refs.multipleTable.toggleRowSelection(e,true);
+          }
         });
-        this.filterExecteId();
       },
       //////////复制接口
       copyApi(data, Index) {
@@ -344,9 +358,9 @@
                   this.$nextTick(()=>{
                       var that = this;
                       this.testCase.testCaseInterfaces.forEach(function(e,index){
-                        that.$refs.multipleTable.toggleRowSelection(e,true);
+                          e.checked = true;
+                          that.$refs.multipleTable.toggleRowSelection(e,true);
                       });
-                      this.multipleSelection = this.testCase.testCaseInterfaces;
                       this.filterExecteId();
                   })
                 }
@@ -391,7 +405,6 @@
             if(ifQualified){//必填信息全部填写完整了 再请求保存接口
               if(caseID == 0){    /////////////////////////////////新增界面 确认按钮事件
                 this.testCase.pId = this.$route.query.pId;
-//                this.testCase.testCaseInterfaces = this.apisInCase;
                 this.$http.post(this.testCaseServer+"testCase/addCase",this.testCase).then(function (res) {
                   if(res.data.code === 10000){
                     var receiveCase = res.data.data;
@@ -413,7 +426,6 @@
                 });
 
               }else{     /////////////////////////编辑界面 确认按钮事件
-//                this.testCase.testCaseInterfaces = this.apisInCase;
                 this.$http.post(this.testCaseServer+"testCase/updateCase",this.testCase).then(function (res) {
                   console.log(res.data.data);
                   if(res.data.code === 10000){
@@ -422,8 +434,7 @@
                       message: '恭喜你，更新用例成功',
                       type: 'success'
                     });
-                    /////////////////////////////////////////////////////////////////////////////////
-//                    this.apisInCase = res.data.data.testCaseInterfaces;
+
                     this.testCase = res.data.data;
                     this.$store.commit('changeTestCaseStatus', 1);
                     this.$store.commit('setNewTestCase', this.testCase);
@@ -452,7 +463,7 @@
           case 1: {   //1=添加接口
             this.testCase.testCaseInterfaces = this.$refs.apiSelectView.getApis();
             this.dialog.visible = false;
-            this.reCheck();
+            this.changeState = true;
           }
             break;
           case 2: { //2=动态库查询
@@ -463,9 +474,17 @@
             var data = this.$refs.editApiDetailInfo.saveApiDetailInfo()
             var index = this.dialog.extend.index;
             if(data){  // 编辑窗口必填参数合格之后 进行的操作
+//                var oldValue =  this.testCase.testCaseInterfaces[index]
+//                for (var i=0; i<this.multipleSelection.length ;i++){
+//                    var value =  this.multipleSelection[i]
+//                    if(oldValue === value){
+//                        this.multipleSelection[i] = data;
+//                      break;
+//                    }
+//                }
               this.$set(this.testCase.testCaseInterfaces, index, data)
               this.dialog.visible = false;
-              this.reCheck();
+              this.changeState = true;
             }
           }
             break;
@@ -481,7 +500,7 @@
             var index = this.dialog.extend.index;
             var partData = this.$refs.searchApiDetailInfo.rewrite();
             console.log(partData);
-            
+
             data.step = partData.step;
             data.urlAddress = partData.urlAddress;
             data.variables = partData.variables;

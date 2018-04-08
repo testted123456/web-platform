@@ -46,7 +46,7 @@
     },
 
     watch:{
-      id: function () {
+      $route(){
         this.init();
       }
     },
@@ -69,7 +69,9 @@
               type: 'success'
             });
 
+            this.$store.commit('changeApiStatus', 2);
             this.api.id = res.data.data.id;
+            this.$store.commit('setNewApi', this.api);
           }else{
             this.$message.error('抱歉，更新接口失败：' + res.data.msg);
           }

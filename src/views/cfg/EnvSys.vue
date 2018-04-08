@@ -25,7 +25,7 @@
             label="系统"
           >
             <template slot-scope="scope">
-              <el-select v-model="appearENVs[scope.$index].system.id" placeholder="请选择">
+              <el-select v-model="appearENVs[scope.$index].systemCfg.id" placeholder="请选择">
                 <el-option
                   v-for="item in systems"
                   :key="item.id"
@@ -75,18 +75,18 @@
           :current-page.sync="currentPage"
           :page-size="pageSize"
           layout="prev, pager, next, jumper"
-          :total="envs.length"
+          :total="envSysems.length"
         >
         </el-pagination>
       </div>
       <el-dialog
         :visible.sync="delDialogVisible"
-        width="25%"
+        width="420px"
       >
         <span>确认删除？</span>
         <span slot="footer" class="dialog-footer">
-                    <el-button @click="delDialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="del">确 定</el-button>
+                    <el-button class="el-button el-button--default el-button--small" @click="delDialogVisible = false">取 消</el-button>
+                    <el-button type="primary" class="el-button el-button--default el-button--small" @click="del">确 定</el-button>
                   </span>
       </el-dialog>
     </el-main>
@@ -112,7 +112,7 @@
 
     computed:{
       appearENVs(){
-        var maxIndex = Math.min(this.pageSize *this.currentPage, this.envs.length);
+        var maxIndex = Math.min(this.pageSize *this.currentPage, this.envSysems.length);
         var arr = this.envSysems.slice(this.pageSize *(this.currentPage - 1), maxIndex)
         return arr;
       }
@@ -176,7 +176,7 @@
         this.testCaseAxios({
           method: 'post',
           data: rows[index],
-          url: 'env/add'
+          url: 'sysEnv/add'
         }).then(function (res) {
           if(res.data.code === 10000){
             vueThis.$message({
@@ -195,7 +195,7 @@
       },
 
       showAdd(index, rows){
-        if(rows.length == index + 1 && (rows[index].name != '')){
+        if(rows.length == index + 1 && (rows[index].systemCfg != null && rows[index].env != null && rows[index].domain != '' && rows[index].dns != null)){
           return true;
         }else{
           return false;
@@ -206,35 +206,45 @@
       addRow(index, rows){
         if(rows.length == index + 1 && rows[index].name != ''  ){
           rows.push({
-            name: '',
-            dbGroup:{}
+            systemCfg : {},
+            env : {},
+            domain : '',
+            dns : ''
           })
-          this.envs.push(rows[index+1]);
+          this.envSysems.push(rows[index+1]);
         }
       },
 
-      del(){
-
+      deleteRow(index, rows){
+          this.delDialogVisible = true;
+          this.delIndex = index;
+          this.delEnvSys = rows;
       },
 
       //删除消息头中的一行
-      deleteRow(index, rows) {
+      del() {
+        this.delDialogVisible = false;
+        let index = this.delIndex;
+        let rows = this.delEnvSys;
+
         if(typeof(rows[index].id) != 'undefined' ){
           let vueThis = this;
 
           this.testCaseAxios({
             method: 'post',
             data: rows[index],
-            url: 'env/delete'
+            url: 'sysEnv/del'
           }).then(function (res) {
             if(res.data.code === 10000){
 
-              if(index == 0 && rows.length == 1 && vueThis.currentPage === 1 && vueThis.envs.length <= vueThis.pageSize){
-                rows[index].name = '';
-                rows[index].dbGroup = {};
+              if(index == 0 && rows.length == 1 && vueThis.currentPage === 1 && vueThis.envSysems.length <= vueThis.pageSize){
+                rows[index].systemCfg = {};
+                rows[index].env = {};
+                rows[index].domain = '';
+                rows[index].dns = '';
               }else {
                 let totalIndex = vueThis.pageSize *(vueThis.currentPage - 1) + index;
-                vueThis.envs.splice(totalIndex, 1);
+                vueThis.envSysems.splice(totalIndex, 1);
               }
 
               vueThis.$message({
@@ -251,12 +261,14 @@
             vueThis.$message.error('服务器请求失败！');
           })
         }else{
-          if(index == 0 && rows.length == 1 && this.currentPage === 1 && this.envs.length <= this.pageSize){
-            rows[index].name = '';
-            rows[index].dbGroup = {};
+          if(index == 0 && rows.length == 1 && this.currentPage === 1 && this.envSysems.length <= this.pageSize){
+            rows[index].systemCfg = {};
+            rows[index].env = {};
+            rows[index].domain = '';
+            rows[index].dns = '';
           }else {
             let totalIndex = this.pageSize *(this.currentPage - 1) + index;
-            this.envs.splice(totalIndex, 1);
+            this.envSysems.splice(totalIndex, 1);
           }
         }
       },
@@ -276,3 +288,8 @@
     }
   }
 </script>
+
+<style scoped>
+
+
+</style>

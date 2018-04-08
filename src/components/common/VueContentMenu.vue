@@ -11,7 +11,7 @@
         <input type="button" @click.stop="delItem" v-bind:disabled="!contextMenuData.showDel" style="width: inherit;height: inherit; border: none;background: inherit" value="删除"/>
       </span>
         <span id="refresh" :style="{background:refreshBackGroundColor}" @mouseover="setRefreshBackground('#46A3FF')" @mouseleave="setRefreshBackground('none')">
-        <input type="button" @click.stop="refreshApi" style="width: inherit;height: inherit; border: none;background: inherit" value="刷新"/>
+        <input type="button" @click.stop="refreshApi" v-bind:disabled="!contextMenuData.showAddDir" style="width: inherit;height: inherit; border: none;background: inherit" value="刷新"/>
       </span>
     </div>
   </div>

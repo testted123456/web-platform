@@ -35,8 +35,8 @@
                 <span>环境配置</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="3-1">数据库</el-menu-item>
-                <el-menu-item index="3-2">系统</el-menu-item>
+                <el-menu-item index="3-1">环境-数据库</el-menu-item>
+                <el-menu-item index="3-2">环境-系统</el-menu-item>
               </el-menu-item-group>
 
             </el-submenu>
@@ -135,5 +135,24 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+  .el-menu-item{
+    text-align: left;
+  }
+
+  /*.el-submenu__title{*/
+    /*text-align: left;*/
+  /*}*/
+
+  .el-submenu{
+    text-align: left;
+  }
+
+  .el-submenu__title{
+    text-align: left;
+  }
+
+  .el-icon-setting{
+    text-align: left;
+  }
 
 </style>

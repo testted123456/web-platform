@@ -1,18 +1,17 @@
 <template>
         <el-container>
-            <el-aside width="240px" style="border-right:1px solid #e6e6e6;overflow-x: scroll">
-
-                <el-input
+            <el-aside :width=asideWidth style="border-right:1px solid #e6e6e6;overflow-x: scroll">
+                  <el-input
                     placeholder="输入接口名称进行过滤"
-                >
-                </el-input>
-                <vue-content-menu :contextMenuData="contextMenuData"
-                                  @addDir="addDir"
-                                  @addItem="addApi"
-                                  @delItem="showDelDialog"
-                                  @refreshApi="refreshApi"
-                ></vue-content-menu>
-                <el-tree
+                  >
+                  </el-input>
+                  <vue-content-menu :contextMenuData="contextMenuData"
+                                    @addDir="addDir"
+                                    @addItem="addApi"
+                                    @delItem="showDelDialog"
+                                    @refreshApi="refreshApi"
+                  ></vue-content-menu>
+                  <el-tree
                     :props="props"
                     :load="loadNode"
                     ref="tree"
@@ -20,20 +19,26 @@
                     lazy
                     node-key="id"
                     @node-click="handleNodeClick" @node-right-click="handleRightClick"
-                >
-                </el-tree>
-                <el-dialog
-                  title="提示"
-                  :visible.sync="delDialogVisible"
-                  width="30%"
                   >
-                  <span>确认删除？</span>
-                  <span slot="footer" class="dialog-footer">
-                    <el-button @click="delDialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="delApi">确 定</el-button>
-                  </span>
-                </el-dialog>
+                  </el-tree>
+                  <el-dialog
+                    title="提示"
+                    :visible.sync="delDialogVisible"
+                    width="30%"
+                  >
+                    <span>确认删除？</span>
+                    <span slot="footer" class="dialog-footer">
+                      <el-button @click="delDialogVisible = false">取 消</el-button>
+                      <el-button type="primary" @click="delApi">确 定</el-button>
+                    </span>
+                  </el-dialog>
+
+
             </el-aside>
+            <div style="width: 20px;background:aliceblue" @mousedown.stop ="onMouseDown"
+                 @mousemove.stop="onMouseMove"
+                 @mouseup="onMouseUp"
+                 draggable="true"></div>
             <router-view></router-view>
         </el-container>
 </template>
@@ -44,14 +49,18 @@
   import store from '@/store';
   import VueContentMenu from '@/components/common/VueContentMenu.vue';
   import ElTree from '@/components/common/tree/src/tree.vue'
+  import ElRow from "element-ui/packages/row/src/row";
+  import ElCol from "element-ui/packages/col/src/col";
 
   export default {
 
-  components: {Router, VueContentMenu, ElTree},
+  components: {ElCol, ElRow, Router, VueContentMenu, ElTree},
 
   name: 'ApiMain',
   data () {
     return {
+      asideWidth: '240px',
+      isMouseDown: false,
       data: [],
       props: {
         label: 'name',
@@ -81,9 +90,8 @@
 
   watch:{
       'isNewApiSaved': function (val, oldVal) { //新增api
+        var node = this.$refs.tree.currentNode.node;
         if(val == 1){
-          var node = this.$refs.tree.currentNode.node;
-
           var newChild = this.$store.state.api.newApi;
 
           if (!node.data.children) {
@@ -99,17 +107,84 @@
 
           node.data.children.push(newChild);
           this.$store.commit( 'changeApiStatus', 0);
-
           node.updateChildren()
 
           if(!node.expanded){
               node.expand();
           }
+        }else if(val == 2){
+          var updatedApi = this.$store.state.api.newApi;
+          node.data.name = updatedApi.name;
+          this.$store.commit( 'changeApiStatus', 0);
         }
+      },
+
+      'isMouseDown': function (val, oldVal) {
+        console.log('isMouseDown:' + val)
       }
   },
 
   methods: {
+    onMouseDown(env){
+
+//        var oEnv = env || envent;
+        this.isMouseDown = true;
+//        var disX = oEnv.clientX
+
+//        document.onmousemove = function (env) {
+//          console.log(this.asideWidth)
+//          var oEnv = env || envent;
+//          this.asideWidth = oEnv.clientX + 'px'
+//          console.log(this.asideWidth)
+//        }
+//
+//        document.onmouseup = function (env) {
+//          document.onmousemove = null;
+//        }
+//      var oEnv = env || envent;
+//
+//      disX = oEnv.clientX - oDiv2.offsetLeft;
+//      disY = oEnv.clientY - oDiv2.offsetLeft;
+//
+//      document.onmousemove = function (env) {
+//        var oEnv = env || envent;
+//        var l = oEnv.clientX - disX;
+//
+//        if(l<0){
+//          l = 0;
+//        }else if(l > oDiv1.offsetWidth - oDiv2.offsetWidth){
+//          l = oDiv1.offsetWidth - oDiv2.offsetWidth;
+//        }
+//
+//        oDiv2.style.left = l + 'px';
+//        var scale = l/(oDiv1.offsetWidth-oDiv2.offsetWidth);
+//
+//        oDiv4.style.top = -scale*(oDiv4.offsetHeight-oDiv3.offsetHeight) + 'px';
+//      }
+//
+//      document.onmouseup = function (env) {
+//        document.onmousemove = null;
+//      }
+    },
+
+    onMouseMove(env){
+      if(this.isMouseDown === true){
+        var oEnv = env || envent;
+        this.asideWidth = oEnv.clientX - oEnv.offsetX + 'px';
+        console.log(this.asideWidth)
+      }
+
+      document.onmouseup = function (env) {
+        this.isMouseDown = false;
+      }
+
+    },
+
+    onMouseUp(env){
+      this.isMouseDown = false;
+    },
+
+
     handleNodeClick(data, node, instance){
       if(node.data.id === 0){
           console.log('xxx')
@@ -249,8 +324,29 @@
       this.delDialogVisible = true;
     },
 
-    refreshApi(){
+    refreshApi(){//刷新节点
       var node = this.$refs.tree.currentNode.node;
+      var vueThis = this;
+
+      this.apiAxios({
+        method: 'get',
+        url: 'api/getApiTreeByPId?pId=' + node.data.id
+      }).then(function (res) {
+        if(res.data.code === 10000){
+          node.data.children = res.data.data;
+        }else{
+          vueThis.$message({
+            message: '刷新失败' + res.data.msg,
+            type: 'error'
+          });
+        }
+      }).catch(function (err) {
+        vueThis.$message.error('服务器请求失败！');
+      })
+
+      node.data.type = false;
+
+      node.updateChildren();
       node.expand();
       this.closeMenu();
     }

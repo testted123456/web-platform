@@ -4,6 +4,7 @@ import Login from '@/views/login'
 import Home from './home/homeRouter.js'
 import ApisInfoCheck from '@/views/testCase/apisInfoCheckComponent.vue'
 import AceTest from '@/views/AceTest'
+import Echart from '@/views/echartDemo'
 
 Vue.use(Router)
 
@@ -24,6 +25,11 @@ export default new Router({
       path:'/ace',
       name:'AceTest',
       component:AceTest
+    },
+    {
+      path:'/echart',
+      name:'Echart',
+      component:Echart
     }
   ]
 })

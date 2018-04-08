@@ -377,6 +377,7 @@
       },
       //新增，编辑 确认按钮事件
       saveCase() {
+
         var caseID = this.$route.query.id;
 
         this.$refs['testCase'].validate((valid) => {
@@ -436,7 +437,7 @@
                     });
 
                     this.testCase = res.data.data;
-                    this.$store.commit('changeTestCaseStatus', 1);
+                    this.$store.commit('changeTestCaseStatus', 2);
                     this.$store.commit('setNewTestCase', this.testCase);
 
                   }else{

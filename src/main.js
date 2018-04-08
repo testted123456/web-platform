@@ -19,15 +19,14 @@ Vue.prototype.axios = axios
 Vue.prototype.cookieManager = Cookie
 Vue.prototype.ApiCopyId = 0;
 Vue.prototype.ApiCopyData = {};
-Vue.prototype.apiServer = 'http://192.168.32.128:8082/inter/';
-Vue.prototype.testCaseServer = 'http://192.168.32.128:8083/case/';
-Vue.prototype.wsServer = '192.168.32.128:8083';
+Vue.prototype.apiServer = 'http://192.168.32.155:8082/inter/';
+Vue.prototype.testCaseServer = 'http://192.168.32.155:8083/case/';
+Vue.prototype.wsServer = '192.168.32.155:8083';
 Vue.prototype.groupServer = 'http://192.168.32.150:8082/group/';
 Vue.prototype.apisInfoCheckaddress = 'http://localhost:8080/#/';
 Vue.prototype.aceManager = aceManager
 String.prototype.trim = function () {
   return this.replace(/(^\s*)|(\s*$)/g, "");
-
 }
 
 Vue.prototype.testCaseAxios = axios.create({
@@ -37,6 +36,7 @@ Vue.prototype.testCaseAxios = axios.create({
 Vue.prototype.apiAxios = axios.create({
   baseURL: 'http://192.168.32.100:8082/inter/'
 });
+
 
 new Vue({
   el: '#app',

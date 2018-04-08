@@ -1,45 +1,46 @@
 <template>
         <el-container>
-            <el-aside :width=asideWidth style="border-right:1px solid #e6e6e6;overflow-x: scroll">
-                  <el-input
-                    placeholder="输入接口名称进行过滤"
-                  >
-                  </el-input>
-                  <vue-content-menu :contextMenuData="contextMenuData"
-                                    @addDir="addDir"
-                                    @addItem="addApi"
-                                    @delItem="showDelDialog"
-                                    @refreshApi="refreshApi"
-                  ></vue-content-menu>
-                  <el-tree
-                    :props="props"
-                    :load="loadNode"
-                    ref="tree"
-                    :expand-on-click-node=false
-                    lazy
-                    node-key="id"
-                    @node-click="handleNodeClick" @node-right-click="handleRightClick"
-                  >
-                  </el-tree>
-                  <el-dialog
-                    title="提示"
-                    :visible.sync="delDialogVisible"
-                    width="30%"
-                  >
-                    <span>确认删除？</span>
-                    <span slot="footer" class="dialog-footer">
+            <el-aside :width=asideWidth id="dragAside" style="position:relative;border-right:1px solid #e6e6e6;overflow: scroll">
+              <div style="position: absolute;left:20px;top:20px;padding-right:20px;">
+                <el-input
+                  placeholder="输入接口名称进行过滤"
+                >
+                </el-input>
+                <vue-content-menu :contextMenuData="contextMenuData"
+                                  @addDir="addDir"
+                                  @addItem="addApi"
+                                  @delItem="showDelDialog"
+                                  @refreshApi="refreshApi"
+                ></vue-content-menu>
+                <el-tree
+                  :props="props"
+                  :load="loadNode"
+                  ref="tree"
+                  :expand-on-click-node=false
+                  lazy
+                  node-key="id"
+                  @node-click="handleNodeClick" @node-right-click="handleRightClick"
+                >
+                </el-tree>
+                <el-dialog
+                  title="提示"
+                  :visible.sync="delDialogVisible"
+                  width="30%"
+                >
+                  <span>确认删除？</span>
+                  <span slot="footer" class="dialog-footer">
                       <el-button @click="delDialogVisible = false">取 消</el-button>
                       <el-button type="primary" @click="delApi">确 定</el-button>
                     </span>
-                  </el-dialog>
-
-
+                </el-dialog>
+              </div>
+              <div style="width: 20px;height:100%;background:deeppink;position:absolute;right:0px;top:0;" @mousedown.stop ="onMouseDown"
+                   @mousemove.stop="onMouseMove"
+                   @mouseup="onMouseUp"
+                   draggable="true" id="drag">
+              </div>
             </el-aside>
-            <div style="width: 20px;background:aliceblue" @mousedown.stop ="onMouseDown"
-                 @mousemove.stop="onMouseMove"
-                 @mouseup="onMouseUp"
-                 draggable="true"></div>
-            <router-view></router-view>
+          <router-view></router-view>
         </el-container>
 </template>
 
@@ -91,6 +92,7 @@
   watch:{
       'isNewApiSaved': function (val, oldVal) { //新增api
         var node = this.$refs.tree.currentNode.node;
+        console.log(node);
         if(val == 1){
           var newChild = this.$store.state.api.newApi;
 
@@ -123,12 +125,38 @@
         console.log('isMouseDown:' + val)
       }
   },
-
+  mounted(){
+      this.dragFun();
+  },
   methods: {
-    onMouseDown(env){
+    dragFun(){
+      var div1 = document.getElementById("drag");
+      div1.onmousedown = function(ev) {
+        var oevent = ev || event;
 
-//        var oEnv = env || envent;
-        this.isMouseDown = true;
+        var distanceX = oevent.clientX - div1.offsetLeft;
+
+        document.onmousemove = function (ev) {
+          var oevent = ev || event;
+          if(oevent.clientX - distanceX -20 > 202){
+            div1.style.left = oevent.clientX - distanceX -20 + 'px';
+            console.log(div1.style.left)
+            document.getElementById("dragAside").style.width = oevent.clientX - distanceX + 20+  'px'
+            console.log(document.getElementById("dragAside").style.width)
+          }
+        };
+        document.onmouseup = function () {
+          document.onmousemove = null;
+          document.onmouseup = null;
+        };
+      }
+
+    },
+    onMouseDown(env){
+//        var div1 = document.getElementById("drag");
+//        var oevent  = env || envent;
+////        this.isMouseDown = true;
+//        var distanceX = oevent.clientX - div1.offsetLeft;
 //        var disX = oEnv.clientX
 
 //        document.onmousemove = function (env) {
@@ -168,20 +196,20 @@
     },
 
     onMouseMove(env){
-      if(this.isMouseDown === true){
-        var oEnv = env || envent;
-        this.asideWidth = oEnv.clientX - oEnv.offsetX + 'px';
-        console.log(this.asideWidth)
-      }
+//      if(this.isMouseDown === true){
+//        var oEnv = env || envent;
+//        this.asideWidth = oEnv.clientX - oEnv.offsetX + 20 + 'px';
+//        console.log(this.asideWidth)
+//      }
 
-      document.onmouseup = function (env) {
-        this.isMouseDown = false;
-      }
+//      document.onmouseup = function (env) {
+//        this.isMouseDown = false;
+//      }
 
     },
 
     onMouseUp(env){
-      this.isMouseDown = false;
+//      this.isMouseDown = false;
     },
 
 

@@ -44,7 +44,7 @@
       saveApi(){
         this.api.pId = this.$route.query.pId;
 
-        this.$http.post("http://localhost:8082/inter/api/addApiDir", this.api).then(function (res) {
+        this.$http.post(this.apiServer+"api/addApiDir", this.api).then(function (res) {
 
           if(res.data.code == '10000') {
             this.$message({

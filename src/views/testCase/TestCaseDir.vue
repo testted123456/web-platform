@@ -107,7 +107,7 @@
                     type: 'success'
                   });
                   //存数据  树节点刷新
-                  this.$store.commit('changeTestCaseStatus', 1);
+                  this.$store.commit('changeTestCaseStatus', 2);
                   this.testCaseDirInfo.id = res.data.data.id;
                   this.$store.commit('setNewTestCase', this.testCaseDirInfo);
                 }else{

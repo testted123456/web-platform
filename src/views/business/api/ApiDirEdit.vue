@@ -62,7 +62,7 @@
       },
 
       saveApi(){
-        this.$http.post("http://localhost:8082/inter/api/addApiDir", this.api).then(function (res) {
+        this.$http.post(this.apiServer + "api/addApiDir", this.api).then(function (res) {
           if(res.data.code == '10000'){
             this.$message({
               message: '恭喜你，更新接口成功',

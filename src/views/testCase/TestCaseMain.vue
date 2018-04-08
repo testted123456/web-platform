@@ -20,7 +20,8 @@
           :expand-on-click-node=false
           lazy
           node-key="id"
-          @node-click="handleNodeClick" @node-right-click="handleRightClick"
+          @node-click = "handleNodeClick"
+          @node-right-click = "handleRightClick"
         >
         </el-tree>
       </div>
@@ -78,37 +79,59 @@
     },
     watch: {
       'isNewTestCaseSaved': function (val, oldVal) { //新增testCase
-        if (val == 1) {
+        if(this.$refs.tree.currentNode == null){
+          this.refreshApi();
+          console.log('refresh')
+        }else{
           var node = this.$refs.tree.currentNode.node;
+          var node1 = null;
+          if (val == 1) {
+            if (!node.data.children) {
+              this.$set(node.data, 'children', []);
+              node.childNodes.forEach(function (vaule, index, array) {
+                node.data.children.push(vaule.data);
+              })
+            }
 
-          if (!node.data.children) {
-            this.$set(node.data, 'children', []);
-            node.childNodes.forEach(function (vaule, index, array) {
-              node.data.children.push(vaule.data);
-            })
-          }
+            var newChild = this.$store.state.testCase.newTestCase;
+            if(newChild.type === "undefined"){
+              return;
+            }else if(newChild.type === false){
+              newChild.children = [];
+            }
+            node.data.children.push(newChild);
+            this.$store.commit('changeTestCaseStatus', 0);
 
-          var newChild = this.$store.state.testCase.newTestCase;
+            node.updateChildren()
 
-          if(newChild.type === "undefined"){
-            return;
-          }else if(newChild.type === false){
-            newChild.children = [];
-          }
+            if (!node.expanded) {
+              node.expand();
+            }
+            var length = this.$refs.tree.currentNode.node.childNodes.length;
+            if(length>0){
+              var currentNODE = this.$refs.tree.currentNode.node.childNodes[length-1]
+              node.setCurrentNode(currentNODE)
+              node1 = currentNODE
+              console.log(currentNODE);
+//              this.$refs.tree.setCurrentNode(currentNODE)
+//              this.$refs.tree.currentNode = currentNODE
+//              this.$refs.tree.currentNode.$children[length-1] = currentNODE;
+            }
 
-          node.data.children.push(newChild);
-          this.$store.commit('changeTestCaseStatus', 0);
+          }else if(val == 2){
+//            var node = this.$refs.tree.currentNode.node;
+            var updatedCase = this.$store.state.testCase.newTestCase;
 
-          node.updateChildren()
+              node.data.name = updatedCase.name;
+           
 
-          if (!node.expanded) {
-            node.expand();
+            this.$store.commit( 'changeTestCaseStatus', 0);
           }
         }
+
       }
     },
     methods: {
-
       handleNodeClick(data, node, instance){
         if (node.data.type) {
           this.$router.push({name: 'TestCase', query: {id: node.data.id}});

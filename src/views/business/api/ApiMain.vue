@@ -114,7 +114,20 @@
           }
         }else if(val == 2){
           var updatedApi = this.$store.state.api.newApi;
-          node.data.name = updatedApi.name;
+
+          if(updatedApi.id === node.data.id){
+            node.data.name = updatedApi.name;
+          }else{
+            let children = node.childNodes;
+
+            children.forEach(function (e, index) {
+              if(e.data.id === updatedApi.id){
+                e.data.name = updatedApi.name;
+                return;
+              }
+            });
+          }
+
           this.$store.commit( 'changeApiStatus', 0);
         }
       },

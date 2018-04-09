@@ -470,18 +470,21 @@
                 message: '恭喜你，保存测试集成功',
                 type: 'success'
               });
-              // 跳转到当且case的详情页
-              //存数据  树节点刷新
-              vueThis.$store.commit('changeGroupStatus', 1);
-              vueThis.group.id = res.data.data.id;
-              vueThis.$store.commit('setNewGroup', vueThis.group);
+
+
               if(vueThis.$route.query.id == 0){
-                console.log('新增界面 需要路由跳转')
+                //存数据  树节点刷新
+                vueThis.$store.commit('changeGroupStatus', 1);
+                vueThis.group = res.data.data;
+                vueThis.$store.commit('setNewGroup', vueThis.group);
                 vueThis.$router.push({name: 'Group', query: {id: res.data.data.id}});
               }else{
+                //存数据  树节点刷新
+                vueThis.$store.commit('changeGroupStatus', 2);
                 vueThis.group = res.data.data;
-                console.log('改变group内容')
+                vueThis.$store.commit('setNewGroup', vueThis.group);
               }
+
             }else{
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }

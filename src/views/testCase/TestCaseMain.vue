@@ -84,11 +84,10 @@
     watch: {
       'isNewTestCaseSaved': function (val, oldVal) { //新增testCase
         if(this.$refs.tree.currentNode == null){
-          this.refreshApi();
+         // this.refreshApi();
           console.log('refresh')
         }else{
           var node = this.$refs.tree.currentNode.node;
-          var node1 = null;
           if (val == 1) {
             if (!node.data.children) {
               this.$set(node.data, 'children', []);
@@ -111,25 +110,25 @@
             if (!node.expanded) {
               node.expand();
             }
-            var length = this.$refs.tree.currentNode.node.childNodes.length;
-            if(length>0){
-              var currentNODE = this.$refs.tree.currentNode.node.childNodes[length-1]
-              node.setCurrentNode(currentNODE)
-              node1 = currentNODE
-              console.log(currentNODE);
-//              this.$refs.tree.setCurrentNode(currentNODE)
-//              this.$refs.tree.currentNode = currentNODE
-//              this.$refs.tree.currentNode.$children[length-1] = currentNODE;
-            }
-
           }else if(val == 2){
-//            var node = this.$refs.tree.currentNode.node;
+
             var updatedCase = this.$store.state.testCase.newTestCase;
 
+            if(updatedCase.id === node.data.id){
               node.data.name = updatedCase.name;
+            }else{
+              let children = node.childNodes;
 
+              children.forEach(function (e, index) {
+                if(e.data.id === updatedCase.id){
+                  e.data.name = updatedCase.name;
+                  return;
+                }
+              });
+            }
 
             this.$store.commit( 'changeTestCaseStatus', 0);
+
           }
         }
 

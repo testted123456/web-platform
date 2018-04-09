@@ -99,10 +99,17 @@
                 type: 'success'
               });
               //存数据  树节点刷新
-              groupDirThis.$store.commit('changeGroupStatus', 1);
-              groupDirThis.groupDirInfo.id = res.data.data.id;
-              groupDirThis.$store.commit('setNewGroup', groupDirThis.groupDirInfo);
-              groupDirThis.$router.push({name: 'GroupDir', query: {id: res.data.data.id}});
+              if(groupDirThis.$route.query.id == 0){
+                groupDirThis.$store.commit('changeGroupStatus', 1);
+                groupDirThis.groupDirInfo.id = res.data.data.id;
+                groupDirThis.$store.commit('setNewGroup', groupDirThis.groupDirInfo);
+                groupDirThis.$router.push({name: 'GroupDir', query: {id: res.data.data.id}});
+              }else{
+                groupDirThis.$store.commit('changeGroupStatus', 2);
+                groupDirThis.groupDirInfo = res.data.data;
+                groupDirThis.$store.commit('setNewGroup', groupDirThis.groupDirInfo);
+              }
+
             }else{
               groupDirThis.$message.error('抱歉，新增测试集目录失败：' + res.data.msg);
             }

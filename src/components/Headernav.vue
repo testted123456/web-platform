@@ -27,7 +27,9 @@
             '/home/api',
             '/home/case',
             '/home/group',
-            '/home/cfg'
+            '/home/cfg',
+            '/home/gjhgkjgkjhkhj',
+            '/home/report'
         ]
     };
   },
@@ -38,7 +40,7 @@
 
     handleSelect(key, keyPath) {
         var index = key;
-        if(index > 4){return}
+        if(index > 8){return}
         var routerName = this.routers[index - 1];
         this.$router.push(routerName);
     }

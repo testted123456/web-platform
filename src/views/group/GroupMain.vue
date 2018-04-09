@@ -82,8 +82,9 @@
     },
     watch: {
       'isNewGroupSaved': function (val, oldVal) { //新增group
+        var node = this.$refs.tree.currentNode.node;
+
         if (val == 1) {
-          var node = this.$refs.tree.currentNode.node;
 
           if (!node.data.children) {
             this.$set(node.data, 'children', []);
@@ -108,6 +109,23 @@
           if (!node.expanded) {
             node.expand();
           }
+        }else if(val == 2){
+          var updatedGroup = this.$store.state.group.newGroup;
+
+          if(updatedGroup.id === node.data.id){
+            node.data.name = updatedGroup.name;
+          }else{
+            let children = node.childNodes;
+
+            children.forEach(function (e, index) {
+              if(e.data.id === updatedGroup.id){
+                e.data.name = updatedGroup.name;
+                return;
+              }
+            });
+          }
+
+          this.$store.commit( 'changeGroupStatus', 0);
         }
       }
     },

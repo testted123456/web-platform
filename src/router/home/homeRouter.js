@@ -4,6 +4,7 @@ import Api from './api/apiRouter'
 import TestCase from './testCase/testCaseRouter'
 import Group from './group/groupRouter'
 import Cfg from './cfg/cfgRouter'
+import Report from './report/reportRouter'
 
 export default {
   path: '/home',
@@ -14,6 +15,7 @@ export default {
     TestCase,
     Group,
     Cfg,
+    Report,
     {
       path: 'welcome',
       name: 'Welcome',

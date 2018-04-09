@@ -323,7 +323,7 @@
     position: absolute;left:20px;top:20px;padding-right:20px;
   }
   .dragLine{
-    width: 20px;height:100%;background:deeppink;position:absolute;right:0px;top:0;
+    width: 20px;height:100%;background:#efefef;position:absolute;right:0px;top:0;
   }
 h1, h2 {
   font-weight: normal;

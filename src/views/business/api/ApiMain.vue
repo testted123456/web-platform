@@ -34,10 +34,7 @@
                     </span>
                 </el-dialog>
               </div>
-              <div style="width: 20px;height:100%;background:deeppink;position:absolute;right:0px;top:0;" @mousedown.stop ="onMouseDown"
-                   @mousemove.stop="onMouseMove"
-                   @mouseup="onMouseUp"
-                   draggable="true" id="drag">
+              <div style="width: 20px;height:100%;background:deeppink;position:absolute;right:0px;top:0;"  id="drag">
               </div>
             </el-aside>
           <router-view></router-view>
@@ -50,12 +47,12 @@
   import store from '@/store';
   import VueContentMenu from '@/components/common/VueContentMenu.vue';
   import ElTree from '@/components/common/tree/src/tree.vue'
-  import ElRow from "element-ui/packages/row/src/row";
-  import ElCol from "element-ui/packages/col/src/col";
+
+
 
   export default {
 
-  components: {ElCol, ElRow, Router, VueContentMenu, ElTree},
+  components: { Router, VueContentMenu, ElTree},
 
   name: 'ApiMain',
   data () {
@@ -139,93 +136,14 @@
       }
   },
   mounted(){
-      this.dragFun();
+      this.dragF();
   },
   methods: {
-    dragFun(){
-      var div1 = document.getElementById("drag");
-      div1.onmousedown = function(ev) {
-        var oevent = ev || event;
-
-        var distanceX = oevent.clientX - div1.offsetLeft;
-
-        document.onmousemove = function (ev) {
-          var oevent = ev || event;
-          if(oevent.clientX - distanceX -20 > 202){
-            div1.style.left = oevent.clientX - distanceX -20 + 'px';
-            console.log(div1.style.left)
-            document.getElementById("dragAside").style.width = oevent.clientX - distanceX + 20+  'px'
-            console.log(document.getElementById("dragAside").style.width)
-          }
-        };
-        document.onmouseup = function () {
-          document.onmousemove = null;
-          document.onmouseup = null;
-        };
-      }
-
-    },
-    onMouseDown(env){
-//        var div1 = document.getElementById("drag");
-//        var oevent  = env || envent;
-////        this.isMouseDown = true;
-//        var distanceX = oevent.clientX - div1.offsetLeft;
-//        var disX = oEnv.clientX
-
-//        document.onmousemove = function (env) {
-//          console.log(this.asideWidth)
-//          var oEnv = env || envent;
-//          this.asideWidth = oEnv.clientX + 'px'
-//          console.log(this.asideWidth)
-//        }
-//
-//        document.onmouseup = function (env) {
-//          document.onmousemove = null;
-//        }
-//      var oEnv = env || envent;
-//
-//      disX = oEnv.clientX - oDiv2.offsetLeft;
-//      disY = oEnv.clientY - oDiv2.offsetLeft;
-//
-//      document.onmousemove = function (env) {
-//        var oEnv = env || envent;
-//        var l = oEnv.clientX - disX;
-//
-//        if(l<0){
-//          l = 0;
-//        }else if(l > oDiv1.offsetWidth - oDiv2.offsetWidth){
-//          l = oDiv1.offsetWidth - oDiv2.offsetWidth;
-//        }
-//
-//        oDiv2.style.left = l + 'px';
-//        var scale = l/(oDiv1.offsetWidth-oDiv2.offsetWidth);
-//
-//        oDiv4.style.top = -scale*(oDiv4.offsetHeight-oDiv3.offsetHeight) + 'px';
-//      }
-//
-//      document.onmouseup = function (env) {
-//        document.onmousemove = null;
-//      }
-    },
-
-    onMouseMove(env){
-//      if(this.isMouseDown === true){
-//        var oEnv = env || envent;
-//        this.asideWidth = oEnv.clientX - oEnv.offsetX + 20 + 'px';
-//        console.log(this.asideWidth)
-//      }
-
-//      document.onmouseup = function (env) {
-//        this.isMouseDown = false;
-//      }
-
-    },
-
-    onMouseUp(env){
-//      this.isMouseDown = false;
-    },
-
-
+      dragF(){
+        var oBox = document.getElementById("dragAside");
+        var oBar = document.getElementById("drag");
+        this.drag.getWidth(oBar, oBox);
+      },
     handleNodeClick(data, node, instance){
       if(node.data.id === 0){
           console.log('xxx')

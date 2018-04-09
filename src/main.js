@@ -8,6 +8,7 @@ import store from './store'
 import Cookie from '@/assets/js/qc-cookie'
 import aceManager from '@/assets/js/hd-ace'
 import axios from 'axios'
+import drag from "@/assets/js/drag";
 
 
 Vue.config.productionTip = false
@@ -15,6 +16,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(VueResource)
 
+Vue.prototype.drag = drag
 Vue.prototype.axios = axios
 Vue.prototype.cookieManager = Cookie
 Vue.prototype.ApiCopyId = 0;

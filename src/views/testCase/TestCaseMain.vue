@@ -1,41 +1,45 @@
 <template>
   <el-container>
-    <el-aside width="240px" style="border-right:1px solid #e6e6e6">
-      <div class="menu">
-        <el-input
-          placeholder="输入用例名称进行过滤"
-          round
+    <el-aside width="240px" id="testCasedragAside" class="leftAside">
+      <div class="leftNavTree">
+        <div class="menu">
+          <el-input
+            placeholder="输入用例名称进行过滤"
+            round
+          >
+          </el-input>
+          <vue-content-menu :contextMenuData="contextMenuData"
+                            @addDir="addDir"
+                            @addItem="addCase"
+                            @delItem="showDelDialog"
+                            @refreshApi="refreshApi"
+          ></vue-content-menu>
+          <el-tree
+            :props="props"
+            :load="loadNode"
+            ref="tree"
+            :expand-on-click-node=false
+            lazy
+            node-key="id"
+            @node-click = "handleNodeClick"
+            @node-right-click = "handleRightClick"
+          >
+          </el-tree>
+        </div>
+        <el-dialog
+          title="提示"
+          :visible.sync="delDialogVisible"
+          width="30%"
         >
-        </el-input>
-        <vue-content-menu :contextMenuData="contextMenuData"
-                          @addDir="addDir"
-                          @addItem="addCase"
-                          @delItem="showDelDialog"
-                          @refreshApi="refreshApi"
-        ></vue-content-menu>
-        <el-tree
-          :props="props"
-          :load="loadNode"
-          ref="tree"
-          :expand-on-click-node=false
-          lazy
-          node-key="id"
-          @node-click = "handleNodeClick"
-          @node-right-click = "handleRightClick"
-        >
-        </el-tree>
-      </div>
-      <el-dialog
-        title="提示"
-        :visible.sync="delDialogVisible"
-        width="30%"
-      >
-        <span>确认删除？</span>
-        <span slot="footer" class="dialog-footer">
+          <span>确认删除？</span>
+          <span slot="footer" class="dialog-footer">
                     <el-button @click="delDialogVisible = false">取 消</el-button>
                     <el-button type="primary" @click="delCase">确 定</el-button>
                   </span>
-      </el-dialog>
+        </el-dialog>
+      </div>
+      <div class="dragLine" id="testCasedrag">
+      </div>
     </el-aside>
     <router-view></router-view>
   </el-container>
@@ -123,7 +127,7 @@
             var updatedCase = this.$store.state.testCase.newTestCase;
 
               node.data.name = updatedCase.name;
-           
+
 
             this.$store.commit( 'changeTestCaseStatus', 0);
           }
@@ -131,7 +135,15 @@
 
       }
     },
+    mounted(){
+      this.dragF();
+    },
     methods: {
+      dragF(){
+        var oBox = document.getElementById("testCasedragAside");
+        var oBar = document.getElementById("testCasedrag");
+        this.drag.getWidth(oBar, oBox);
+      },
       handleNodeClick(data, node, instance){
         if (node.data.type) {
           this.$router.push({name: 'TestCase', query: {id: node.data.id}});
@@ -263,7 +275,15 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .leftAside{
+    position:relative;border-right:1px solid #e6e6e6;overflow: scroll
+  }
+  .leftNavTree{
+    position: absolute;left:20px;top:20px;padding-right:20px;
+  }
+  .dragLine{
+    width: 20px;height:100%;background:deeppink;position:absolute;right:0px;top:0;
+  }
   h1, h2 {
     font-weight: normal;
   }

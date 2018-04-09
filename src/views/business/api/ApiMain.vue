@@ -1,7 +1,7 @@
 <template>
         <el-container>
-            <el-aside :width=asideWidth id="dragAside" style="position:relative;border-right:1px solid #e6e6e6;overflow: scroll">
-              <div style="position: absolute;left:20px;top:20px;padding-right:20px;">
+            <el-aside :width=asideWidth id="dragAside" class="leftAside">
+              <div class="leftNavTree">
                 <el-input
                   placeholder="输入接口名称进行过滤"
                 >
@@ -34,7 +34,7 @@
                     </span>
                 </el-dialog>
               </div>
-              <div style="width: 20px;height:100%;background:deeppink;position:absolute;right:0px;top:0;"  id="drag">
+              <div class="dragLine"  id="drag">
               </div>
             </el-aside>
           <router-view></router-view>
@@ -316,6 +316,15 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .leftAside{
+    position:relative;border-right:1px solid #e6e6e6;overflow: scroll
+  }
+  .leftNavTree{
+    position: absolute;left:20px;top:20px;padding-right:20px;
+  }
+  .dragLine{
+    width: 20px;height:100%;background:deeppink;position:absolute;right:0px;top:0;
+  }
 h1, h2 {
   font-weight: normal;
 }

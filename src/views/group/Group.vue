@@ -24,7 +24,7 @@
               </el-col>
             </el-form-item>
             <!--环境-->
-            <el-form-item label="环境" prop="env" :rules="[{ required: false, message: '环境不能为空'} ]">
+            <el-form-item label="环境" prop="env" :rules="[{ required: true, message: '环境不能为空'} ]">
               <el-col :span="8">
                 <el-select v-model="group.env" placeholder="请选择">
                   <el-option
@@ -248,7 +248,7 @@
         });
       },
       getData() {
-        this.executeBtnShow = true;//执行按钮隐藏
+        this.executeBtnShow = false;//执行按钮隐藏
         var groupID = this.$route.query.id;
         var vueThis = this;
         //获取环境列表select
@@ -276,12 +276,13 @@
                   id:null,
                   name:'',
                   optstatus:0,
-                  pId:this.$route.query.pId,
+                  pId:vueThis.$route.query.pId,
                   updatedBy:null,
                   updatedTime:null,
                   jobTime:'',
                   testCaseList:[]
                 }
+                console.log(vueThis.group.env)
               }else{ // group编辑页面
                 // 获取group详情信息内容
                 vueThis.executeBtnShow = true;//执行按钮显示
@@ -314,9 +315,9 @@
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
           })
-          .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
-          });
+//          .catch(function (err) {
+//            vueThis.$message.error('抱歉，服务器异常！' );
+//          });
       },
       //check 定时任务
       checkTask(){
@@ -407,52 +408,70 @@
 
       //执行弹窗方法
       execCase() {
-
-        if(this.checkboxExecutable){
-          if(this.selectedCaseArr.length > 0){
-            this.dialog = {
-              title: '执行结果',
-              visible: true,
-              footerVisible: false,
-              contentType: 3,
-              width: '30%',
-              extend: {
-              }
-            }
-            console.log(this.selectedCaseArr);
-            this.percentageNum = 0;
-            var perThis = this;
-            var exectData = {
-                id : this.group.id,
-                testCaseList:this.selectedCaseArr
-            }
-            this.serverSendMsg = setInterval(function(){
-                perThis.groupAxios({
-                  method: 'post',
-                  data: exectData,
-                  url: 'testCaseInterface/addCaseInterfaces'
-                })
-                .then(function (res) {
-                  if(res.data.code === 10000){
-//                    if(perThis.percentageNum >= 100){
-//                      clearInterval(perThis.serverSendMsg)
-//                    }else{
-//                      perThis.percentageNum = perThis.percentageNum +10;
-//                    }
-                  }else{
-                    perThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
-                  }
-                })
-//                .catch(function(err){
-//                  //  vueThis.$message.error('服务器请求失败！');
-//                });
-            }, 1000);
-          }else{
-            this.$message.error('请先选择要执行的用例');
+        this.dialog = {
+          title: '执行结果',
+          visible: true,
+          footerVisible: false,
+          contentType: 3,
+          width: '30%',
+          extend: {
           }
-        }else{
-          this.$message.error('抱歉，选中的某些用例是新增的，请先清除新增的用例');
         }
+
+        this.percentageNum = 0;
+        var perThis = this;
+        var exectData = {
+          id : this.group.id,
+          testCaseList:this.selectedCaseArr
+        }
+
+        this.groupAxios({
+          method: 'get',
+          data: {
+          },
+          url: 'runGroup?id='+perThis.group.id
+        })
+        .then(function (res) {
+            if(res.data.code === 10000){
+              clearInterval(perThis.serverSendMsg)
+              perThis.serverSendMsg = setInterval(function(){
+                perThis.testCaseAxios({
+                  method: 'get',
+                  data: {},
+                  url: 'group/getProgress?groupId='+perThis.group.id
+                })
+                  .then(function (res) {
+                    if(res.data.code === 10000){
+                      perThis.percentageNum = res.data.data;
+                    }else if(res.data.code === 10001){
+                      clearInterval(perThis.serverSendMsg)
+                    }else{
+                      perThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
+                    }
+                  })
+
+              }, 1000);
+
+            }else{
+              perThis.$message.error('抱歉，执行失败：' + res.data.msg);
+            }
+        })
+
+
+
+
+
+//        if(this.checkboxExecutable){
+//          if(this.selectedCaseArr.length > 0){
+//
+//            console.log(this.selectedCaseArr);
+//
+//          }else{
+//            this.$message.error('请先选择要执行的用例');
+//          }
+//        }else{
+//          this.$message.error('抱歉，选中的某些用例是新增的，请先清除新增的用例');
+//        }
 
       },
 

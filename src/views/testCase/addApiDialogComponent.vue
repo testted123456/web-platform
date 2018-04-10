@@ -92,7 +92,7 @@
         }else{
 
           var vueThis = this;
-          vueThis.testCaseAxios({
+          vueThis.apiAxios({
             method: 'get',
             data: {
             },

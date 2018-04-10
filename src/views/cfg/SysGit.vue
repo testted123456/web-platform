@@ -75,7 +75,7 @@
           return {
             sysGit:[],
               currentPage: 1,
-              pageSize: 1,
+              pageSize: 10,
               delIndex: '',
               delSysGit: {},
               delDialogVisible: false

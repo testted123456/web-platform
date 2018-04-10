@@ -85,7 +85,7 @@
           return {
             sysBranch:[],
             currentPage: 1,
-            pageSize: 1,
+            pageSize: 10,
             delIndex: '',
             delSysBranch: {},
             delDialogVisible: false

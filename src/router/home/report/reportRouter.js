@@ -1,6 +1,6 @@
 import ReportMain from  '@/views/report/reportMain'
-import Reportchart from  '@/views/report/reportchart'
-import Reportchart2 from  '@/views/report/reportchart2'
+import ApiSystem from  '@/views/report/apiSystem'
+import ApiBranch from  '@/views/report/apiBranch'
 
 export default {
   path: 'report',
@@ -8,14 +8,14 @@ export default {
   component: ReportMain,
   children: [
     {
-      path: 'reportchart',
-      name: 'Reportchart',
-      component: Reportchart
+      path: 'apiSystem',
+      name: 'ApiSystem',
+      component: ApiSystem
     },
     {
-      path: 'reportchart2',
-      name: 'Reportchart2',
-      component: Reportchart2
+      path: 'apiBranch',
+      name: 'ApiBranch',
+      component: ApiBranch
     }
   ]
 }

@@ -286,7 +286,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .leftAside{
-    position:relative;border-right:1px solid #e6e6e6;overflow: scroll
+    position:relative;border-right:1px solid #e6e6e6;overflow-y: scroll
   }
   .leftNavTree{
     position: absolute;left:20px;top:20px;padding-right:20px;
@@ -312,7 +312,6 @@
     color: #42b983;
   }
   .el-aside{
-    overflow: scroll;
     -webkit-box-sizing: border-box;
   }
   aside {

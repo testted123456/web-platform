@@ -10,26 +10,35 @@
         style="border-right:0px solid #e6e6e6">
         <el-submenu index="1">
           <template slot="title">
-            <i class="el-icon-location"></i>
-            <span>导航一</span>
+            <i class="el-icon-menu"></i>
+            <span>接口统计</span>
           </template>
           <el-menu-item-group>
-            <template slot="title">分组一</template>
-            <el-menu-item index="1-1">选项1</el-menu-item>
-            <el-menu-item index="1-2">选项2</el-menu-item>
+            <el-menu-item index="1-1">按系统分</el-menu-item>
+            <el-menu-item index="1-2">系统分支</el-menu-item>
+            <el-menu-item index="1-3">接口数</el-menu-item>
           </el-menu-item-group>
-          <el-menu-item-group title="分组2">
-            <el-menu-item index="1-3">选项3</el-menu-item>
-          </el-menu-item-group>
-          <el-submenu index="1-4">
-            <template slot="title">选项4</template>
-            <el-menu-item index="1-4-1">选项1</el-menu-item>
-          </el-submenu>
         </el-submenu>
-        <el-menu-item index="2">
-          <i class="el-icon-menu"></i>
-          <span slot="title">导航二</span>
-        </el-menu-item>
+        <el-submenu index="2">
+          <template slot="title">
+            <i class="el-icon-menu"></i>
+            <span>用例统计</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="2-1">是否被group引用</el-menu-item>
+            <el-menu-item index="2-2">按系统分</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-submenu index="3">
+          <template slot="title">
+            <i class="el-icon-menu"></i>
+            <span>group统计</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="3-1">数量</el-menu-item>
+            <el-menu-item index="3-2">成功率</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
       </el-menu>
     </el-aside>
     <router-view></router-view>
@@ -68,11 +77,11 @@
       select(index, indexPath){
         switch (index){
           case '1-1':{
-            this.$router.push({name: 'Reportchart'});
+            this.$router.push({name: 'ApiSystem'});
           }
             break;
           case '1-2':{
-            this.$router.push({name: 'Reportchart2'});
+            this.$router.push({name: 'ApiBranch'});
           }
             break;
 

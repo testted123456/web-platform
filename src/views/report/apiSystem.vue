@@ -1,5 +1,7 @@
 <template>
-  <chart :options="polar"></chart>
+  <div style="height:100%;overflow-y: scroll">
+    <chart :options="polar"></chart>
+  </div>
 </template>
 
 <script>

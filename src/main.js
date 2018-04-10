@@ -10,6 +10,9 @@ import aceManager from '@/assets/js/hd-ace'
 import axios from 'axios'
 import drag from "@/assets/js/drag";
 
+axios.defaults.withCredentials=true;
+
+
 
 Vue.config.productionTip = false
 
@@ -32,12 +35,34 @@ String.prototype.trim = function () {
 }
 
 Vue.prototype.testCaseAxios = axios.create({
-  baseURL: 'http://192.168.32.100:8083/case/'
+  baseURL: 'http://192.168.32.155:8083/case/'
 });
 
 Vue.prototype.apiAxios = axios.create({
-  baseURL: 'http://192.168.32.100:8082/inter/'
+  baseURL: 'http://192.168.32.155:8082/inter/'
 });
+
+Vue.prototype.usrAxios = axios.create({
+  baseURL: 'http://192.168.32.155:8080/'
+});
+
+Vue.prototype.apiAxios.interceptors.response.use(data => {
+    return data
+}, error => {
+ return error
+})
+
+Vue.prototype.usrAxios.interceptors.response.use(data => {
+  return data
+}, error => {
+  return error
+})
+
+Vue.prototype.testCaseAxios.interceptors.response.use(data => {
+  return data
+}, error => {
+  return error
+})
 
 
 new Vue({

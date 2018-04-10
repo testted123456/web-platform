@@ -161,15 +161,21 @@
       }else if(node.isLeaf === true){
           return;
       }else{
-        this.$http.get(this.apiServer + "api/getApiTreeByPId?pId=" + node.data.id).then(function (res) {
-          if(res.data.code == '10000'){
+        var vueThis = this;
+        this.apiAxios({
+          method: 'get',
+          url: 'api/getApiTreeByPId?pId=' + node.data.id
+        }).then(function (res) {
+          if(res.data.code === 10000){
             var tempApi = res.data.data;
             return resolve(res.data.data);
+          }else {
+            vueThis.$message.error('抱歉，获取接口信息失败：' + res.data.msg);
           }
-          return;
-        },function (res) {
-
+        }).catch(function (err) {
+          vueThis.$message.error('抱歉，服务器异常！' );
         });
+
       }
     },
 

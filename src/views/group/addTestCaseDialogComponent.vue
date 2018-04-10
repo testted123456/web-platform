@@ -116,7 +116,9 @@
         this.case = node.data;
 
         if(node.data.type){
-          this.tempCases.push(this.case);
+            var obj = JSON.stringify(this.case);
+            obj = JSON.parse(obj)
+          this.tempCases.push(obj);
         }else{
           this.$message({
             message: '文件夹不能添加',

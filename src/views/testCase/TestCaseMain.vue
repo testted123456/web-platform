@@ -38,9 +38,8 @@
                   </span>
         </el-dialog>
       </div>
-      <div class="dragLine" id="testCasedrag">
-      </div>
     </el-aside>
+    <div class="dragLine" id="testCasedrag"></div>
     <router-view></router-view>
   </el-container>
 </template>
@@ -272,17 +271,8 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .leftAside{
-    position:relative;border-right:1px solid #e6e6e6;overflow: scroll
-  }
-  .leftNavTree{
-    position: absolute;left:20px;top:20px;padding-right:20px;
-  }
-  .dragLine{
-    width: 10px;height:100%;background:#efefef;position:absolute;right:0px;top:0;
-  }
+
   h1, h2 {
     font-weight: normal;
   }
@@ -301,7 +291,6 @@
     color: #42b983;
   }
   .el-aside{
-    overflow: scroll;
     -webkit-box-sizing: border-box;
   }
   aside {

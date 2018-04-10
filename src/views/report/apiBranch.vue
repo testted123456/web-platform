@@ -1,9 +1,8 @@
 <template>
-    <div>
+    <div style="height:100%;overflow-y: scroll">
         <chart  :options="option"></chart>
         <chart  @click="lineClick" :options="option1"></chart>
         <chart @click="barClick" :options="bar"></chart>
-
     </div>
 </template>
 

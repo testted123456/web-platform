@@ -51,10 +51,35 @@
 
     login(){
       // 判断input是否为空
+      var  vueThis = this;
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loginState = '登录中';
           this.loading = true;
+
+
+          vueThis.usrAxios({
+            method: 'post',
+            data: {
+              "username":"yaoyinbing",
+              "password":"Init1234#"
+            },
+            url: 'user/login'
+          }).then(function (res) {
+            if(res.data.code === 10000){
+              vueThis.$message({
+                message: '登陆成功',
+                type: 'success'
+              });
+            }else {
+              vueThis.$message.error('登陆失败：' + res.data.msg);
+              return;
+            }
+          }).catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
+            return;
+          });
+
           this.$router.push('/home/welcome');
 
           this.cookieManager.saveCookie("name",this.formData.account,"23");
@@ -63,13 +88,13 @@
           this.cookieManager.getCookie("pws");
 
 
-          this.$http.post("http://localhost:8082/inter/api/addApi").then(function (res) {
-            if(res.data.succeed){
-              this.$router.push('/home/welcome');
-            }else{
-            }
-          }, function (res) {
-          });
+//          this.$http.post("http://localhost:8082/inter/api/addApi").then(function (res) {
+//            if(res.data.succeed){
+//              this.$router.push('/home/welcome');
+//            }else{
+//            }
+//          }, function (res) {
+//          });
 
 
         } else {

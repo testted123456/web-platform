@@ -57,7 +57,12 @@
                 type:0
             }
         }else{
-          this.axios.get(vueThis.groupServer+"getById?id="+ groupDirID)
+          vueThis.groupAxios({
+            method: 'get',
+            data: {
+            },
+            url: 'getById?id='+ groupDirID
+          })
           .then(function (res) {
             if(res.data.code === 10000){
               vueThis.groupDirInfo= {
@@ -71,6 +76,9 @@
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
           })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
+          });
         }
       },
       saveGroup(){
@@ -91,7 +99,11 @@
       //确认按钮ajax事件
       submitAjax(){
         var groupDirThis = this;
-        this.axios.post(groupDirThis.groupServer+"save",groupDirThis.groupDirInfo)
+          groupDirThis.groupAxios({
+            method: 'post',
+            data: groupDirThis.groupDirInfo,
+            url: 'save'
+          })
           .then(function (res) {
             if(res.data.code === 10000){
               groupDirThis.$message({
@@ -114,6 +126,9 @@
               groupDirThis.$message.error('抱歉，新增测试集目录失败：' + res.data.msg);
             }
           })
+          .catch(function (err) {
+            groupDirThis.$message.error('抱歉，服务器异常！' );
+          });
       }
     }
   }

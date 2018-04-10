@@ -42,6 +42,10 @@ Vue.prototype.apiAxios = axios.create({
   baseURL: 'http://192.168.32.155:8082/inter/'
 });
 
+Vue.prototype.groupAxios = axios.create({
+  baseURL: 'http://192.168.32.150:8082/group/'
+});
+
 Vue.prototype.usrAxios = axios.create({
   baseURL: 'http://192.168.32.155:8080/'
 });
@@ -50,6 +54,12 @@ Vue.prototype.apiAxios.interceptors.response.use(data => {
     return data
 }, error => {
  return error
+})
+
+Vue.prototype.groupAxios.interceptors.response.use(data => {
+  return data
+}, error => {
+  return error
 })
 
 Vue.prototype.usrAxios.interceptors.response.use(data => {

@@ -163,28 +163,44 @@
     },
     methods: {
       getData(){
+        var vueThis = this;
         var caseID = this.$route.query.testCaseId;
         // 获取表格内容
-        this.$http.get(this.testCaseServer + "testCase/checkCase?testCaseId=" + caseID).then(function (res) {
+        vueThis.testCaseAxios({
+          method: 'get',
+          data: {
+          },
+          url: "testCase/checkCase?testCaseId=" + caseID
+        })
+        .then(function (res) {
           if(res.data.code === 10000){
-            console.log(res.data.data)
-            this.apisInfoCheck = res.data.data;
+            vueThis.apisInfoCheck = res.data.data;
           }
-        },function (res) {
+        })
+        .catch(function (err) {
+          vueThis.$message.error('抱歉，服务器异常！' );
         });
       },
 
       getCheckInfo(data,branch){
         var separate = this.$refs.separate;
+        var vueThis = this;
           separate.scrollIntoView();
-        this.$http.get(this.testCaseServer + "testCaseInterface/checkApi?id="+ data.id +"&apiId="+ data.apiId + "&lastBranch="+ branch).then(function (res) {
+        vueThis.testCaseAxios({
+          method: 'get',
+          data: {
+          },
+          url: "testCaseInterface/checkApi?id="+ data.id +"&apiId="+ data.apiId + "&lastBranch="+ branch
+        })
+        .then(function (res) {
           if(res.data.code === 10000){
-            console.log(res.data.data)
-            this.jsonData = res.data.data;
+            vueThis.jsonData = res.data.data;
           }else{
 
           }
-        },function (res) {
+        })
+        .catch(function (err) {
+          vueThis.$message.error('抱歉，服务器异常！' );
         });
       }
     }

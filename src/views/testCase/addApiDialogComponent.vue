@@ -91,13 +91,23 @@
           return;
         }else{
 
-          this.$http.get(this.apiServer + "api/getApiTreeByPId?pId=" + node.data.id).then(function (res) {
+          var vueThis = this;
+          vueThis.testCaseAxios({
+            method: 'get',
+            data: {
+            },
+            url: "api/getApiTreeByPId?pId=" + node.data.id
+          })
+          .then(function (res) {
             if(res.data.code === 10000){
               var apiTreeInfo = res.data.data;
               return resolve(res.data.data);
             }
             return;
-          },function (res) { });
+          })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
+          });
 
 //          var apiTreeData =  [
 //            {

@@ -34,8 +34,7 @@
                     </span>
                 </el-dialog>
               </div>
-              <div class="dragLine"  id="drag">
-              </div>
+              <!--<div class="dragLine"  id="drag"></div>-->
             </el-aside>
           <router-view></router-view>
         </el-container>
@@ -136,7 +135,7 @@
       }
   },
   mounted(){
-      this.dragF();
+      //this.dragF();
   },
   methods: {
       dragF(){

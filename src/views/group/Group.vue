@@ -252,7 +252,12 @@
         var groupID = this.$route.query.id;
         var vueThis = this;
         //获取环境列表select
-        this.axios.get(vueThis.testCaseServer+'env/getAllEnvs')
+          vueThis.testCaseAxios({
+            method: 'get',
+            data: {
+            },
+            url: 'env/getAllEnvs'
+          })
           .then(function(res){
             if (res.data.code === 10000 ) {
               var tempEnviornment = [];
@@ -280,7 +285,12 @@
               }else{ // group编辑页面
                 // 获取group详情信息内容
                 vueThis.executeBtnShow = true;//执行按钮显示
-                vueThis.axios.get(vueThis.groupServer+'getById?id='+groupID)
+                  vueThis.groupAxios({
+                    method: 'get',
+                    data: {
+                    },
+                    url:'getById?id='+groupID
+                  })
                   .then(function(res){
                     if (res.data.code === 10000 ) {
                       vueThis.group = res.data.data;
@@ -296,16 +306,27 @@
                       vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
                     }
                   })
+                  .catch(function (err) {
+                    vueThis.$message.error('抱歉，服务器异常！' );
+                  });
               }
             }else{
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
           })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
+          });
       },
       //check 定时任务
       checkTask(){
         var vueThis = this;
-        vueThis.axios.get(vueThis.groupServer+'checkJobTime?jobTime='+vueThis.group.jobTime)
+          vueThis.groupAxios({
+            method: 'get',
+            data: {
+            },
+            url: 'checkJobTime?jobTime='+vueThis.group.jobTime
+          })
           .then(function(res){
             if (res.data.code === 10000 ) {
               vueThis.$message.success('恭喜，格式合法');
@@ -313,6 +334,9 @@
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
           })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
+          });
 
       },
 
@@ -403,7 +427,11 @@
                 testCaseList:this.selectedCaseArr
             }
             this.serverSendMsg = setInterval(function(){
-              perThis.axios.post(perThis.groupServer+"testCaseInterface/addCaseInterfaces",exectData)
+                perThis.groupAxios({
+                  method: 'post',
+                  data: exectData,
+                  url: 'testCaseInterface/addCaseInterfaces'
+                })
                 .then(function (res) {
                   if(res.data.code === 10000){
 //                    if(perThis.percentageNum >= 100){
@@ -463,7 +491,11 @@
       //确认按钮  请求ajax
       submitGetData(){
         var vueThis = this;
-        vueThis.axios.post(vueThis.groupServer+"save",vueThis.group)
+          vueThis.groupAxios({
+            method: 'post',
+            data: vueThis.group,
+            url: 'save'
+          })
           .then(function (res) {
             if(res.data.code === 10000){
               vueThis.$message({
@@ -489,6 +521,9 @@
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
           })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
+          });
       }
     }
   }

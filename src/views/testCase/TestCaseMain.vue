@@ -27,9 +27,8 @@
           </el-tree>
         </div>
         <el-dialog
-          title="提示"
           :visible.sync="delDialogVisible"
-          width="30%"
+          width="20%"
         >
           <span>确认删除？</span>
           <span slot="footer" class="dialog-footer">

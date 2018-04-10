@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Login from '@/views/login'
 import Home from './home/homeRouter.js'
 import ApisInfoCheck from '@/views/testCase/apisInfoCheckComponent.vue'
+import ApiExecuteResult from '@/views/testCase/apiExecuteResult.vue'
 import AceTest from '@/views/AceTest'
 import Echart from '@/views/echartDemo'
 
@@ -30,6 +31,11 @@ export default new Router({
       path:'/echart',
       name:'Echart',
       component:Echart
+    },
+    {
+      path:'/apiExecuteResult',
+      name:'ApiExecuteResult',
+      component:ApiExecuteResult
     }
   ]
 })

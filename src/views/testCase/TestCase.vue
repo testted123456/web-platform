@@ -44,6 +44,9 @@
                   <el-button type="text" @click="apiInfoCheck" v-if="executeBtnShow">校验</el-button>
                 </div>
                 <div class="pd12">
+                  <el-button type="text" @click="apiExecuteResult" v-if="executeBtnShow">执行结果</el-button>
+                </div>
+                <div class="pd12">
                   <el-button  type="text" @click="pastApi">粘贴接口</el-button>
                 </div>
               </el-col>
@@ -625,6 +628,12 @@
 //          extend: {}
 //        }
       },
+      /*执行结果*/
+      apiExecuteResult() {
+        window.open(this.apisInfoCheckaddress+'apiExecuteResult?testCaseId='+this.$route.query.id)
+
+      },
+
       /*接口编辑*/
       apiEdit(data, index) {
         this.dialog = {

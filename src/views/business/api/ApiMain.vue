@@ -146,7 +146,6 @@
       },
     handleNodeClick(data, node, instance){
       if(node.data.id === 0){
-          console.log('xxx')
         this.$router.push({path: '/home/api'});
       }else if (node.data.type === true) {
         this.$router.push({name: 'ApiEdit', params: {id: node.data.id}});
@@ -248,8 +247,12 @@
       const nodeId = node.data.id;
 
       if(node.isLeaf === false){//删除目录
-        this.$http.get(this.apiServer + "api/delApiDir?id=" + nodeId).then(function (res) {
-          if(res.data.code == '10000'){
+
+        this.apiAxios({
+          method: 'get',
+          url: 'api/delApiDir?id=' + nodeId
+        }).then(function (res) {
+          if(res.data.code === 10000){
             this.delItem(node);
 
             this.$message({
@@ -258,29 +261,46 @@
             });
 
             this.$router.push({path: '/home/api'});
-          }else{
-            this.$message.error('抱歉，删除接口目录失败：' + res.data.msg);
+          }else {
+            vueThis.$message.error('抱歉，删除接口信息失败：' + res.data.msg);
           }
-        },function (res) {
-          this.$message.error('抱歉，服务器异常。');
+        }).catch(function (err) {
+          vueThis.$message.error('抱歉，服务器异常！' );
         });
-      }else{
-        this.$http.get(this.apiServer + "api/delApi?id=" + nodeId).then(function (res) {
-          if(res.data.code == '10000'){
-            this.delItem(node);
 
-            this.$message({
-              message: '恭喜你，删除接口成功！',
-              type: 'success'
-            });
-
-            this.$router.push({path: '/home/api'});
-          }else{
-            this.$message.error('抱歉，删除接口失败：' + res.data.msg);
-          }
-        },function (res) {
-          this.$message.error('抱歉，服务器异常。');
-        });
+//        this.$http.get(this.apiServer + "api/delApiDir?id=" + nodeId).then(function (res) {
+//          if(res.data.code == '10000'){
+//            this.delItem(node);
+//
+//            this.$message({
+//              message: '恭喜你，删除接口目录成功！',
+//              type: 'success'
+//            });
+//
+//            this.$router.push({path: '/home/api'});
+//          }else{
+//            this.$message.error('抱歉，删除接口目录失败：' + res.data.msg);
+//          }
+//        },function (res) {
+//          this.$message.error('抱歉，服务器异常。');
+//        });
+//      }else{
+//        this.$http.get(this.apiServer + "api/delApi?id=" + nodeId).then(function (res) {
+//          if(res.data.code == '10000'){
+//            this.delItem(node);
+//
+//            this.$message({
+//              message: '恭喜你，删除接口成功！',
+//              type: 'success'
+//            });
+//
+//            this.$router.push({path: '/home/api'});
+//          }else{
+//            this.$message.error('抱歉，删除接口失败：' + res.data.msg);
+//          }
+//        },function (res) {
+//          this.$message.error('抱歉，服务器异常。');
+//        });
       }
     },
 

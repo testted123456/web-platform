@@ -12,8 +12,6 @@ import drag from "@/assets/js/drag";
 
 axios.defaults.withCredentials=true;
 
-
-
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
@@ -35,35 +33,37 @@ String.prototype.trim = function () {
 }
 
 Vue.prototype.testCaseAxios = axios.create({
-  baseURL: 'http://192.168.32.155:8083/case/'
+  baseURL: 'http://localhost:8083/case/'
 });
 
 Vue.prototype.apiAxios = axios.create({
-  baseURL: 'http://192.168.32.155:8082/inter/'
+  baseURL: 'http://localhost:8082/inter/',
+  // headers: {'Access-Control-Allow-Origin': '*'}
+  withCredentials: true
+
 });
 
 Vue.prototype.usrAxios = axios.create({
-  baseURL: 'http://192.168.32.155:8080/'
+  baseURL: 'http://localhost:8080/'
 });
 
 Vue.prototype.apiAxios.interceptors.response.use(data => {
     return data
 }, error => {
- return error
+  return Promise.reject(error)
 })
 
 Vue.prototype.usrAxios.interceptors.response.use(data => {
   return data
 }, error => {
-  return error
+  return Promise.reject(error)
 })
 
 Vue.prototype.testCaseAxios.interceptors.response.use(data => {
   return data
 }, error => {
-  return error
+  return Promise.reject(error)
 })
-
 
 new Vue({
   el: '#app',

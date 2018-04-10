@@ -34,17 +34,18 @@
     };
   },
    created() {
+     this.ifLoginShow = true;
 
      // 第一步判断是否登录
-     this.$http.post("http://localhost:8082/inter/api/addApi").then(function (res) {
-       if(res.data.succeed){
-         this.$router.push('/home/welcome');
-       }else{
-         this.ifLoginShow = true; //登录界面显示
-       }
-     }, function (res) {
-       this.ifLoginShow = true; //登录界面显示
-     });
+//     this.$http.post("http://localhost:8082/inter/api/addApi").then(function (res) {
+//       if(res.data.succeed){
+//         this.$router.push('/home/welcome');
+//       }else{
+//         this.ifLoginShow = true; //登录界面显示
+//       }
+//     }, function (res) {
+//       this.ifLoginShow = true; //登录界面显示
+//     });
 
    },
   methods: {
@@ -67,10 +68,7 @@
             url: 'user/login'
           }).then(function (res) {
             if(res.data.code === 10000){
-              vueThis.$message({
-                message: '登陆成功',
-                type: 'success'
-              });
+              vueThis.$router.push('/home/welcome');
             }else {
               vueThis.$message.error('登陆失败：' + res.data.msg);
               return;
@@ -80,12 +78,12 @@
             return;
           });
 
-          this.$router.push('/home/welcome');
 
-          this.cookieManager.saveCookie("name",this.formData.account,"23");
-          this.cookieManager.saveCookie("pws",this.formData.pws,"23");
-          this.cookieManager.getCookie("name");
-          this.cookieManager.getCookie("pws");
+
+//          this.cookieManager.saveCookie("name",this.formData.account,"23");
+//          this.cookieManager.saveCookie("pws",this.formData.pws,"23");
+//          this.cookieManager.getCookie("name");
+//          this.cookieManager.getCookie("pws");
 
 
 //          this.$http.post("http://localhost:8082/inter/api/addApi").then(function (res) {

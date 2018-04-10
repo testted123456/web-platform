@@ -298,6 +298,39 @@
       },
 
       init(){
+
+        var vueThis = this;
+
+        this.apiAxios({
+          method: 'get',
+          url: 'api/getApi?id=' + this.$route.params.id
+        }).then(function (res) {
+          if(res.data.code === 10000){
+            vueThis.api = res.data.data;
+
+            if(vueThis.api.requestHead === null){
+              vueThis.api.requestHead = [{Key: '', Value: ''}];
+            }
+
+            if(vueThis.api.responseHead === null){
+              vueThis.api.responseHead = [{Key: '', Value: ''}];
+            }
+
+            if(isJson(vueThis.api.requestBody)){
+              vueThis.api.requestBody = formatJson(vueThis.api.requestBody)
+            }
+
+            if(isJson(vueThis.api.responseBody)){
+              vueThis.api.responseBody = formatJson(vueThis.api.responseBody)
+            }
+          }else {
+            vueThis.$message.error('抱歉，获取接口信息失败：' + res.data.msg);
+          }
+        }).catch(function (err) {
+          vueThis.$message.error('抱歉，服务器异常！' );
+        });
+
+        /**
         this.$http.get(this.apiServer + "api/getApi?id=" + this.$route.params.id).then(function (res) {
           if(res.data.code == '10000'){
             this.api = res.data.data;
@@ -321,6 +354,7 @@
           }
         },function (res) {
         });
+        **/
       },
 
       initSystems(){
@@ -425,6 +459,50 @@
           return;
         }
 
+        var vueThis = this;
+
+        this.apiAxios.post('api/addApi', tempApi).then(function (res) {
+          if(res.data.code === 10000){
+            vueThis.$message({
+              message: '恭喜你，更新接口成功',
+              type: 'success'
+            });
+
+            vueThis.$store.commit('changeApiStatus', 2);
+            vueThis.api.id = res.data.data.id;
+            vueThis.$store.commit('setNewApi', vueThis.api);
+
+          }else {
+            vueThis.$message.error('抱歉，更新接口失败：' + res.data.msg);
+          }
+        }).catch(function (err) {
+          vueThis.$message.error('抱歉，服务器异常！' );
+        });
+
+//        this.apiAxios({
+//          method: 'post',
+//          data: tempApi,
+//          url: 'api/addApi',
+//          headers: {'Access-Control-Allow-Origin': '*'}
+//        }).then(function (res) {
+//          if(res.data.code === 10000){
+//            vueThis.$message({
+//              message: '恭喜你，更新接口成功',
+//              type: 'success'
+//            });
+//
+//            vueThis.$store.commit('changeApiStatus', 2);
+//            vueThis.api.id = res.data.data.id;
+//            vueThis.$store.commit('setNewApi', vueThis.api);
+//
+//          }else {
+//            vueThis.$message.error('抱歉，更新接口失败：' + res.data.msg);
+//          }
+//        }).catch(function (err) {
+//          vueThis.$message.error('抱歉，服务器异常！' );
+//        });
+
+        /**
         this.$http.post(this.apiServer + "api/addApi", tempApi).then(function (res) {
           if(res.data.code == '10000'){
             this.$message({
@@ -441,6 +519,7 @@
         }, function (res) {
           this.$message.error('服务器请求失败！');
         });
+        **/
       }
     }
   }

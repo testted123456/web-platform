@@ -38,8 +38,8 @@
                   </span>
         </el-dialog>
       </div>
+      <div class="dragLine" id="testCasedrag"></div>
     </el-aside>
-    <div class="dragLine" id="testCasedrag"></div>
     <router-view></router-view>
   </el-container>
 </template>
@@ -272,7 +272,7 @@
 </script>
 
 <style scoped>
-
+@import "../../assets/css/common.css";
   h1, h2 {
     font-weight: normal;
   }

@@ -92,13 +92,23 @@
           return;
         }else{
 
-          this.$http.get(this.testCaseServer + "testCase/getCaseTreeByPId?pId=" + node.data.id).then(function (res) {
+          var vueThis = this;
+          vueThis.testCaseAxios({
+            method: 'get',
+            data: {
+            },
+            url: "testCase/getCaseTreeByPId?pId=" + node.data.id
+          })
+          .then(function (res) {
             if(res.data.code === 10000){
               var apiTreeInfo = res.data.data;
               return resolve(res.data.data);
             }
             return;
-          },function (res) { });
+          })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
+          });
         }
       },
       addCase(){
@@ -106,7 +116,9 @@
         this.case = node.data;
 
         if(node.data.type){
-          this.tempCases.push(this.case);
+            var obj = JSON.stringify(this.case);
+            obj = JSON.parse(obj)
+          this.tempCases.push(obj);
         }else{
           this.$message({
             message: '文件夹不能添加',

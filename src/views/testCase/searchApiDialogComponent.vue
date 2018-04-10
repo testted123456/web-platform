@@ -208,11 +208,20 @@
       isJson,
       getTreeData(){
         var This = this;
-        this.axios.get(This.testCaseServer+"testCaseInterface/getSameCasesByApiId?apiId=" + This.searchInfo.interfaceId).then(function (res) {
+        This.testCaseAxios({
+          method: 'get',
+          data: {
+          },
+          url: "testCaseInterface/getSameCasesByApiId?apiId=" + This.searchInfo.interfaceId
+        })
+        .then(function (res) {
           if(res.data.code === 10000){
             This.treeData = res.data.data;
             console.log(This.treeData)
           }
+        })
+        .catch(function (err) {
+          This.$message.error('抱歉，服务器异常！' );
         });
       },
       handleNodeClick(data, node, instance) {

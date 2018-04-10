@@ -38,8 +38,8 @@
                   </span>
         </el-dialog>
       </div>
+      <!--<div class="dragLine" id="testCasedrag"></div>-->
     </el-aside>
-    <div class="dragLine" id="testCasedrag"></div>
     <router-view></router-view>
   </el-container>
 </template>
@@ -134,7 +134,7 @@
       }
     },
     mounted(){
-      this.dragF();
+//      this.dragF();
     },
     methods: {
       dragF(){
@@ -155,14 +155,23 @@
         } else if (node.isLeaf === true) {
           return;
         } else {
-          this.$http.get(this.testCaseServer+"testCase/getCaseTreeByPId?pId=" + node.data.id).then(function (res) {
+          var vueThis = this;
+          vueThis.testCaseAxios({
+            method: 'get',
+            data: {
+            },
+            url: "testCase/getCaseTreeByPId?pId=" + node.data.id
+          })
+          .then(function (res) {
             if (res.data.code === 10000 ) {
               var tempApi = res.data.data;
               return resolve(res.data.data);
             }
             return;
 
-          }, function (res) {
+          })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
           });
 
 
@@ -217,35 +226,47 @@
         this.delDialogVisible = false;
         const node = this.$refs.tree.currentNode.node;
         const nodeId = node.data.id;
-
+        var vueThis = this;
         if(node.isLeaf === false){//删除case目录
-          this.$http.get(this.testCaseServer + "testCase/deleteTestCaseDir?id=" + nodeId).then(function (res) {
+          vueThis.testCaseAxios({
+            method: 'get',
+            data: {
+            },
+            url: 'testCase/deleteTestCaseDir?id='+nodeId
+          })
+          .then(function (res) {
             if(res.data.code == '10000'){
-              this.delItemNode(node);
-              this.$message({
+              vueThis.delItemNode(node);
+              vueThis.$message({
                 message: '恭喜你，删除用例目录成功！',
                 type: 'success'
               });
             }else{
-              this.$message.error('抱歉，删除用例目录失败：' + res.data.msg);
+              vueThis.$message.error('抱歉，删除用例目录失败：' + res.data.msg);
             }
-          },function (res) {
-            this.$message.error('抱歉，服务器异常。');
+          }).catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
           });
         }else{ //删除某个case
-          this.$http.get(this.testCaseServer + "testCase/deleteCase?id=" + nodeId).then(function (res) {
+          vueThis.testCaseAxios({
+            method: 'get',
+            data: {
+            },
+            url: "testCase/deleteCase?id=" + nodeId
+          })
+          .then(function (res) {
             if(res.data.code == '10000'){
-              this.delItemNode(node);
-              this.$message({
+              vueThis.delItemNode(node);
+              vueThis.$message({
                 message: '恭喜你，删除用例成功！',
                 type: 'success'
               });
             }else{
-              this.$message.error('抱歉，删除用例失败：' + res.data.msg);
+              vueThis.$message.error('抱歉，删除用例失败：' + res.data.msg);
             }
-          },function (res) {
-            this.$message.error('抱歉，服务器异常。');
-          });
+          }).catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
+          });;
         }
       },
       delItemNode(node){
@@ -272,7 +293,7 @@
 </script>
 
 <style scoped>
-
+@import "../../assets/css/common.css";
   h1, h2 {
     font-weight: normal;
   }

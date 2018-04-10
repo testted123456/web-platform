@@ -34,8 +34,7 @@
                     </span>
                 </el-dialog>
               </div>
-              <div class="dragLine"  id="drag">
-              </div>
+              <!--<div class="dragLine"  id="drag"></div>-->
             </el-aside>
           <router-view></router-view>
         </el-container>
@@ -136,7 +135,7 @@
       }
   },
   mounted(){
-      this.dragF();
+      //this.dragF();
   },
   methods: {
       dragF(){
@@ -342,15 +341,8 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .leftAside{
-    position:relative;border-right:1px solid #e6e6e6;overflow-y: scroll
-  }
-  .leftNavTree{
-    position: absolute;left:20px;top:20px;padding-right:20px;
-  }
-  .dragLine{
-    width: 10px;height:100%;background:#efefef;position:absolute;right:0px;top:0;
-  }
+  @import "../../../assets/css/common.css";
+
 h1, h2 {
   font-weight: normal;
 }

@@ -52,7 +52,7 @@ var startDrag = function(bar, target, callback){
 		if(params.flag){
 			var nowX = e.clientX;
 			var disX = nowX - params.currentX;
-			if(parseInt(params.width) + disX > 250 && parseInt(params.width) + disX < 450){
+			if(parseInt(params.width) + disX > 240 && parseInt(params.width) + disX < 450){
         target.style.width = parseInt(params.width) + disX + "px";
       }
 

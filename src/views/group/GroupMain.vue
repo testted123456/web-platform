@@ -37,8 +37,7 @@
                   </span>
         </el-dialog>
       </div>
-      <div class="dragLine" id="groupdrag">
-      </div>
+      <!--<div class="dragLine" id="groupdrag"></div>-->
     </el-aside>
     <router-view></router-view>
   </el-container>
@@ -78,7 +77,7 @@
       }
     },
     mounted(){
-      this.dragF();
+      //this.dragF();
     },
     watch: {
       'isNewGroupSaved': function (val, oldVal) { //新增group
@@ -164,8 +163,13 @@
 //                type: true
 //              }
 //          ]);
-          var vueThis = this;
-          this.axios.get(vueThis.groupServer+'getByPid?pid='+node.data.id)
+            var vueThis = this;
+            vueThis.groupAxios({
+              method: 'get',
+              data: {
+              },
+              url: 'getByPid?pid='+node.data.id
+            })
             .then(function(res){
               if (res.data.code === 10000 ) {
                 var tempApi = res.data.data;
@@ -174,7 +178,9 @@
                 vueThis.$message.error('抱歉，获取信息失败：' + err.data.msg);
               }
             })
-
+            .catch(function (err) {
+              vueThis.$message.error('抱歉，服务器异常！' );
+            });
 
 
         }
@@ -230,8 +236,12 @@
         const nodeId = node.data.id;
         var vueThis = this;
         if(node.isLeaf === false){//删除case目录
-
-          this.axios.get(vueThis.groupServer + "deleteGroup?id=" + nodeId)
+          vueThis.groupAxios({
+            method: 'get',
+            data: {
+            },
+            url: "deleteGroup?id=" + nodeId
+          })
           .then(function (res) {
             if(res.data.code == '10000'){
               vueThis.delItemNode(node);
@@ -243,9 +253,17 @@
               vueThis.$message.error('抱歉，删除测试集目录失败：' + res.data.msg);
             }
           })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
+          });
 
         }else{ //删除某个case
-          this.axios.get(vueThis.groupServer + "deleteGroup?id=" + nodeId)
+          vueThis.groupAxios({
+            method: 'get',
+            data: {
+            },
+            url: "deleteGroup?id=" + nodeId
+          })
           .then(function (res) {
             if(res.data.code == '10000'){
               vueThis.delItemNode(node);
@@ -257,6 +275,9 @@
               vueThis.$message.error('抱歉，删除测试集失败：' + res.data.msg);
             }
           })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
+          });
 
         }
       },
@@ -283,17 +304,8 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .leftAside{
-    position:relative;border-right:1px solid #e6e6e6;overflow-y: scroll
-  }
-  .leftNavTree{
-    position: absolute;left:20px;top:20px;padding-right:20px;
-  }
-  .dragLine{
-    width: 10px;height:100%;background:#efefef;position:absolute;right:0px;top:0;
-  }
+  @import "../../assets/css/common.css";
   h1, h2 {
     font-weight: normal;
   }

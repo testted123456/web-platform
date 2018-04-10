@@ -1,5 +1,5 @@
 <template>
-    <div style="height:100%;overflow-y: scroll">
+    <div >
         <chart  :options="option"></chart>
         <chart  @click="lineClick" :options="option1"></chart>
         <chart @click="barClick" :options="bar"></chart>
@@ -7,13 +7,7 @@
 </template>
 
 <script>
-
     import ECharts from 'vue-echarts'
-
-    // import ECharts modules manually to reduce bundle size
-    //  import 'echarts/lib/chart/bar'
-    //  import 'echarts/lib/component/tooltip'
-
     export default {
         name: 'welcome',
         components: {'chart': ECharts},

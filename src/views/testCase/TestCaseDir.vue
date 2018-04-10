@@ -56,10 +56,16 @@
                 type:false
             }
         }else{
-          this.$http.get(this.testCaseServer+"testCase/getCaseById?id="+ caseDirID).then(function (res) {
+          var vueThis = this;
+          vueThis.testCaseAxios({
+            method: 'get',
+            data: {
+            },
+            url: "testCase/getCaseById?id="+ caseDirID
+          })
+          .then(function (res) {
             if(res.data.code === 10000){
-                console.log(res.data.data);
-              this.testCaseDirInfo= {
+              vueThis.testCaseDirInfo= {
                 id: res.data.data.id,
                 name: res.data.data.name,
                 description: res.data.data.description,
@@ -67,54 +73,68 @@
                 type:false
               }
             }else{
-              this.$message.error('抱歉，获取信息失败：' + res.data.msg);
+              vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
-          },function (res) {
-            this.$message.error('抱歉，获取信息失败：' + res.data.msg);
+          })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
           });
         }
       },
       saveApi(){
         var caseDirID = this.$route.query.id;
         var caseDirThis = this;
+        var vueThis = this;
         this.$refs['testCaseDir'].validate((valid) => {
           if (valid) {
             if(caseDirID == 0){    /////////////////////////////////新增界面 确认按钮事件
               this.testCaseDirInfo.pId = this.$route.query.pId;
-              this.$http.post(this.testCaseServer+"testCase/addCaseDir",this.testCaseDirInfo).then(function (res) {
+              vueThis.testCaseAxios({
+                method: 'post',
+                data: vueThis.testCaseDirInfo,
+                url: "testCase/addCaseDir"
+              })
+              .then(function (res) {
                 if(res.data.code === 10000){
-                  this.$message({
+                  vueThis.$message({
                     message: '恭喜你，新增用例目录成功',
                     type: 'success'
                   });
                   // 跳转到当且caseDir的详情页
                   //存数据  树节点刷新
-                  this.$store.commit('changeTestCaseStatus', 1);
-                  this.testCaseDirInfo.id = res.data.data.id;
-                  this.$store.commit('setNewTestCase', this.testCaseDirInfo);
-                  this.$router.push({name: 'TestCaseDir', query: {id: res.data.data.id}});
+                  vueThis.$store.commit('changeTestCaseStatus', 1);
+                  vueThis.testCaseDirInfo.id = res.data.data.id;
+                  vueThis.$store.commit('setNewTestCase', vueThis.testCaseDirInfo);
+                  vueThis.$router.push({name: 'TestCaseDir', query: {id: res.data.data.id}});
                 }else{
-                  this.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
+                  vueThis.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
                 }
-              },function (res) {
-                this.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
+              })
+              .catch(function (err) {
+                vueThis.$message.error('抱歉，服务器异常！' );
               });
             }else{     /////////////////////////编辑界面 确认按钮事件
-              this.$http.post(this.testCaseServer+"testCase/addCaseDir",this.testCaseDirInfo).then(function (res) {
+              vueThis.testCaseAxios({
+                method: 'post',
+                data: this.testCaseDirInfo,
+                url: "testCase/addCaseDir"
+              })
+              .then(function (res) {
                 if(res.data.code === 10000){
-                  this.$message({
+                  vueThis.$message({
                     message: '恭喜你，更新用例目录成功',
                     type: 'success'
                   });
                   //存数据  树节点刷新
-                  this.$store.commit('changeTestCaseStatus', 2);
-                  this.testCaseDirInfo.id = res.data.data.id;
-                  this.$store.commit('setNewTestCase', this.testCaseDirInfo);
+                  vueThis.$store.commit('changeTestCaseStatus', 2);
+                  vueThis.testCaseDirInfo.id = res.data.data.id;
+                  vueThis.$store.commit('setNewTestCase', vueThis.testCaseDirInfo);
                 }else{
-                  this.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
+                  vueThis.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
                 }
-              },function (res) {
-                this.$message.error('抱歉，新增用例目录失败：' + res.data.msg);
+              })
+              .catch(function (err) {
+                vueThis.$message.error('抱歉，服务器异常！' );
               });
             }
           } else {
@@ -126,7 +146,6 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
   .el-row {

@@ -327,51 +327,67 @@
         var caseID = this.$route.query.id;
         this.intellCheckData = [];
         //获取环境列表select
-        this.$http.get(this.testCaseServer+"env/getAllEnvs").then(function (res) {
+        var vueThis = this;
+        vueThis.testCaseAxios({
+          method: 'get',
+          data: {
+          },
+          url: "env/getAllEnvs"
+        })
+        .then(function (res) {
           if(res.data.code === 10000){
             var tempEnviornment = [];
             res.data.data.forEach(function (e, index) {
               tempEnviornment.push({value: e.name, label: e.name})
             });
-            this.enviornment = tempEnviornment;
+            vueThis.enviornment = tempEnviornment;
             ///////////////////////获取环境信息成功之后 再去获取页面其他信息
 
             if (caseID == 0){   //新增case页面
-              this.testCase = {
+              vueThis.testCase = {
                 caseType:'false',
-                env:this.enviornment[0].value,
+                env:vueThis.enviornment[0].value,
                 type:true
               }
-              this.testCase.testCaseInterfaces = [];
+              vueThis.testCase.testCaseInterfaces = [];
             }else{
               // case编辑页面
               // 获取测试用例详情信息内容
-              this.executeBtnShow = true;//执行按钮显示
-              this.$http.get(this.testCaseServer+"testCase/getCaseById?id=" + caseID).then(function (res) {
+              vueThis.executeBtnShow = true;//执行按钮显示
+              vueThis.testCaseAxios({
+                method: 'get',
+                data: {
+                },
+                url: "testCase/getCaseById?id=" + caseID
+              })
+              .then(function (res) {
                 if(res.data.code === 10000){
-                  this.testCase = res.data.data;
-                  if(this.testCase.caseType){
-                    this.testCase.caseType = "true"
+                  vueThis.testCase = res.data.data;
+                  if(vueThis.testCase.caseType){
+                    vueThis.testCase.caseType = "true"
                   }else{
-                    this.testCase.caseType = "false"
+                    vueThis.testCase.caseType = "false"
                   }
-                  this.$nextTick(()=>{
-                      var that = this;
-                      this.testCase.testCaseInterfaces.forEach(function(e,index){
+                  vueThis.$nextTick(()=>{
+                      var that = vueThis;
+                      vueThis.testCase.testCaseInterfaces.forEach(function(e,index){
                           e.checked = true;
                           that.$refs.multipleTable.toggleRowSelection(e,true);
                       });
-                      this.filterExecteId();
+                      vueThis.filterExecteId();
                   })
                 }
-              },function (res) {
+              })
+              .catch(function (err) {
+                vueThis.$message.error('抱歉，服务器异常！' );
               });
             }
           }else{
-            this.$message.error('抱歉，获取环境信息失败：' + res.data.msg);
+            vueThis.$message.error('抱歉，获取环境信息失败：' + res.data.msg);
           }
-        },function (res) {
-          this.$message.error('抱歉，获取环境信息失败：' + res.data.msg);
+        })
+        .catch(function (err) {
+          vueThis.$message.error('抱歉，服务器异常！' );
         });
 
       },
@@ -379,7 +395,7 @@
       saveCase() {
 
         var caseID = this.$route.query.id;
-
+        var vueThis = this;
         this.$refs['testCase'].validate((valid) => {
           if (valid) {
             var ifQualified = true;
@@ -406,49 +422,60 @@
             if(ifQualified){//必填信息全部填写完整了 再请求保存接口
               if(caseID == 0){    /////////////////////////////////新增界面 确认按钮事件
                 this.testCase.pId = this.$route.query.pId;
-                this.$http.post(this.testCaseServer+"testCase/addCase",this.testCase).then(function (res) {
+                vueThis.testCaseAxios({
+                  method: 'post',
+                  data: vueThis.testCase,
+                  url: "testCase/addCase"
+                })
+                .then(function (res) {
                   if(res.data.code === 10000){
                     var receiveCase = res.data.data;
-                    this.$message({
+                    vueThis.$message({
                       message: '恭喜你，新增用例成功',
                       type: 'success'
                     });
                     // 跳转到当且case的详情页
                     //存数据  树节点刷新
-                    this.$store.commit('changeTestCaseStatus', 1);
-                    this.testCase.id = res.data.data.id;
-                    this.$store.commit('setNewTestCase', this.testCase);
-                    this.$router.push({name: 'TestCase', query: {id: res.data.data.id}});
+                    vueThis.$store.commit('changeTestCaseStatus', 1);
+                    vueThis.testCase.id = res.data.data.id;
+                    vueThis.$store.commit('setNewTestCase', vueThis.testCase);
+                    vueThis.$router.push({name: 'TestCase', query: {id: res.data.data.id}});
                   }else{
-                    this.$message.error('抱歉，新增用例失败：' + res.data.msg);
+                    vueThis.$message.error('抱歉，新增用例失败：' + res.data.msg);
                   }
-                },function (res) {
-                  this.$message.error('服务器请求失败！');
+                })
+                .catch(function (err) {
+                  vueThis.$message.error('抱歉，服务器异常！' );
                 });
 
               }else{     /////////////////////////编辑界面 确认按钮事件
-                this.$http.post(this.testCaseServer+"testCase/updateCase",this.testCase).then(function (res) {
-                  console.log(res.data.data);
+                vueThis.testCaseAxios({
+                  method: 'post',
+                  data: this.testCase,
+                  url: "testCase/updateCase"
+                })
+                .then(function (res) {
                   if(res.data.code === 10000){
                     var receiveCase = res.data.data;
-                    this.$message({
+                    vueThis.$message({
                       message: '恭喜你，更新用例成功',
                       type: 'success'
                     });
 
-                    this.testCase = res.data.data;
-                    this.$store.commit('changeTestCaseStatus', 2);
-                    this.$store.commit('setNewTestCase', this.testCase);
+                    vueThis.testCase = res.data.data;
+                    vueThis.$store.commit('changeTestCaseStatus', 2);
+                    vueThis.$store.commit('setNewTestCase', vueThis.testCase);
 
                   }else{
-                    this.$message.error('抱歉，更新用例失败：' + res.data.msg);
+                    vueThis.$message.error('抱歉，更新用例失败：' + res.data.msg);
                   }
-                },function (res) {
-                  this.$message.error('服务器请求失败！');
+                })
+                .catch(function (err) {
+                  vueThis.$message.error('抱歉，服务器异常！' );
                 });
               }
             }else{
-              this.$message.error('请填写完整api内容');
+              vueThis.$message.error('请填写完整api内容');
             }
 
           } else {
@@ -650,11 +677,19 @@
               this.ws = new WebSocket("ws://"+ this.wsServer +"/case/webSocket/123");
               //this.ws = new Object();
               this.ws.onopen = function () {
-                textArea_this.$http.post(textArea_this.testCaseServer+"testCase/executeApis",exectData).then(function (res) {
+                textArea_this.testCaseAxios({
+                  method: 'post',
+                  data: exectData,
+                  url: "testCase/executeApis"
+                })
+                .then(function (res) {
                   if(res.data.code === 10000){
                     console.log("传送caseId成功")
                   }
-                },function (res) {});
+                })
+                .catch(function (err) {
+                  vueThis.$message.error('抱歉，服务器异常！' );
+                });
 
                 textArea_this.ws.send("");
               };

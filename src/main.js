@@ -33,11 +33,11 @@ String.prototype.trim = function () {
 }
 
 Vue.prototype.testCaseAxios = axios.create({
-  baseURL: 'http://localhost:8083/case/'
+  baseURL: 'http://192.168.32.155:8083/case/'
 });
 
 Vue.prototype.apiAxios = axios.create({
-  baseURL: 'http://localhost:8082/inter/',
+  baseURL: 'http://192.168.32.155:8082/inter/',
   // headers: {'Access-Control-Allow-Origin': '*'}
   withCredentials: true
 

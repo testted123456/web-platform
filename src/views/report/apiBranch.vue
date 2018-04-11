@@ -1,9 +1,14 @@
 <template>
-    <div >
+  <el-container>
+    <el-main>
+      <div >
         <chart  :options="option"></chart>
         <chart  @click="lineClick" :options="option1"></chart>
         <chart @click="barClick" :options="bar"></chart>
-    </div>
+      </div>
+    </el-main>
+  </el-container>
+
 </template>
 
 <script>

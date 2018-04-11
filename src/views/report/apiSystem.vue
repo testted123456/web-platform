@@ -1,7 +1,12 @@
 <template>
-  <div>
-    <chart :options="polar"></chart>
-  </div>
+  <el-container>
+    <el-main>
+      <div>
+        <chart :options="polar"></chart>
+      </div>
+    </el-main>
+  </el-container>
+
 </template>
 
 <script>

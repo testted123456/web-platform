@@ -66,7 +66,7 @@
               align="left"
             >
               <template slot-scope="scope">
-                <el-button type="text" @click="">{{ scope.row.name }}</el-button>
+                <el-button type="text" @click="transToCase(scope.row.id)">{{ scope.row.name }}</el-button>
               </template>
             </el-table-column>
 
@@ -236,6 +236,10 @@
         if(this.checkboxExecutable){
           this.selectedCaseArr = tempArr.concat();
         }
+      },
+      // 跳转到case页面
+      transToCase(id){
+        this.$router.push({name: 'TestCase', query: {id: id}});
       },
       //因存储地址变了  复选之前已经选中的复选框
       reCheck(){
@@ -533,6 +537,15 @@
                 //存数据  树节点刷新
                 vueThis.$store.commit('changeGroupStatus', 2);
                 vueThis.group = res.data.data;
+                vueThis.$nextTick(()=>{
+                  var that = vueThis;
+                  vueThis.group.testCaseList.forEach(function(e,index){
+                    e.checked = true;
+                    that.$refs.multipleTable.toggleRowSelection(e,true);
+                  })
+                  vueThis.filterExecteId();
+                })
+
                 vueThis.$store.commit('setNewGroup', vueThis.group);
               }
 

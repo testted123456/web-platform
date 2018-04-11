@@ -533,6 +533,15 @@
                 //存数据  树节点刷新
                 vueThis.$store.commit('changeGroupStatus', 2);
                 vueThis.group = res.data.data;
+                vueThis.$nextTick(()=>{
+                  var that = vueThis;
+                  vueThis.group.testCaseList.forEach(function(e,index){
+                    e.checked = true;
+                    that.$refs.multipleTable.toggleRowSelection(e,true);
+                  })
+                  vueThis.filterExecteId();
+                })
+
                 vueThis.$store.commit('setNewGroup', vueThis.group);
               }
 

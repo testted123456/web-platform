@@ -161,6 +161,9 @@
           </el-input>
           <div v-html="compiledMarkdown" class="markDown"></div>
         </div>
+        <!--执行结果弹窗-->
+        <api-execute-result-dialog-component v-if="dialog.contentType === 8" ></api-execute-result-dialog-component>
+
         <!--弹窗footer-->
         <span v-if="dialog.footerVisible" slot="footer" class="dialog-footer">
                       <el-button @click="dialogCancel">取 消</el-button>
@@ -183,12 +186,13 @@
   import intellCheckDialogComponent from '@/views/testCase/intellCheckDialogComponent.vue';
   import editApiDialogComponent from '@/views/testCase/editApiDialogComponent.vue';
   import searchApiDialogComponent from '@/views/testCase/searchApiDialogComponent.vue';
+  import apiExecuteResultDialogComponent from '@/views/testCase/apiExecuteResultDialogComponent.vue';
   import {moveup, movedown} from  "@/assets/js/tableRowMove.js";
   import marked from 'marked';
   import {lodash} from 'lodash';
 
   export default {
-    components: {editApiDialogComponent, addApiDialogComponent, intellCheckDialogComponent,searchApiDialogComponent},
+    components: {editApiDialogComponent, addApiDialogComponent, intellCheckDialogComponent,searchApiDialogComponent,apiExecuteResultDialogComponent},
 
     name: 'TestCase',
 
@@ -234,7 +238,7 @@
           title: '',
           visible:false,
           footerVisible:true,
-          contentType:0, // 1=添加接口，2=动态库查询，3=编辑接口,4=删除接口,5=搜索接口,6=校验接口,7=执行
+          contentType:0, // 1=添加接口，2=动态库查询，3=编辑接口,4=删除接口,5=搜索接口,6=校验接口,7=执行,8=执行结果
           width:'60%',
           extend:{}   // 扩展字段
         },
@@ -454,7 +458,7 @@
               }else{     /////////////////////////编辑界面 确认按钮事件
                 vueThis.testCaseAxios({
                   method: 'post',
-                  data: this.testCase,
+                  data: vueThis.testCase,
                   url: "testCase/updateCase"
                 })
                 .then(function (res) {
@@ -471,6 +475,14 @@
                     }else{
                       vueThis.testCase.caseType = "false"
                     }
+                    vueThis.$nextTick(()=>{
+                      var that = vueThis;
+                      vueThis.testCase.testCaseInterfaces.forEach(function(e,index){
+                        e.checked = true;
+                        that.$refs.multipleTable.toggleRowSelection(e,true);
+                      });
+                      vueThis.filterExecteId();
+                    })
 
                     vueThis.$store.commit('changeTestCaseStatus', 2);
                     vueThis.$store.commit('setNewTestCase', vueThis.testCase);
@@ -625,19 +637,18 @@
       /*校验*/
       apiInfoCheck() {
         window.open(this.apisInfoCheckaddress+'apisInfoCheck?testCaseId='+this.$route.query.id)
-        //   this.dialog = {
-//          title: '校验接口',
-//          visible: true,
-//          footerVisible: false,
-//          contentType: 6,
-//          width: '90%',
-//          extend: {}
-//        }
+
       },
       /*执行结果*/
       apiExecuteResult() {
-        window.open(this.apisInfoCheckaddress+'apiExecuteResult?testCaseId='+this.$route.query.id)
-
+        this.dialog = {
+         title: '执行结果',
+         visible: true,
+         footerVisible: false,
+         contentType: 8,
+         width: '80%',
+         extend: {}
+        }
       },
 
       /*接口编辑*/

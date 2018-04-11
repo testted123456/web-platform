@@ -466,6 +466,12 @@
                     });
 
                     vueThis.testCase = res.data.data;
+                    if(vueThis.testCase.caseType){
+                      vueThis.testCase.caseType = "true"
+                    }else{
+                      vueThis.testCase.caseType = "false"
+                    }
+
                     vueThis.$store.commit('changeTestCaseStatus', 2);
                     vueThis.$store.commit('setNewTestCase', vueThis.testCase);
 

@@ -39,6 +39,9 @@
                 <div class="pd12">
                   <el-button type="text" @click="addTestCaseClick">添加用例</el-button>
                 </div>
+                <div class="pd12">
+                  <el-button type="text" @click="caseExecuteResult" v-if="executeBtnShow" >执行结果</el-button>
+                </div>
               </el-col>
             </el-form-item>
           </el-form>
@@ -116,6 +119,8 @@
       >
         <!--添加接口弹窗-->
         <add-test-case-dialog-component ref="caseSelectView" v-if="dialog.contentType === 1"  :selectedCases="group.testCaseList"></add-test-case-dialog-component>
+        <!--执行结果弹窗-->
+        <case-execute-result-dialog-component v-if="dialog.contentType === 4" ></case-execute-result-dialog-component>
         <!--删除接口弹窗-->
         <span v-if="dialog.contentType === 2" >是否删除此用例？</span>
         <!--执行弹窗-->
@@ -143,13 +148,14 @@
 <script>
 
   import addTestCaseDialogComponent from '@/views/group/addTestCaseDialogComponent.vue';
+  import caseExecuteResultDialogComponent from '@/views/group/caseExecuteResultDialogComponent.vue';
   import {moveup, movedown} from  "@/assets/js/tableRowMove.js";
   import marked from 'marked';
   import {lodash} from 'lodash';
   import ElRow from "element-ui/packages/row/src/row";
 
   export default {
-    components: {ElRow, addTestCaseDialogComponent},
+    components: {ElRow, addTestCaseDialogComponent,caseExecuteResultDialogComponent},
     name: 'Group',
     data () {
       return {
@@ -392,6 +398,17 @@
           visible: true,   //整个弹窗显示与否
           footerVisible: true,
           contentType: 1,  //弹窗内容显示什么
+          width: '80%',
+          extend: {}
+        }
+      },
+      /*执行结果*/
+      caseExecuteResult(){
+        this.dialog = {
+          title: '执行结果',
+          visible: true,   //整个弹窗显示与否
+          footerVisible: false,
+          contentType: 4,  //弹窗内容显示什么
           width: '80%',
           extend: {}
         }

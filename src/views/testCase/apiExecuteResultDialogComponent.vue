@@ -1,8 +1,100 @@
 <template>
+  <el-container style="height:500px;">
+    <el-main>
+      <el-row>
+        <el-table v-show="apiResult.aa.length>0"
+                  :data="apiResult.aa"
+                  style="width: 100%"
+                  ref="multipleTable">
 
+          </el-table-column>
+
+          <el-table-column
+            prop="name"
+            label="名称"
+            align="left"
+          >
+          </el-table-column>
+
+          <el-table-column
+            prop="step"
+            label="步骤名称"
+            align="left"
+          >
+          </el-table-column>
+
+          <el-table-column
+            prop="system"
+            label="执行时间"
+            align="left"
+          >
+          </el-table-column>
+
+          <el-table-column
+            prop="branch"
+            label="结果"
+            align="left"
+          >
+          </el-table-column>
+
+
+
+        </el-table>
+      </el-row>
+      <el-row class="hTitle">*实际结果</el-row>
+      <el-row>
+        <div class="jsonContent" >
+          {{formatJson(JSON.stringify(apiResult.dd))}}
+
+        </div>
+      </el-row>
+      <el-row class="hTitle">*断言结果</el-row>
+      <el-row>
+        <el-table v-show="apiResult.aa.length>0"
+                  :data="apiResult.aa"
+                  style="width: 100%"
+                  ref="multipleTable">
+
+          </el-table-column>
+
+          <el-table-column
+            prop="name"
+            label="名称"
+            align="left"
+          >
+          </el-table-column>
+
+          <el-table-column
+            prop="step"
+            label="步骤名称"
+            align="left"
+          >
+          </el-table-column>
+
+          <el-table-column
+            prop="system"
+            label="执行时间"
+            align="left"
+          >
+          </el-table-column>
+
+          <el-table-column
+            prop="branch"
+            label="结果"
+            align="left"
+          >
+          </el-table-column>
+
+
+
+        </el-table>
+      </el-row>
+    </el-main>
+  </el-container>
 </template>
 
 <script>
+  import { formatJson, isJson } from "@/assets/js/formatJson.js";
 
   export default {
     props: [],
@@ -11,7 +103,15 @@
     data(){
       return {
 
+        apiResult:{
+          'aa':[
 
+          ],
+          'dd':{
+            'a':1,
+            'bb':2
+          }
+        }
 
       }
     },
@@ -21,8 +121,11 @@
 
     },
     mounted() {
+      // this.getData()
     },
     methods: {
+      formatJson,
+      isJson,
       getData() {
         var vueThis = this;
         var caseID = this.$route.query.testCaseId;
@@ -34,7 +137,7 @@
         })
           .then(function (res) {
             if (res.data.code === 10000) {
-              vueThis.apisInfoCheck = res.data.data;
+              vueThis.apiResult = res.data.data;
             }
           })
           .catch(function (err) {
@@ -47,79 +150,18 @@
 </script>
 
 <style scoped>
-  .el-row {
-    /*width:100%;*/
-    margin-bottom: 20px;
-  &:last-child {
-     margin-bottom: 0;
-   }
-  }
-  .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
-    padding-top: 6px;
-  }
-  .font-center{
-    text-align: center;
-  }
-  .font-blod{
-    font-weight:bolder;
-    color:#909399;
-  }
-  .json-box{
-    display: block;
-    margin:0;
+  .jsonContent{
+    border:1px solid #bcbec2;
+    padding:8px;
     width:100%;
-    height:200px;
-    border:1px solid #ccc;
-    border-radius: 4px;
-    resize: none;
-    outline: none;
-    /*overflow: scroll;*/
+    background: #f5f5f5;
+    border-radius:5px;
   }
-  .el-tree {
-    margin-right: 2px;
+  .hTitle{
+    padding: 15px 0;
+    font-size: 18px;
   }
-  .el-input--small{
-    margin-left: 2px;
-    margin-right:10px;
+  textarea{
+    outline: none !important;
   }
-  .el-input__inner{
-    width: 80%;
-    padding-right: 0px;
-    overflow-x: hidden;
-  }
-  .vue-transfer-tree {
-    border: 0.5px solid;
-    border-radius: 5px;
-    min-height: 500px;
-    height: 500px;
-    margin-left: 2px;
-    margin-right: 2px;
-    padding-right: 1px;
-    overflow-y: auto;
-    overflow-x: auto;
-  }
-  .vue-transfer-label{
-    width: 100%;
-    background:#f5f7fa;
-    display: inline-block;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    min-height: 30px;
-    margin-top:1px;
-    padding-left: 3px;
-    padding-top: 10px;
-    font-weight: 500;
-  }
-  .vue-transfer-input{
-    border-radius: 15px;
-    margin-left:10%;
-    margin-right: 10%;
-    width: 80%;
-    margin-top: 10px;
-    min-height: 32px;
-    border-width: 0.5px;
-  }
-
 </style>

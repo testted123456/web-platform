@@ -44,7 +44,7 @@
                   <el-button type="text" @click="apiInfoCheck" v-if="executeBtnShow">校验</el-button>
                 </div>
                 <div class="pd12">
-                  <el-button type="text" @click="apiExecuteResult" v-if="executeBtnShow">执行结果</el-button>
+                  <el-button type="text" @click="apiExecuteResult" >执行结果</el-button>
                 </div>
                 <div class="pd12">
                   <el-button  type="text" @click="pastApi">粘贴接口</el-button>
@@ -642,7 +642,7 @@
       /*执行结果*/
       apiExecuteResult() {
         this.dialog = {
-         title: '执行结果',
+         title: '执行结果报告',
          visible: true,
          footerVisible: false,
          contentType: 8,

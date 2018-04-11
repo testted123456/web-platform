@@ -135,8 +135,8 @@
 
             if(vueThis.envSysems === null || vueThis.envSysems.length === 0){
               vueThis.envSysems =[{
-                envs:{},
-                systems:{},
+                env:{id:''},
+                systemCfg:{id:''},
                 domain: '',
                 dns:''
               }]

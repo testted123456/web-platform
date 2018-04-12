@@ -1,7 +1,7 @@
 <template>
-  <el-container>
+  <el-container >
     <el-row :span="24">
-      <el-col :span="6">
+      <el-col :span="6" style="border:1px solid #ccc">
         <div class="vue-transfer-tree">
           <label class="vue-transfer-label">接口</label>
           <input class="vue-transfer-input" placeholder="输入接口名称搜索"/>
@@ -9,7 +9,7 @@
         </div>
       </el-col>
 
-      <el-col :span="18">
+      <el-col :span="17" style="margin-left:18px;border:1px solid #ccc">
         <div class="vue-transfer-tree">
           <label class="vue-transfer-label">已选接口</label>
           <div>
@@ -368,10 +368,10 @@
     overflow-x: hidden;
   }
   .vue-transfer-tree {
-    border: 0.5px solid;
+    /*border: 0.5px solid;*/
     border-radius: 5px;
-    min-height: 300px;
-    height: 300px;
+    min-height: 500px;
+    height: 500px;
     margin-left: 2px;
     margin-right: 2px;
     padding-right: 1px;

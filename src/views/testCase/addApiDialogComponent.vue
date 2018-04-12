@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-row >
-      <el-col :span="8">
+      <el-col :span="8" style="border:1px solid #ccc">
         <div class="vue-transfer-tree">
           <label class="vue-transfer-label">接口</label>
           <input class="vue-transfer-input" placeholder="输入接口名称搜索"/>
@@ -13,12 +13,12 @@
           </el-tree>
         </div>
       </el-col>
-      <el-col :span="4">
+      <el-col :span="2">
         <div style="text-align: center;margin-left: 2px;margin-top: 80%">
           <div><input type="button" value=">" @click="addApi" style="border-radius: 60px;height: 40px;width: 40px"/></div>
         </div>
       </el-col>
-      <el-col :span="12">
+      <el-col :span="14" style="border:1px solid #ccc">
         <div class="vue-transfer-tree">
           <label class="vue-transfer-label">已选接口</label>
           <el-table
@@ -30,7 +30,7 @@
             style="width: 100%; margin-top: 2px">
             <el-table-column
               prop="name"
-              label="接口名称">
+              label="接口名称" min-width="250">
             </el-table-column>
             <el-table-column
               prop="system"
@@ -46,9 +46,9 @@
               <template slot-scope="scope">
                 <el-button
                   @click.native.prevent="deleteRow(scope.$index, tempApis)"
-                  type="primary"
+                  type="text"
                   size="small">
-                  移除
+                  <i class="el-icon-minus"></i>
                 </el-button>
               </template>
             </el-table-column>
@@ -72,17 +72,256 @@
           isLeaf: 'type',
           children: 'children'
         },
-        tempApis:[]
+        tempApis:[],
+        submitApis:[]
       }
     },
 
     created(){
-      this.tempApis = this.selectedApis.concat()
+      //字符串截取显示
+      // submitApis 需要提交的数据
+      // tempApis   展示数据
+
+
+    console.log(this.selectedApis)
+
+
+      var hhhh = [
+        {
+        "id": 66,
+        "testCase": {
+          "id": 114,
+          "pId": 113,
+          "name": "1GV的水果豆腐干8888发鬼地方个梵蒂冈梵蒂冈的飞",
+          "description": null,
+          "type": true,
+          "env": "SIT",
+          "projectName": null,
+          "createdBy": null,
+          "createdTime": "2018-04-10 15:01:57",
+          "updatedBy": null,
+          "updatedTime": "2018-04-11 18:56:39",
+          "caseType": false,
+          "testCaseInterfaces": [{
+            "id": 66,
+            "interfaceId": 4,
+            "interfaceName": "test",
+            "apiType": "0",
+            "postWay": "1",
+            "branch": "dev",
+            "system": "acc",
+            "orderNo": 0,
+            "step": "vccv",
+            "urlAddress": "/acc-app/fundtrans/recharge",
+            "variables": null,
+            "requestHead": null,
+            "requestBody": "{\n    \"trdNo\": \"${trdNo}\",\n    \"payNo\": \"${payNo}\",\n    \"amount\": \"${amount}\",\n    \"seqNo\": \"${seqNo}\",\n    \"providerFee\": \"${providerFee}\",\n    \"initiator\": \"05\",\n    \"accountNo\": \"${accountNo}\",\n    \"proofId\": \"${proofId}\",\n    \"userId\": \"${userId}\",\n    \"rechargeType\": \"0\",\n    \"tradeType\": \"recharge\",\n    \"bankCardId\": \"${bankCardId}\"\n}",
+            "responseHead": null,
+            "responseBody": "{\n    \"errorCode\": \"0000000\",\n    \"errorMessage\": \"处理成功\",\n    \"succeed\": true,\n    \"data\": null\n}",
+            "assertions": null,
+            "createdBy": null,
+            "createdTime": null,
+            "updatedBy": null,
+            "updatedTime": "2018-04-11 18:56:39",
+            "optstatus": 0
+          }, {
+            "id": 69,
+            "interfaceId": 1,
+            "interfaceName": "2341",
+            "apiType": "0",
+            "postWay": "1",
+            "branch": "dev1",
+            "system": "acc",
+            "orderNo": 1,
+            "step": "777",
+            "urlAddress": "234",
+            "variables": null,
+            "requestHead": "[{\"Value\":\"sdf\",\"Key\":\"sdf\"}]",
+            "requestBody": "{\n    \"a1\": 1\n}",
+            "responseHead": "[{\"Value\":\"sd\",\"Key\":\"sd\"}]",
+            "responseBody": "{\n    \"ad\": 1\n}",
+            "assertions": null,
+            "createdBy": null,
+            "createdTime": null,
+            "updatedBy": null,
+            "updatedTime": "2018-04-11 18:56:39",
+            "optstatus": 0
+          }],
+          "optstatus": 0
+        },
+        "interfaceId": 4,
+        "orderNo": 0,
+        "step": "vccv",
+        "name": "展示数据展示数据展示数据展示数据展示数据展示数据展示数据展示数据展示数据展示数据22222555557777766666kkhmbjbjh",
+        "apiType": "0",
+        "postWay": "1",
+        "branch": "dev",
+        "system": "acc",
+        "urlAddress": "/acc-app/fundtrans/recharge",
+        "variables": null,
+        "requestHead": null,
+        "requestBody": "{\n    \"trdNo\": \"${trdNo}\",\n    \"payNo\": \"${payNo}\",\n    \"amount\": \"${amount}\",\n    \"seqNo\": \"${seqNo}\",\n    \"providerFee\": \"${providerFee}\",\n    \"initiator\": \"05\",\n    \"accountNo\": \"${accountNo}\",\n    \"proofId\": \"${proofId}\",\n    \"userId\": \"${userId}\",\n    \"rechargeType\": \"0\",\n    \"tradeType\": \"recharge\",\n    \"bankCardId\": \"${bankCardId}\"\n}",
+        "responseHead": null,
+        "responseBody": "{\n    \"errorCode\": \"0000000\",\n    \"errorMessage\": \"处理成功\",\n    \"succeed\": true,\n    \"data\": null\n}",
+        "assertions": null,
+        "createdBy": null,
+        "createdTime": null,
+        "updatedBy": null,
+        "updatedTime": "2018-04-11 06:56:39",
+        "optstatus": 0,
+        "checked": true
+      },
+        {
+        "id": 69,
+        "testCase": {
+          "id": 114,
+          "pId": 113,
+          "name": "1GV的水果豆腐干8888发鬼地方个梵蒂冈梵蒂冈的飞",
+          "description": null,
+          "type": true,
+          "env": "SIT",
+          "projectName": null,
+          "createdBy": null,
+          "createdTime": "2018-04-10 15:01:57",
+          "updatedBy": null,
+          "updatedTime": "2018-04-11 18:56:39",
+          "caseType": false,
+          "testCaseInterfaces": [{
+            "id": 66,
+            "interfaceId": 4,
+            "interfaceName": "test",
+            "apiType": "0",
+            "postWay": "1",
+            "branch": "dev",
+            "system": "acc",
+            "orderNo": 0,
+            "step": "vccv",
+            "urlAddress": "/acc-app/fundtrans/recharge",
+            "variables": null,
+            "requestHead": null,
+            "requestBody": "{\n    \"trdNo\": \"${trdNo}\",\n    \"payNo\": \"${payNo}\",\n    \"amount\": \"${amount}\",\n    \"seqNo\": \"${seqNo}\",\n    \"providerFee\": \"${providerFee}\",\n    \"initiator\": \"05\",\n    \"accountNo\": \"${accountNo}\",\n    \"proofId\": \"${proofId}\",\n    \"userId\": \"${userId}\",\n    \"rechargeType\": \"0\",\n    \"tradeType\": \"recharge\",\n    \"bankCardId\": \"${bankCardId}\"\n}",
+            "responseHead": null,
+            "responseBody": "{\n    \"errorCode\": \"0000000\",\n    \"errorMessage\": \"处理成功\",\n    \"succeed\": true,\n    \"data\": null\n}",
+            "assertions": null,
+            "createdBy": null,
+            "createdTime": null,
+            "updatedBy": null,
+            "updatedTime": "2018-04-11 18:56:39",
+            "optstatus": 0
+          }, {
+            "id": 69,
+            "interfaceId": 1,
+            "interfaceName": "2341",
+            "apiType": "0",
+            "postWay": "1",
+            "branch": "dev1",
+            "system": "acc",
+            "orderNo": 1,
+            "step": "777",
+            "urlAddress": "234",
+            "variables": null,
+            "requestHead": "[{\"Value\":\"sdf\",\"Key\":\"sdf\"}]",
+            "requestBody": "{\n    \"a1\": 1\n}",
+            "responseHead": "[{\"Value\":\"sd\",\"Key\":\"sd\"}]",
+            "responseBody": "{\n    \"ad\": 1\n}",
+            "assertions": null,
+            "createdBy": null,
+            "createdTime": null,
+            "updatedBy": null,
+            "updatedTime": "2018-04-11 18:56:39",
+            "optstatus": 0
+          }],
+          "optstatus": 0
+        },
+        "interfaceId": 1,
+        "orderNo": 1,
+        "step": "777",
+        "name": "2341888发鬼地方个梵蒂冈梵蒂冈",
+        "apiType": "0",
+        "postWay": "1",
+        "branch": "dev1",
+        "system": "acc",
+        "urlAddress": "234",
+        "variables": null,
+        "requestHead": [{
+          "Value": "sdf",
+          "Key": "sdf"
+        }],
+        "requestBody": "{\n    \"a1\": 1\n}",
+        "responseHead": [{
+          "Value": "sd",
+          "Key": "sd"
+        }],
+        "responseBody": "{\n    \"ad\": 1\n}",
+        "assertions": null,
+        "createdBy": null,
+        "createdTime": null,
+        "updatedBy": null,
+        "updatedTime": "2018-04-11 06:56:39",
+        "optstatus": 0,
+        "checked": true
+      }
+      ];
+
+
+
+
+      var a = hhhh;
+      a = JSON.stringify(a)
+      a = JSON.parse(a);
+
+      var b = hhhh;
+      b = JSON.stringify(b)
+      b = JSON.parse(b);
+
+      this.submitApis= a;
+      this.tempApis = b;
+
+      var that = this;
+      this.tempApis.forEach(function(val,index,arr){
+        if(that.getString(val.name) > 20){
+          val.name = that.cutstr(val.name , 50)
+        }
+      })
+
     },
 
     methods: {
+      getString(str){
+        // return str.replace(/[\u0391-\uFFE5]/g,"aa").length;  //先把中文替换成两个字节的英文，在计算长度
+        var realLength = 0, len = str.length, charCode = -1;
+        for (var i = 0; i < len; i++) {
+          charCode = str.charCodeAt(i);
+          if (charCode >= 0 && charCode <= 128) realLength += 1;
+          else realLength += 2;
+        }
+        return realLength;
+      },
+      cutstr(str, len) {
+        var str_length = 0;
+        var str_len = 0;
+        var str_cut = new String();
+        str_len = str.length;
+        for (var i = 0; i < str_len; i++) {
+          var a = str.charAt(i);
+          str_length++;
+          if (escape(a).length > 4) {
+            //中文字符的长度经编码之后大于4
+            str_length++;
+          }
+          str_cut = str_cut.concat(a);
+          if (str_length >= len) {
+            str_cut = str_cut.concat("...");
+            return str_cut;
+          }
+        }
+        //如果给定字符串小于指定长度，则返回源字符串；
+        if (str_length < len) {
+          return str;
+        }
+      },
+
       handleNodeClick(data, node, instance) {
-//          console.log('xxx');
       },
       loadNode(node, resolve) {
         if(node.level === 0){
@@ -109,7 +348,7 @@
             vueThis.$message.error('抱歉，服务器异常！' );
           });
 
-//          var apiTreeData =  [
+         // var apiTreeData =  [
 //            {
 //              "id": 1,
 //              "name": "1",
@@ -198,7 +437,21 @@
             assertions:null
           }
 
+          this.submitApis.push(newApiData);
+
+          newApiData = JSON.stringify(newApiData);
+          newApiData = JSON.parse(newApiData);
+
+          console.log(this.getString(newApiData.name))
+
+          if(this.getString(newApiData.name) > 50){
+            val.name = this.cutstr(val.name , 50)
+          }
+
+          console.log(newApiData.name)
+
           this.tempApis.push(newApiData);
+
 
         }else{
           this.$message({
@@ -215,9 +468,10 @@
       },
       deleteRow(index, rows) {
         rows.splice(index, 1);
+        this.submitApis.splice(index, 1);
       },
       getApis(){
-        return this.tempApis.concat();
+        return this.submitApis.concat();
       },
       resetApis(){
         this.tempApis = this.selectedApis.concat()
@@ -228,6 +482,7 @@
 </script>
 
 <style scoped>
+
   .el-row {
     width:100%;
   }
@@ -244,7 +499,7 @@
     overflow-x: hidden;
   }
   .vue-transfer-tree {
-    border: 0.5px solid;
+    /*border: 0.5px solid;*/
     border-radius: 5px;
     min-height: 300px;
     height: 300px;
@@ -255,7 +510,7 @@
     overflow-x: auto;
   }
   .vue-transfer-label{
-    width: 98%;
+    width: 100%;
     background:#f5f7fa;
     display: inline-block;
     border-top-left-radius: 5px;

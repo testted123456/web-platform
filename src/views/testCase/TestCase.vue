@@ -74,6 +74,7 @@
               prop="name"
               label="接口名称"
               align="left"
+              min-width="170"
             >
             </el-table-column>
 
@@ -540,20 +541,11 @@
             var data = this.dialog.extend.data;
             var index = this.dialog.extend.index;
             var partData = this.$refs.searchApiDetailInfo.rewrite();
-            console.log(partData);
 
             var fData = partData;
             fData.id = data.id;
 
             this.$set(this.testCase.testCaseInterfaces, index, fData)
-
-//            data.step = partData.step;
-//            data.urlAddress = partData.urlAddress;
-//            data.variables = partData.variables;
-//            data.requestHead = partData.requestHead;
-//            data.requestBody = partData.requestBody;
-//            data.responseBody = partData.responseBody;
-//            data.assertions = partData.assertions;
 
           }
             break;
@@ -587,7 +579,6 @@
           }
             break;
           case 7:{
-            console.log("closexxxxx")
             this.closeWebSocket()
           }
           default:
@@ -616,7 +607,7 @@
           visible: true,   //整个弹窗显示与否
           footerVisible: true,
           contentType: 1,  //弹窗内容显示什么
-          width: '60%',
+          width: '90%',
           extend: {}
         }
       },

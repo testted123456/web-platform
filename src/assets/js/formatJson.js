@@ -2,8 +2,14 @@
  * Created by ted on 2018/1/11.
  */
 var formatJson =function (jsonStr) {
-  let jsonObj = JSON.parse(jsonStr);
-  return JSON.stringify(jsonObj, null, 4);
+  if(jsonStr == null || jsonStr == 'null' || jsonStr == ''){
+    console.log('null  null  null')
+    return
+  }else{
+    let jsonObj = JSON.parse(jsonStr);
+    return JSON.stringify(jsonObj, null, 4);
+  }
+
 }
 
 //判断字符串是否为json

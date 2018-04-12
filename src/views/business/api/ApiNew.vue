@@ -91,24 +91,24 @@
               <el-tab-pane label="Req Body" name="ReqBody">
                 <el-row>
                   <el-col :span="16">
-                    <el-radio v-model="api.requestBodyType" label="0" disabled>form-data</el-radio>
-                    <el-radio v-model="api.requestBodyType" label="1">x-www-form-urlencoded</el-radio>
-                    <el-radio v-model="api.requestBodyType" label="2">row</el-radio>
-                    <el-radio v-model="api.requestBodyType" label="3" disabled="">binary</el-radio>
+                    <el-radio v-model="requestBodyType" label="0" disabled>form-data</el-radio>
+                    <el-radio v-model="requestBodyType" label="1">x-www-form-urlencoded</el-radio>
+                    <el-radio v-model="requestBodyType" label="2">row</el-radio>
+                    <el-radio v-model="requestBodyType" label="3" disabled="">binary</el-radio>
                   </el-col>
                   <el-col :span="8">
-                    <el-dropdown v-if="api.requestBodyType == 2" @command="selectRequestBodyRow">
+                    <el-dropdown v-if="requestBodyType == 2" @command="selectRequestBodyRow">
                       <span class="el-dropdown-link">
                         {{requestBodyRowType}}<i class="el-icon-arrow-down el-icon--right"></i>
                       </span>
                       <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="0">Text</el-dropdown-item>
-                        <el-dropdown-item command="1">Text(text/plain)</el-dropdown-item>
-                        <el-dropdown-item command="2">Json(application/json)</el-dropdown-item>
-                        <el-dropdown-item command="3">Javascript(application/javascript)</el-dropdown-item>
-                        <el-dropdown-item command="4">XML(application/xml)</el-dropdown-item>
-                        <el-dropdown-item command="5">XML(text/xml)</el-dropdown-item>
-                        <el-dropdown-item command="6">HTML(text/html)</el-dropdown-item>
+                        <el-dropdown-item command="Text">Text</el-dropdown-item>
+                        <el-dropdown-item command="Text(text/plain)">Text(text/plain)</el-dropdown-item>
+                        <el-dropdown-item command="Json(application/json)">Json(application/json)</el-dropdown-item>
+                        <el-dropdown-item command="Javascript(application/javascript)">Javascript(application/javascript)</el-dropdown-item>
+                        <el-dropdown-item command="XML(application/xml)">XML(application/xml)</el-dropdown-item>
+                        <el-dropdown-item command="XML(text/xml)">XML(text/xml)</el-dropdown-item>
+                        <el-dropdown-item command="HTML(text/html)">HTML(text/html)</el-dropdown-item>
                       </el-dropdown-menu>
                     </el-dropdown>
                   </el-col>
@@ -254,10 +254,6 @@
     data () {
       return {
         labelPosition:"right",
-//        showSuccessAlert: false,
-//        showErrorAlert: false,
-//        alertErrorTitle: '',
-        requestBodyRowType: 'Text',
         api: {
           id: '',
           name: '',
@@ -273,8 +269,8 @@
             Key: '',
             Value: ''
           }],
-          requestBodyType: '2',
-          requestBodyRowType: '2',
+//          requestBodyType: '2',
+//          requestBodyRowType: '2',
           requestBody: null,
           responseHead: [{
             Key: '',
@@ -289,12 +285,115 @@
           system: ''
         },
         apiSystems: [],
-        activeName: 'ReqHeaders'
+        activeName: 'ReqHeaders',
+        requestBodyRowType: 'Text',
+        requestBodyType: '2',
+        reqestContentType: {'Key':'Content-Type', 'Value':''}
       }
     },
 
     created() {
       this.init();
+    },
+
+    computed: {
+      reqestContentTypeValue: function(){
+        return this.reqestContentType.Value;
+      }
+    },
+
+    watch:{
+
+      'requestBodyType': function(){
+        let ContentType = null;
+
+        if(this.requestBodyType === '1'){
+          this.reqestContentType.Value = 'application/x-www-form-urlencoded';
+        }else if(this.requestBodyType === '2'){
+          switch (this.requestBodyRowType){
+            case "Text":
+              this.reqestContentType.Value = '';
+              break;
+            case "Text(text/plain)":
+              this.reqestContentType.Value = 'text/plain';
+              break;
+            case "Json(application/json)":
+              this.reqestContentType.Value = 'application/json';
+              break;
+            case "Javascript(application/javascript)":
+              this.reqestContentType.Value = 'application/javascript';
+              break;
+            case "XML(application/xml)":
+              this.reqestContentType.Value = 'application/xml';
+              break;
+            case "XML(text/xml)":
+              this.reqestContentType.Value = 'text/xml';
+              break;
+            case "HTML(text/html)":
+              this.reqestContentType.Value = 'text/html';
+              break;
+          }
+        }
+      },
+
+      'requestBodyRowType': function () {
+        let ContentType = null;
+
+        switch (this.requestBodyRowType){
+          case "Text":
+            this.reqestContentType.Value = '';
+            break;
+          case "Text(text/plain)":
+            this.reqestContentType.Value = 'text/plain';
+            break;
+          case "Json(application/json)":
+            this.reqestContentType.Value = 'application/json';
+            break;
+          case "Javascript(application/javascript)":
+            this.reqestContentType.Value = 'application/javascript';
+            break;
+          case "XML(application/xml)":
+            this.reqestContentType.Value = 'application/xml';
+            break;
+          case "XML(text/xml)":
+            this.reqestContentType.Value = 'text/xml';
+            break;
+          case "HTML(text/html)":
+            this.reqestContentType.Value = 'text/html';
+            break;
+        }
+
+      },
+
+      'reqestContentTypeValue': function (val, oldVal) {
+
+        let contentTypeIndex = null;
+
+        this.api.requestHead.forEach(function (e, index) {
+          if(e.Key === 'Content-Type'){
+            contentTypeIndex = index;
+          }
+        });
+
+        if(val === '' && contentTypeIndex != null){
+
+          if(contentTypeIndex == 0 && this.api.requestHead.length == 1){
+            this.api.requestHead[contentTypeIndex].Key = '';
+            this.api.requestHead[contentTypeIndex].Value = '';
+          }else {
+            this.api.requestHead.splice(contentTypeIndex, 1);
+          }
+        }else if(val != null && contentTypeIndex != null){
+          this.api.requestHead[contentTypeIndex].Value = val;
+        }else if(val != null && contentTypeIndex === null){
+          if(this.api.requestHead.length === 1 && this.api.requestHead[0].Key === '' && this.api.requestHead[0].Value === ''){
+            this.api.requestHead[0].Key = 'Content-Type';
+            this.api.requestHead[0].Value = val;
+          }else{
+            this.api.requestHead.push(this.reqestContentType);
+          }
+        }
+      }
     },
 
     methods: {
@@ -361,29 +460,29 @@
       },
 
       selectRequestBodyRow(command){
-          this.api.requestBodyRowType = command;
+        this.requestBodyRowType = command;
 
-          if(command == 0){
-            this.requestBodyRowType = 'Text';
-          }
-          if(command == 1){
-            this.requestBodyRowType = 'Text(text/plain)';
-          }
-          if(command == 2){
-            this.requestBodyRowType = 'Json(application/json)';
-          }
-          if(command == 3){
-            this.requestBodyRowType = 'Javascript(application/javascript)';
-          }
-          if(command == 4){
-            this.requestBodyRowType = 'XML(application/xml)';
-          }
-          if(command == 5){
-            this.requestBodyRowType = 'XML(text/xml)';
-          }
-          if(command == 6){
-            this.requestBodyRowType = 'HTML(text/html)';
-          }
+//          if(command == 0){
+//            this.requestBodyRowType = 'Text';
+//          }
+//          if(command == 1){
+//            this.requestBodyRowType = 'Text(text/plain)';
+//          }
+//          if(command == 2){
+//            this.requestBodyRowType = 'Json(application/json)';
+//          }
+//          if(command == 3){
+//            this.requestBodyRowType = 'Javascript(application/javascript)';
+//          }
+//          if(command == 4){
+//            this.requestBodyRowType = 'XML(application/xml)';
+//          }
+//          if(command == 5){
+//            this.requestBodyRowType = 'XML(text/xml)';
+//          }
+//          if(command == 6){
+//            this.requestBodyRowType = 'HTML(text/html)';
+//          }
       },
 
       //保存api

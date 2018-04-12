@@ -541,20 +541,11 @@
             var data = this.dialog.extend.data;
             var index = this.dialog.extend.index;
             var partData = this.$refs.searchApiDetailInfo.rewrite();
-            console.log(partData);
 
             var fData = partData;
             fData.id = data.id;
 
             this.$set(this.testCase.testCaseInterfaces, index, fData)
-
-//            data.step = partData.step;
-//            data.urlAddress = partData.urlAddress;
-//            data.variables = partData.variables;
-//            data.requestHead = partData.requestHead;
-//            data.requestBody = partData.requestBody;
-//            data.responseBody = partData.responseBody;
-//            data.assertions = partData.assertions;
 
           }
             break;
@@ -588,7 +579,6 @@
           }
             break;
           case 7:{
-            console.log("closexxxxx")
             this.closeWebSocket()
           }
           default:

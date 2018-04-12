@@ -30,7 +30,7 @@
             style="width: 100%; margin-top: 2px">
             <el-table-column
               prop="name"
-              label="接口名称" min-width="170">
+              label="接口名称" min-width="250">
             </el-table-column>
             <el-table-column
               prop="system"
@@ -152,7 +152,7 @@
         "interfaceId": 4,
         "orderNo": 0,
         "step": "vccv",
-        "name": "test",
+        "name": "展示数据展示数据展示数据展示数据展示数据展示数据展示数据展示数据展示数据展示数据22222555557777766666kkhmbjbjh",
         "apiType": "0",
         "postWay": "1",
         "branch": "dev",
@@ -236,7 +236,7 @@
         "interfaceId": 1,
         "orderNo": 1,
         "step": "777",
-        "name": "2341",
+        "name": "2341888发鬼地方个梵蒂冈梵蒂冈",
         "apiType": "0",
         "postWay": "1",
         "branch": "dev1",
@@ -266,11 +266,11 @@
 
 
 
-      var a = this.selectedApis;
+      var a = hhhh;
       a = JSON.stringify(a)
       a = JSON.parse(a);
 
-      var b = this.selectedApis;
+      var b = hhhh;
       b = JSON.stringify(b)
       b = JSON.parse(b);
 
@@ -279,23 +279,49 @@
 
       var that = this;
       this.tempApis.forEach(function(val,index,arr){
-        if(that.getString(val.name) > 41){
-          val.name = val.name.substring(0,20) + '...';
+        if(that.getString(val.name) > 20){
+          val.name = that.cutstr(val.name , 50)
         }
       })
-
-
-
-      // console.log(this.getString('测试测试eshi'))
 
     },
 
     methods: {
       getString(str){
-        return str.replace(/[\u0391-\uFFE5]/g,"aa").length;  //先把中文替换成两个字节的英文，在计算长度
+        // return str.replace(/[\u0391-\uFFE5]/g,"aa").length;  //先把中文替换成两个字节的英文，在计算长度
+        var realLength = 0, len = str.length, charCode = -1;
+        for (var i = 0; i < len; i++) {
+          charCode = str.charCodeAt(i);
+          if (charCode >= 0 && charCode <= 128) realLength += 1;
+          else realLength += 2;
+        }
+        return realLength;
       },
+      cutstr(str, len) {
+        var str_length = 0;
+        var str_len = 0;
+        var str_cut = new String();
+        str_len = str.length;
+        for (var i = 0; i < str_len; i++) {
+          var a = str.charAt(i);
+          str_length++;
+          if (escape(a).length > 4) {
+            //中文字符的长度经编码之后大于4
+            str_length++;
+          }
+          str_cut = str_cut.concat(a);
+          if (str_length >= len) {
+            str_cut = str_cut.concat("...");
+            return str_cut;
+          }
+        }
+        //如果给定字符串小于指定长度，则返回源字符串；
+        if (str_length < len) {
+          return str;
+        }
+      },
+
       handleNodeClick(data, node, instance) {
-//          console.log('xxx');
       },
       loadNode(node, resolve) {
         if(node.level === 0){
@@ -418,8 +444,8 @@
 
           console.log(this.getString(newApiData.name))
 
-          if(this.getString(newApiData.name) > 41){
-            newApiData.name = newApiData.name.substring(0,20) + '...';
+          if(this.getString(newApiData.name) > 50){
+            val.name = this.cutstr(val.name , 50)
           }
 
           console.log(newApiData.name)

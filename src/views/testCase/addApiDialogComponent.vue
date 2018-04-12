@@ -30,7 +30,7 @@
             style="width: 100%; margin-top: 2px">
             <el-table-column
               prop="name"
-              label="接口名称" min-width="150">
+              label="接口名称" min-width="170">
             </el-table-column>
             <el-table-column
               prop="system"
@@ -83,7 +83,7 @@
       // tempApis   展示数据
 
 
-
+    console.log(this.selectedApis)
 
 
       var hhhh = [
@@ -266,35 +266,34 @@
 
 
 
-      var a = hhhh;
+      var a = this.selectedApis;
       a = JSON.stringify(a)
       a = JSON.parse(a);
 
-      var b = hhhh;
+      var b = this.selectedApis;
       b = JSON.stringify(b)
       b = JSON.parse(b);
 
       this.submitApis= a;
       this.tempApis = b;
 
+      var that = this;
       this.tempApis.forEach(function(val,index,arr){
-        val.name = val.name.substring(0,2) + '...';
+        if(that.getString(val.name) > 41){
+          val.name = val.name.substring(0,20) + '...';
+        }
       })
 
-      console.log(this.submitApis[0].name)
-      console.log(this.tempApis[0].name)
 
 
-      var c = [4,5,6];
-      var d = c.concat();
-      c.reverse();
-      console.log(c);//[6,5,4]
-      console.log(d);//[4,5,6]
-
+      // console.log(this.getString('测试测试eshi'))
 
     },
 
     methods: {
+      getString(str){
+        return str.replace(/[\u0391-\uFFE5]/g,"aa").length;  //先把中文替换成两个字节的英文，在计算长度
+      },
       handleNodeClick(data, node, instance) {
 //          console.log('xxx');
       },
@@ -416,7 +415,14 @@
 
           newApiData = JSON.stringify(newApiData);
           newApiData = JSON.parse(newApiData);
-          newApiData.name.substring(0,2);
+
+          console.log(this.getString(newApiData.name))
+
+          if(this.getString(newApiData.name) > 41){
+            newApiData.name = newApiData.name.substring(0,20) + '...';
+          }
+
+          console.log(newApiData.name)
 
           this.tempApis.push(newApiData);
 

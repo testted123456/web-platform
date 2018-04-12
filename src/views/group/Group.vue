@@ -67,6 +67,7 @@
               prop="name"
               label="测试用例名称"
               align="left"
+              min-width="170"
             >
               <template slot-scope="scope">
                 <el-button type="text" @click="transToCase(scope.row.id)">{{ scope.row.name }}</el-button>
@@ -108,7 +109,7 @@
         </el-row>
       </div>
 
-      
+
       <!-- 增加 删除 等弹框 -->
       <el-dialog
         v-if="dialog.visible"

@@ -74,6 +74,7 @@
               prop="name"
               label="接口名称"
               align="left"
+              min-width="170"
             >
             </el-table-column>
 

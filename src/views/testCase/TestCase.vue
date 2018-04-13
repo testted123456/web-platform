@@ -21,6 +21,16 @@
               <el-radio v-model="testCase.caseType" label="true">是</el-radio>
               <el-radio v-model="testCase.caseType" label="false">否</el-radio>
             </el-form-item>
+            <el-form-item label="API系统:" prop="system" :rules="[{ required: true, trigger: 'blur',message: '接口系统不能为空'} ]">
+              <el-select v-model="testCase.system" placeholder="请选择">
+                <el-option
+                  v-for="item in apiSystems"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
             <!--环境-->
             <el-form-item label="环境" prop="env" :rules="[{ required: true, message: '环境不能为空'} ]">
               <el-col :span="8">
@@ -209,6 +219,7 @@
         executeBtnShow:false,
         excResult: '',
         enviornment:[],
+        apiSystems:[],
         testCase: {
           caseType:false,
           createdBy:null,
@@ -223,6 +234,7 @@
           updatedBy:null,
           updatedTime:null,
           type:true,
+          system:'',
           testCaseInterfaces:[]
         },
         copyIndex:0,
@@ -334,69 +346,94 @@
         this.executeBtnShow = false;//执行按钮隐藏
         var caseID = this.$route.query.id;
         this.intellCheckData = [];
-        //获取环境列表select
         var vueThis = this;
+
+        //获取系统
         vueThis.testCaseAxios({
           method: 'get',
           data: {
           },
-          url: "env/getAllEnvs"
+          url: "sysCfg/getAllAlias"
         })
         .then(function (res) {
           if(res.data.code === 10000){
             var tempEnviornment = [];
             res.data.data.forEach(function (e, index) {
-              tempEnviornment.push({value: e.name, label: e.name})
+              tempEnviornment.push({value: e, label: e})
             });
-            vueThis.enviornment = tempEnviornment;
-            ///////////////////////获取环境信息成功之后 再去获取页面其他信息
+            vueThis.apiSystems = tempEnviornment;
 
-            if (caseID == 0){   //新增case页面
-              vueThis.testCase = {
-                caseType:'false',
-                env:vueThis.enviornment[0].value,
-                type:true
-              }
-              vueThis.testCase.testCaseInterfaces = [];
-            }else{
-              // case编辑页面
-              // 获取测试用例详情信息内容
-              vueThis.executeBtnShow = true;//执行按钮显示
-              vueThis.testCaseAxios({
-                method: 'get',
-                data: {
-                },
-                url: "testCase/getCaseById?id=" + caseID
-              })
+            //获取环境列表select
+            vueThis.testCaseAxios({
+              method: 'get',
+              data: {
+              },
+              url: "env/getAllEnvs"
+            })
               .then(function (res) {
                 if(res.data.code === 10000){
-                  vueThis.testCase = res.data.data;
-                  if(vueThis.testCase.caseType){
-                    vueThis.testCase.caseType = "true"
+                  var tempEnviornment = [];
+                  res.data.data.forEach(function (e, index) {
+                    tempEnviornment.push({value: e.name, label: e.name})
+                  });
+                  vueThis.enviornment = tempEnviornment;
+                  ///////////////////////获取环境信息成功之后 再去获取页面其他信息
+
+                  if (caseID == 0){   //新增case页面
+                    vueThis.testCase = {
+                      caseType:'false',
+                      env:vueThis.enviornment[0].value,
+                      type:true,
+                      system:vueThis.apiSystems[0].value
+                    }
+                    vueThis.testCase.testCaseInterfaces = [];
                   }else{
-                    vueThis.testCase.caseType = "false"
-                  }
-                  vueThis.$nextTick(()=>{
-                      var that = vueThis;
-                      vueThis.testCase.testCaseInterfaces.forEach(function(e,index){
-                          e.checked = true;
-                          that.$refs.multipleTable.toggleRowSelection(e,true);
+                    // case编辑页面
+                    // 获取测试用例详情信息内容
+                    vueThis.executeBtnShow = true;//执行按钮显示
+                    vueThis.testCaseAxios({
+                      method: 'get',
+                      data: {
+                      },
+                      url: "testCase/getCaseById?id=" + caseID
+                    })
+                      .then(function (res) {
+                        if(res.data.code === 10000){
+                          vueThis.testCase = res.data.data;
+                          if(vueThis.testCase.caseType){
+                            vueThis.testCase.caseType = "true"
+                          }else{
+                            vueThis.testCase.caseType = "false"
+                          }
+                          vueThis.$nextTick(()=>{
+                            var that = vueThis;
+                            vueThis.testCase.testCaseInterfaces.forEach(function(e,index){
+                              e.checked = true;
+                              that.$refs.multipleTable.toggleRowSelection(e,true);
+                            });
+                            vueThis.filterExecteId();
+                          })
+                        }
+                      })
+                      .catch(function (err) {
+                        vueThis.$message.error('抱歉，服务器异常！' );
                       });
-                      vueThis.filterExecteId();
-                  })
+                  }
+                }else{
+                  vueThis.$message.error('抱歉，获取环境信息失败：' + res.data.msg);
                 }
               })
               .catch(function (err) {
                 vueThis.$message.error('抱歉，服务器异常！' );
               });
-            }
-          }else{
-            vueThis.$message.error('抱歉，获取环境信息失败：' + res.data.msg);
+
           }
         })
         .catch(function (err) {
           vueThis.$message.error('抱歉，服务器异常！' );
         });
+
+
 
       },
       //新增，编辑 确认按钮事件

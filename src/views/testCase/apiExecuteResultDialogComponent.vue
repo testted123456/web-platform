@@ -5,7 +5,7 @@
         <el-table v-show="apiResult.length>0"
                   :data="apiResult"
                   style="width: 100%"
-                  ref="multipleTable">
+                  ref="multipleTable" border>
 
 
           <el-table-column
@@ -45,7 +45,7 @@
         </el-table>
       </el-row>
 
-      <div v-show="detailInfoShow">
+      <div v-show="detailInfoShow" style="padding-top:40px;">
         <el-row class="hTitle">*接口url为</el-row>
         <el-row>
           <div class="jsonContent" >
@@ -56,77 +56,129 @@
 
         <el-row class="hTitle">*自定义变量</el-row>
         <el-row>
-          <div class="jsonContent" >
-            <el-input
-              type="textarea"
-              :rows="8"
-              placeholder="请输入内容"
-              v-model="apiDetail.variables">
-            </el-input>
-          </div>
+          <el-input
+            type="textarea"
+            autosize
+            readonly
+            resize="none"
+            placeholder=""
+            v-model="apiDetail.variables">
+          </el-input>
         </el-row>
 
-        <el-row class="hTitle">*头部</el-row>
+        <el-row class="hTitle">*请求头</el-row>
         <el-row>
-          <div class="jsonContent" >
-            <el-input
-              type="textarea"
-              :rows="8"
-              placeholder="请输入内容"
-              v-model="apiDetail.headers">
-            </el-input>
-          </div>
+          headers
+          <el-table v-show="apiDetail.headers.length>0"
+                    :data="apiDetail.headers"
+                    style="width: 100%"
+                    ref="multipleTable" border>
+
+            <el-table-column
+              prop="Key"
+              label="Key"
+              align="left"
+            >
+            </el-table-column>
+
+            <el-table-column
+              prop="Value"
+              label="Value"
+              align="left"
+            >
+            </el-table-column>
+          </el-table>
         </el-row>
 
         <el-row class="hTitle">*请求参数</el-row>
         <el-row>
-          <!--<div class="jsonContent" >-->
-            <!--{{formatJson(apiDetail.requestBody)}}-->
-          <!--</div>-->
           <el-input
-            type="textarea"
-            :rows="8"
-            placeholder="请输入内容"
-            v-model="apiDetail.requestBody">
-          </el-input>
+          type="textarea"
+          autosize
+          readonly
+          resize="none"
+          placeholder="请输入内容"
+          v-model="apiDetail.requestBody">
+        </el-input>
         </el-row>
 
         <el-row class="hTitle">*响应</el-row>
         <el-row>
-          <div class="jsonContent" >
-            <el-input
-              type="textarea"
-              :rows="8"
-              placeholder="请输入内容"
-              v-model="apiDetail.responseBody">
-            </el-input>
-          </div>
+          <el-input
+            type="textarea"
+            autosize
+            readonly
+            resize="none"
+            placeholder=""
+            v-model="apiDetail.responseBody">
+          </el-input>
+        </el-row>
+
+        <el-row class="hTitle">*实际响应</el-row>
+        <el-row>
+          <el-input
+            type="textarea"
+            autosize
+            readonly
+            resize="none"
+            placeholder=""
+            v-model="apiDetail.actualResponseBody">
+          </el-input>
         </el-row>
 
 
 
         <el-row class="hTitle">*预期结果</el-row>
         <el-row>
-          <div class="jsonContent" >
-            <el-input
-              type="textarea"
-              :rows="8"
-              placeholder="请输入内容"
-              v-model="apiDetail.exception">
-            </el-input>
-          </div>
+          <el-input
+            type="textarea"
+            autosize
+            readonly
+            resize="none"
+            placeholder=""
+            v-model="apiDetail.exception">
+          </el-input>
         </el-row>
 
         <el-row class="hTitle">*断言结果</el-row>
         <el-row>
-          <div class="jsonContent" >
-            <el-input
-              type="textarea"
-              :rows="8"
-              placeholder="请输入内容"
-              v-model="apiDetail.assertions">
-            </el-input>
-          </div>
+          <el-table v-show="apiDetail.assertions.length>0"
+                    :data="apiDetail.assertions"
+                    style="width: 100%"
+                    ref="multipleTable" border>
+
+            <el-table-column
+              prop="actualResult"
+              label="预期结果"
+              align="left"
+            >
+            </el-table-column>
+
+            <el-table-column
+              prop="comparator"
+              label="比较符"
+              align="left"
+            >
+            </el-table-column>
+
+            <el-table-column
+              prop="expectResult"
+              label="实际结果"
+              align="left"
+            >
+            </el-table-column>
+
+            <el-table-column
+              prop="result"
+              label="结果"
+              align="left"
+            >
+            </el-table-column>
+
+
+
+          </el-table>
+
         </el-row>
 
       </div>
@@ -154,7 +206,8 @@
           requestBody:'',
           responseBody:'',
           exception:'',
-          assertions:''
+          assertions:'',
+          actualResponseBody:''
         }
 
       }
@@ -179,22 +232,25 @@
           data: {},
           url: "report/getCaseReport?id=" + caseID
         })
-          .then(function (res) {
-            if (res.data.code === 10000) {
-              vueThis.apiResult = res.data.data;
-              console.log(vueThis.apiResult )
-              vueThis.apiResult.forEach(function(val,index,arr){
-                if(val.result){
-                  val.result = 'true'
-                }else{
-                  val.result = 'false'
-                }
-              })
-            }
-          })
-          .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！');
-          });
+        .then(function (res) {
+          if (res.data.code === 10000) {
+            vueThis.apiResult = res.data.data;
+            console.log(vueThis.apiResult )
+            vueThis.apiResult.forEach(function(val,index,arr){
+              if(val.result){
+                val.result = 'true'
+              }else{
+                val.result = 'false'
+              }
+            })
+          }
+        })
+        .catch(function (err) {
+          vueThis.$message.error('抱歉，服务器异常！');
+        });
+
+
+
       },
       getDetail(id){
         this.detailInfoShow = true;
@@ -205,9 +261,12 @@
             console.log(that.apiDetail)
             that.apiDetail.requestBody = formatJson(that.apiDetail.requestBody)
             that.apiDetail.variables = formatJson(that.apiDetail.variables)
-            that.apiDetail.headers = formatJson(that.apiDetail.headers)
             that.apiDetail.responseBody = formatJson(that.apiDetail.responseBody)
-            that.apiDetail.assertions = formatJson(that.apiDetail.assertions)
+            that.apiDetail.actualResponseBody = formatJson(that.apiDetail.actualResponseBody)
+
+            that.apiDetail.headers = JSON.parse(that.apiDetail.headers)
+            that.apiDetail.assertions = JSON.parse(that.apiDetail.assertions)
+
 
 
           }
@@ -230,7 +289,32 @@
     padding: 15px 0;
     font-size: 18px;
   }
-  textarea{
+  .textAreaStyle{
     outline: none !important;
+    resize: none;
+    display: block;
+    padding: 5px 15px;
+    line-height: 1.5;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: inherit;
+    color: #606266;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    text-indent: 0px;
+  }
+
+
+
+  .el-textarea.is-disabled .el-textarea__inner {
+    background-color: #f5f5f5;
+    border-color: #e4e7ed;
+    color: #606266;
+    cursor: not-allowed;
   }
 </style>

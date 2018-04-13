@@ -102,17 +102,17 @@
         </el-input>
         </el-row>
 
-        <el-row class="hTitle">*响应</el-row>
-        <el-row>
-          <el-input
-            type="textarea"
-            autosize
-            readonly
-            resize="none"
-            placeholder=""
-            v-model="apiDetail.responseBody">
-          </el-input>
-        </el-row>
+        <!--<el-row class="hTitle">*响应</el-row>-->
+        <!--<el-row>-->
+          <!--<el-input-->
+            <!--type="textarea"-->
+            <!--autosize-->
+            <!--readonly-->
+            <!--resize="none"-->
+            <!--placeholder=""-->
+            <!--v-model="apiDetail.responseBody">-->
+          <!--</el-input>-->
+        <!--</el-row>-->
 
         <el-row class="hTitle">*实际响应</el-row>
         <el-row>
@@ -129,6 +129,7 @@
 
 
         <el-row class="hTitle">*预期结果</el-row>
+        <!--exception-->
         <el-row>
           <el-input
             type="textarea"
@@ -136,7 +137,7 @@
             readonly
             resize="none"
             placeholder=""
-            v-model="apiDetail.exception">
+            v-model="apiDetail.responseBody">
           </el-input>
         </el-row>
 

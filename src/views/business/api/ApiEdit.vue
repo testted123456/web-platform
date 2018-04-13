@@ -90,7 +90,7 @@
 
               <!--request body-->
               <el-tab-pane label="Req Body" name="ReqBody">
-                <el-row>
+                <el-row v-if="api.postWay == 1">
                   <el-col :span="18">
                     <el-radio v-model="requestBodyType" label="0" disabled>form-data</el-radio>
                     <el-radio v-model="requestBodyType" label="1">x-www-form-urlencoded</el-radio>
@@ -404,40 +404,6 @@
           if(res.data.code === 10000){
             vueThis.api = res.data.data;
 
-            vueThis.api.requestHead.forEach(function (e, index) {
-              if(e.Key === 'Content-Type'){
-                  switch (e.Value){
-                    case "application/x-www-form-urlencoded":
-                      vueThis.requestBodyType = '1';
-                      break;
-                    case "text/plain":
-                      vueThis.requestBodyType = '2';
-                      vueThis.requestBodyRowType = 'Text(text/plain)';
-                      break;
-                    case "application/json":
-                      vueThis.requestBodyType = '2';
-                      vueThis.requestBodyRowType = 'Json(application/json)';
-                      break;
-                    case "application/javascript":
-                      vueThis.requestBodyType = '2';
-                      vueThis.requestBodyRowType = 'Javascript(application/javascript)';
-                      break;
-                    case "application/xml":
-                      vueThis.requestBodyType = '2';
-                      vueThis.requestBodyRowType = 'XML(application/xml)';
-                      break;
-                    case "text/xml":
-                      vueThis.requestBodyType = '2';
-                      vueThis.requestBodyRowType = 'XML(text/xml)';
-                      break;
-                    case "text/html":
-                      vueThis.requestBodyType = '2';
-                      vueThis.requestBodyRowType = 'HTML(text/html)';
-                      break;
-                  }
-              }
-            });
-
             if(vueThis.api.requestHead === null){
               vueThis.api.requestHead = [{Key: '', Value: ''}];
             }
@@ -453,10 +419,45 @@
             if(isJson(vueThis.api.responseBody)){
               vueThis.api.responseBody = formatJson(vueThis.api.responseBody)
             }
+
+            vueThis.api.requestHead.forEach(function (e, index) {
+              if(e.Key === 'Content-Type'){
+                switch (e.Value){
+                  case "application/x-www-form-urlencoded":
+                    vueThis.requestBodyType = '1';
+                    break;
+                  case "text/plain":
+                    vueThis.requestBodyType = '2';
+                    vueThis.requestBodyRowType = 'Text(text/plain)';
+                    break;
+                  case "application/json":
+                    vueThis.requestBodyType = '2';
+                    vueThis.requestBodyRowType = 'Json(application/json)';
+                    break;
+                  case "application/javascript":
+                    vueThis.requestBodyType = '2';
+                    vueThis.requestBodyRowType = 'Javascript(application/javascript)';
+                    break;
+                  case "application/xml":
+                    vueThis.requestBodyType = '2';
+                    vueThis.requestBodyRowType = 'XML(application/xml)';
+                    break;
+                  case "text/xml":
+                    vueThis.requestBodyType = '2';
+                    vueThis.requestBodyRowType = 'XML(text/xml)';
+                    break;
+                  case "text/html":
+                    vueThis.requestBodyType = '2';
+                    vueThis.requestBodyRowType = 'HTML(text/html)';
+                    break;
+                }
+              }
+            });
           }else {
             vueThis.$message.error('抱歉，获取接口信息失败：' + res.data.msg);
           }
         }).catch(function (err) {
+            console.log(err)
           vueThis.$message.error('抱歉，服务器异常！' );
         });
 

@@ -24,12 +24,12 @@
                 </el-tree>
                 <el-dialog
                   :visible.sync="delDialogVisible"
-                  width="20%"
+                  width="420px"
                 >
                   <span>确认删除？</span>
                   <span slot="footer" class="dialog-footer">
-                      <el-button @click="delDialogVisible = false">取 消</el-button>
-                      <el-button type="primary" @click="delApi">确 定</el-button>
+                      <el-button size="small" @click="delDialogVisible = false">取 消</el-button>
+                      <el-button size="small" type="primary" @click="delApi">确 定</el-button>
                     </span>
                 </el-dialog>
               </div>
@@ -244,27 +244,53 @@
       const node = this.$refs.tree.currentNode.node;
       const nodeId = node.data.id;
 
-      if(node.isLeaf === false){//删除目录
+      var vueThis = this;
+
+      if(node.isLeaf === false) {//删除目录
 
         this.apiAxios({
           method: 'get',
           url: 'api/delApiDir?id=' + nodeId
         }).then(function (res) {
-          if(res.data.code === 10000){
+          if (res.data.code === 10000) {
             this.delItem(node);
 
-            this.$message({
+            vueThis.$message({
               message: '恭喜你，删除接口目录成功！',
               type: 'success'
             });
 
-            this.$router.push({path: '/home/api'});
-          }else {
+            vueThis.$router.push({path: '/home/api'});
+          } else {
             vueThis.$message.error('抱歉，删除接口信息失败：' + res.data.msg);
           }
         }).catch(function (err) {
-          vueThis.$message.error('抱歉，服务器异常！' );
+            console.log(err)
+          vueThis.$message.error('抱歉，服务器异常！');
         });
+      }else {
+        this.apiAxios({
+          method: 'get',
+          url: 'api/delApi?id=' + nodeId
+        }).then(function (res) {
+          if (res.data.code === 10000) {
+            vueThis.delItem(node);
+
+            vueThis.$message({
+              message: '恭喜你，删除接口目录成功！',
+              type: 'success'
+            });
+
+            vueThis.$router.push({path: '/home/api'});
+          } else {
+            vueThis.$message.error('抱歉，删除接口信息失败：' + res.data.msg);
+          }
+        }).catch(function (err) {
+          console.log(err)
+          vueThis.$message.error('抱歉，服务器异常！');
+        });
+
+      }
 
 //        this.$http.get(this.apiServer + "api/delApiDir?id=" + nodeId).then(function (res) {
 //          if(res.data.code == '10000'){
@@ -299,12 +325,32 @@
 //        },function (res) {
 //          this.$message.error('抱歉，服务器异常。');
 //        });
-      }
+
     },
 
     showDelDialog(){
       this.closeMenu();
-      this.delDialogVisible = true;
+//      this.delDialogVisible = true;
+
+      this.$confirm('此操作将永久删除该接口, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+//        confirmButtonClass: 'delApi',
+        type: 'warning'
+      }).then(() => {
+        this.delApi();
+//        this.$message({
+//          type: 'success',
+//          message: '删除成功!'
+//        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+
+
     },
 
     refreshApi(){//刷新节点
@@ -366,5 +412,14 @@ aside {
   -webkit-box-sizing: border-box;
   float:right;
 }
+
+.el-dialog__body{
+  padding-left: 10px;
+  text-align: left!important;
+}
+  .el-dialog__header{
+    display: none;
+    height: 100px;
+  }
 
 </style>

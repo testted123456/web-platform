@@ -89,7 +89,7 @@
 
               <!--request body-->
               <el-tab-pane label="Req Body" name="ReqBody">
-                <el-row>
+                <el-row v-if="api.postWay == 1">
                   <el-col :span="16">
                     <el-radio v-model="requestBodyType" label="0" disabled>form-data</el-radio>
                     <el-radio v-model="requestBodyType" label="1">x-www-form-urlencoded</el-radio>

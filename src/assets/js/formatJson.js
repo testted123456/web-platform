@@ -3,12 +3,12 @@
  */
 var formatJson =function (jsonStr) {
   if(jsonStr == null || jsonStr == 'null' || jsonStr == ''){
-    console.log('null  null  null')
-    return
-  }else{
-    let jsonObj = JSON.parse(jsonStr);
-    return JSON.stringify(jsonObj, null, 4);
+    return false;
   }
+
+  let jsonObj = JSON.parse(jsonStr);
+  return JSON.stringify(jsonObj, null, 4);
+
 
 }
 

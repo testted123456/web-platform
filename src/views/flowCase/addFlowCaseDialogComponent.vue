@@ -73,17 +73,67 @@
           children: 'children'
         },
         case:{},
-        tempCases:[]
+        tempCases:[],
+        submitCases:[]
       }
     },
 
     created(){
-      this.tempCases = this.selectedCases.concat()
+      // this.tempCases = this.selectedCases.concat()
+      var a = this.selectedCases;
+      a = JSON.stringify(a)
+      a = JSON.parse(a);
+
+      var b = this.selectedCases;
+      b = JSON.stringify(b)
+      b = JSON.parse(b);
+
+      this.submitCases= a;
+      this.tempCases = b;
+
+      var that = this;
+      this.tempCases.forEach(function(val,index,arr){
+        if(that.getString(val.name) > 20){
+          val.name = that.cutstr(val.name , 50)
+        }
+      })
     },
 
     methods: {
+      getString(str){
+        // return str.replace(/[\u0391-\uFFE5]/g,"aa").length;  //先把中文替换成两个字节的英文，在计算长度
+        var realLength = 0, len = str.length, charCode = -1;
+        for (var i = 0; i < len; i++) {
+          charCode = str.charCodeAt(i);
+          if (charCode >= 0 && charCode <= 128) realLength += 1;
+          else realLength += 2;
+        }
+        return realLength;
+      },
+      cutstr(str, len) {
+        var str_length = 0;
+        var str_len = 0;
+        var str_cut = new String();
+        str_len = str.length;
+        for (var i = 0; i < str_len; i++) {
+          var a = str.charAt(i);
+          str_length++;
+          if (escape(a).length > 4) {
+            //中文字符的长度经编码之后大于4
+            str_length++;
+          }
+          str_cut = str_cut.concat(a);
+          if (str_length >= len) {
+            str_cut = str_cut.concat("...");
+            return str_cut;
+          }
+        }
+        //如果给定字符串小于指定长度，则返回源字符串；
+        if (str_length < len) {
+          return str;
+        }
+      },
       handleNodeClick(data, node, instance) {
-//          console.log('xxx');
       },
       loadNode(node, resolve) {
         if(node.level === 0){
@@ -118,7 +168,23 @@
         if(node.data.type){
             var obj = JSON.stringify(this.case);
             obj = JSON.parse(obj)
-          this.tempCases.push(obj);
+            this.submitCases.push(obj);
+
+          this.case = JSON.stringify(this.case);
+          this.case = JSON.parse(this.case);
+
+          console.log(this.getString(this.case.name))
+
+          if(this.getString(this.case.name) > 50){
+            this.case.name = this.cutstr(this.case.name , 50)
+          }
+
+          console.log(this.case.name)
+
+          this.tempApis.push(this.case);
+
+
+
         }else{
           this.$message({
             message: '文件夹不能添加',
@@ -133,9 +199,12 @@
       },
       deleteRow(index, rows) {
         rows.splice(index, 1);
+        this.submitCases.splice(index, 1);
+
       },
       getCases(){
-        return this.tempCases.concat();
+        return this.submitCases.concat();
+
       },
       resetCases(){
         this.tempCases = this.selectedCases.concat()

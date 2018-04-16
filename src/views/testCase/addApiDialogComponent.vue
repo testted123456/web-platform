@@ -266,11 +266,11 @@
 
 
 
-      var a = hhhh;
+      var a = this.selectedApis;
       a = JSON.stringify(a)
       a = JSON.parse(a);
 
-      var b = hhhh;
+      var b = this.selectedApis;
       b = JSON.stringify(b)
       b = JSON.parse(b);
 
@@ -445,7 +445,7 @@
           console.log(this.getString(newApiData.name))
 
           if(this.getString(newApiData.name) > 50){
-            val.name = this.cutstr(val.name , 50)
+            newApiData.name = this.cutstr(newApiData.name , 50)
           }
 
           console.log(newApiData.name)

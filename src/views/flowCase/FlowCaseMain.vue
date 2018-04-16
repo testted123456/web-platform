@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside width="240px" id="groupdragAside" class="leftAside">
+    <el-aside width="240px"  class="leftAside">
       <div class="leftNavTree">
         <div class="menu">
           <el-input
@@ -72,14 +72,13 @@
     },
     computed: {
       isNewGroupSaved() {
-        return this.$store.state.group.isNewGroupSaved;
+        return this.$store.state.group.isNewFlowCaseSaved;
       }
     },
     mounted(){
-      //this.dragF();
     },
     watch: {
-      'isNewGroupSaved': function (val, oldVal) { //新增group
+      'isNewFlowCaseSaved': function (val, oldVal) { //新增FlowCase
         var node = this.$refs.tree.currentNode.node;
 
         if (val == 1) {
@@ -91,7 +90,7 @@
             })
           }
 
-          var newChild = this.$store.state.group.newGroup;
+          var newChild = this.$store.state.flowCase.newFlowCase;
 
           if(newChild.type === "undefined"){
             return;
@@ -100,7 +99,7 @@
           }
 
           node.data.children.push(newChild);
-          this.$store.commit('changeGroupStatus', 0);
+          this.$store.commit('changeFlowCaseStatus', 0);
 
           node.updateChildren()
 
@@ -108,36 +107,32 @@
             node.expand();
           }
         }else if(val == 2){
-          var updatedGroup = this.$store.state.group.newGroup;
+          var updatedFlowCase = this.$store.state.flowCase.newFlowCase;
 
-          if(updatedGroup.id === node.data.id){
-            node.data.name = updatedGroup.name;
+          if(updatedFlowCase.id === node.data.id){
+            node.data.name = updatedFlowCase.name;
           }else{
             let children = node.childNodes;
 
             children.forEach(function (e, index) {
-              if(e.data.id === updatedGroup.id){
-                e.data.name = updatedGroup.name;
+              if(e.data.id === updatedFlowCase.id){
+                e.data.name = updatedFlowCase.name;
                 return;
               }
             });
           }
 
-          this.$store.commit( 'changeGroupStatus', 0);
+          this.$store.commit( 'changeFlowCaseStatus', 0);
         }
       }
     },
     methods: {
-      dragF(){
-        var oBox = document.getElementById("groupdragAside");
-        var oBar = document.getElementById("groupdrag");
-        this.drag.getWidth(oBar, oBox);
-      },
+
       handleNodeClick(data, node, instance){
         if (node.data.type) {
-          this.$router.push({name: 'Group', query: {id: node.data.id}});
+          this.$router.push({name: 'FlowCase', query: {id: node.data.id}});
         } else {
-          this.$router.push({name: 'GroupDir', query: {id: node.data.id}});
+          this.$router.push({name: 'FlowCaseDir', query: {id: node.data.id}});
         }
       },
       loadNode(node, resolve) { //渲染树节点
@@ -150,24 +145,12 @@
         } else if (node.isLeaf === true) {
           return;
         } else {
-//          return resolve([
-//              {
-//                name: '测试集1',
-//                id: 1,
-//                type: true
-//              },
-//              {
-//                name: '测试集2',
-//                id: 2,
-//                type: true
-//              }
-//          ]);
             var vueThis = this;
-            vueThis.groupAxios({
+            vueThis.testCaseAxios({
               method: 'get',
               data: {
               },
-              url: 'getByPid?pid='+node.data.id
+              url: 'flowCase/getTreeByPId?pId='+node.data.id
             })
             .then(function(res){
               if (res.data.code === 10000 ) {
@@ -226,7 +209,19 @@
       },
       showDelDialog(){
         this.closeMenu();
-        this.delDialogVisible = true;
+        // this.delDialogVisible = true;
+        this.$confirm('此操作将永久删除该接口, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.delCase();
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
 
       delCase(){ //右键删除case
@@ -235,11 +230,11 @@
         const nodeId = node.data.id;
         var vueThis = this;
         if(node.isLeaf === false){//删除case目录
-          vueThis.groupAxios({
+          vueThis.testCaseAxios({
             method: 'get',
             data: {
             },
-            url: "deleteGroup?id=" + nodeId
+            url: "flowCase/delete?id=" + nodeId
           })
           .then(function (res) {
             if(res.data.code == '10000'){
@@ -257,11 +252,11 @@
           });
 
         }else{ //删除某个case
-          vueThis.groupAxios({
+          vueThis.testCaseAxios({
             method: 'get',
             data: {
             },
-            url: "deleteGroup?id=" + nodeId
+            url: "flowCase/delete?id=" + nodeId
           })
           .then(function (res) {
             if(res.data.code == '10000'){
@@ -292,7 +287,7 @@
           }
         });
         children.splice(i, 1);
-        this.$router.push({name: 'GroupMain'});
+        this.$router.push({name: 'FlowCaseMain'});
       },
       refreshApi(){
         var node = this.$refs.tree.currentNode.node;

@@ -1,18 +1,17 @@
 <template>
   <el-container  style="font-size: 0.875em;">
       <el-main>
-        <el-form   ref="groupDir"  :label-position="labelPosition"  label-width="150px" :model="groupDirInfo" style="width:78%;">
+        <el-form   ref="flowCaseDir"  :label-position="labelPosition"  label-width="150px" :model="flowCaseDirInfo" style="width:78%;">
           <el-form-item label="用例流目录名称" prop="name" :rules="[{ required: true, trigger: 'blur',message: '用例流目录名称不能为空'} ]">
-            <el-input v-model="groupDirInfo.name" placeholder="请输入测试集目录名称"></el-input>
+            <el-input v-model="flowCaseDirInfo.name" placeholder="请输入测试集目录名称"></el-input>
           </el-form-item>
           <el-form-item label="用例流目录描述" prop="description" :rules="[{ required: false, trigger: 'blur',message: '用例流目录描述不能为空'} ]">
-            <el-input v-model="groupDirInfo.description" placeholder="请输入用例流目录描述"></el-input>
+            <el-input v-model="flowCaseDirInfo.description" placeholder="请输入用例流目录描述"></el-input>
           </el-form-item>
         </el-form>
       </el-main>
       <el-footer style="text-align: right;">
-        <el-button type="primary" @click="saveGroup">确认</el-button>
-        <!--<el-button>取消</el-button>-->
+        <el-button type="primary" @click="saveFlowCase">确认</el-button>
       </el-footer>
   </el-container>
 
@@ -26,7 +25,7 @@
     data () {
       return {
         labelPosition:'right',
-        groupDirInfo: {
+        flowCaseDirInfo: {
           id: '',
           name: '',
           description: '',
@@ -45,10 +44,10 @@
     },
     methods: {
       getData(){
-        var groupDirID = this.$route.query.id;
+        var flowCaseDirID = this.$route.query.id;
         var vueThis = this;
-        if(groupDirID == 0){
-            this.groupDirInfo= {
+        if(flowCaseDirID == 0){
+            this.flowCaseDirInfo= {
                 id: '',
                 name: '',
                 description: '',
@@ -56,15 +55,15 @@
                 type:0
             }
         }else{
-          vueThis.groupAxios({
+          vueThis.testCaseAxios({
             method: 'get',
             data: {
             },
-            url: 'getById?id='+ groupDirID
+            url: 'flowCase/getById?id='+ flowCaseDirID
           })
           .then(function (res) {
             if(res.data.code === 10000){
-              vueThis.groupDirInfo= {
+              vueThis.flowCaseDirInfo= {
                 id: res.data.data.id,
                 name: res.data.data.name,
                 description: res.data.data.description,
@@ -80,12 +79,12 @@
           });
         }
       },
-      saveGroup(){
-        var groupDirID = this.$route.query.id;
-        this.$refs['groupDir'].validate((valid) => {
+      saveFlowCase(){
+        var flowCaseDirID = this.$route.query.id;
+        this.$refs['flowCaseDir'].validate((valid) => {
           if (valid) {
-            if(groupDirID == 0){    /////////////////////////////////新增界面 确认按钮事件
-              this.groupDirInfo.pId = this.$route.query.pId;
+            if(flowCaseDirID == 0){    /////////////////////////////////新增界面 确认按钮事件
+              this.flowCaseDirInfo.pId = this.$route.query.pId;
               this.submitAjax();
             }else{     /////////////////////////编辑界面 确认按钮事件
               this.submitAjax();
@@ -97,36 +96,36 @@
       },
       //确认按钮ajax事件
       submitAjax(){
-        var groupDirThis = this;
-          groupDirThis.groupAxios({
+        var flowCaseDirThis = this;
+        flowCaseDirThis.testCaseAxios({
             method: 'post',
-            data: groupDirThis.groupDirInfo,
-            url: 'save'
+            data: flowCaseDirThis.flowCaseDirInfo,
+            url: 'addOrUpdate'
           })
           .then(function (res) {
             if(res.data.code === 10000){
-              groupDirThis.$message({
+              flowCaseDirThis.$message({
                 message: '恭喜你，更新用例流目录成功',
                 type: 'success'
               });
               //存数据  树节点刷新
-              if(groupDirThis.$route.query.id == 0){
-                groupDirThis.$store.commit('changeGroupStatus', 1);
-                groupDirThis.groupDirInfo.id = res.data.data.id;
-                groupDirThis.$store.commit('setNewGroup', groupDirThis.groupDirInfo);
-                groupDirThis.$router.push({name: 'GroupDir', query: {id: res.data.data.id}});
+              if(flowCaseDirThis.$route.query.id == 0){
+                flowCaseDirThis.$store.commit('changeFlowCaseStatus', 1);
+                flowCaseDirThis.flowCaseDirInfo.id = res.data.data.id;
+                flowCaseDirThis.$store.commit('setNewFlowCase', flowCaseDirThis.flowCaseDirInfo);
+                flowCaseDirThis.$router.push({name: 'FlowCaseDir', query: {id: res.data.data.id}});
               }else{
-                groupDirThis.$store.commit('changeGroupStatus', 2);
-                groupDirThis.groupDirInfo = res.data.data;
-                groupDirThis.$store.commit('setNewGroup', groupDirThis.groupDirInfo);
+                flowCaseDirThis.$store.commit('changeFlowCaseStatus', 2);
+                flowCaseDirThis.flowCaseDirInfo = res.data.data;
+                flowCaseDirThis.$store.commit('setNewFlowCase', flowCaseDirThis.flowCaseDirInfo);
               }
 
             }else{
-              groupDirThis.$message.error('抱歉，新增用例流目录失败：' + res.data.msg);
+              flowCaseDirThis.$message.error('抱歉，新增用例流目录失败：' + res.data.msg);
             }
           })
           .catch(function (err) {
-            groupDirThis.$message.error('抱歉，服务器异常！' );
+            flowCaseDirThis.$message.error('抱歉，服务器异常！' );
           });
       }
     }

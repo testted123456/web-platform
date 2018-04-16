@@ -3,20 +3,20 @@
     <el-main>
       <div style="padding-bottom: 60px;">
         <div style="width:80%;text-align: left">
-          <el-form   ref="group"  :label-position="labelPosition"  label-width="100px" :model="group">
+          <el-form   ref="flowCase"  :label-position="labelPosition"  label-width="100px" :model="flowCase">
             <!--测试集名称-->
             <el-form-item label="用例流名称" prop="name" :rules="[{ required: true, trigger: 'blur',message: '测试集名称不能为空'} ]">
-              <el-input v-model="group.name" placeholder="请输入用例流名称"></el-input>
+              <el-input v-model="flowCase.name" placeholder="请输入用例流名称"></el-input>
             </el-form-item>
             <!--测试集描述-->
             <el-form-item label="用例流描述" prop="description" :rules="[{ required: false, trigger: 'blur',message: '测试集描述不能为空'} ]">
-              <el-input v-model="group.description" placeholder="请输入用例流描述"></el-input>
+              <el-input v-model="flowCase.description" placeholder="请输入用例流描述"></el-input>
             </el-form-item>
 
             <!--环境-->
             <el-form-item label="环境" prop="env" :rules="[{ required: true, message: '环境不能为空'} ]">
               <el-col :span="8">
-                <el-select v-model="group.env" placeholder="请选择">
+                <el-select v-model="flowCase.env" placeholder="请选择">
                   <el-option
                     v-for="item in enviornment"
                     :key="item.value"
@@ -38,8 +38,8 @@
         </div>
         <!--用例列表-->
         <el-row style="padding-top:30px;">
-          <el-table v-show="group.testCaseList.length>0"
-                    :data="group.testCaseList"
+          <el-table v-show="flowCase.testCases.length>0"
+                    :data="flowCase.testCases"
                     style="width: 100%"
                     @selection-change="handleSelectionChange"
                     @select="selectOne"
@@ -84,10 +84,10 @@
               align="left" width="280px">
               <template slot-scope="scope">
                 <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="上移" placement="top">
-                  <el-button  type="text" size="mini" @click.native.prevent="moveup(scope.$index, scope.row, group.testCaseList)"  ><i class="el-icon-arrow-up"></i></el-button>
+                  <el-button  type="text" size="mini" @click.native.prevent="moveup(scope.$index, scope.row, flowCase.testCases)"  ><i class="el-icon-arrow-up"></i></el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="下移" placement="top">
-                  <el-button  type="text" size="mini" @click.native.prevent="movedown(scope.$index, scope.row, group.testCaseList)" ><i class="el-icon-arrow-down"></i></el-button>
+                  <el-button  type="text" size="mini" @click.native.prevent="movedown(scope.$index, scope.row, flowCase.testCases)" ><i class="el-icon-arrow-down"></i></el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">
                   <el-button  type="text" size="mini" @click="removeApi(scope.$index)"><i class="el-icon-minus"></i></el-button>
@@ -110,17 +110,29 @@
         :before-close="handleClose"
       >
         <!--添加接口弹窗-->
-        <add-flow-case-dialog-component ref="caseSelectView" v-if="dialog.contentType === 1"  :selectedCases="group.testCaseList"></add-flow-case-dialog-component>
+        <add-flow-case-dialog-component ref="caseSelectView" v-if="dialog.contentType === 1"  :selectedCases="flowCase.testCases"></add-flow-case-dialog-component>
         <!--执行结果弹窗-->
         <flow-case-execute-result-dialog-component v-if="dialog.contentType === 4" ></flow-case-execute-result-dialog-component>
         <!--删除接口弹窗-->
         <span v-if="dialog.contentType === 2" >是否删除此用例？</span>
         <!--执行弹窗-->
-        <div v-if="dialog.contentType === 3" ref="executeCase" :selectedCheckBox="selectedCaseArr">
-          <div style="text-align: center">
-            <el-progress type="circle" :percentage="percentageNum"></el-progress>
-          </div>
+        <div v-if="dialog.contentType === 3" ref="executeCase">
+          <el-input
+            type="textarea"
+            :rows="1"
+            v-model="excResult"
+            v-show="false"
+          >
+          </el-input>
+          <div v-html="compiledMarkdown" class="markDown"></div>
         </div>
+
+        <!--<div v-if="dialog.contentType === 3" ref="executeCase" :selectedCheckBox="selectedCaseArr">-->
+          <!--<div style="text-align: center">-->
+            <!--<el-progress type="circle" :percentage="percentageNum"></el-progress>-->
+          <!--</div>-->
+        <!--</div>-->
+
         <!--弹窗footer-->
         <span v-if="dialog.footerVisible" slot="footer" class="dialog-footer">
                       <el-button @click="dialogCancel">取 消</el-button>
@@ -146,11 +158,13 @@
   import {lodash} from 'lodash';
   import ElRow from "element-ui/packages/row/src/row";
 
+
   export default {
     components: {ElRow, addFlowCaseDialogComponent,flowCaseExecuteResultDialogComponent},
     name: 'FlowCase',
     data () {
       return {
+        ws:null,
         changeState:false,
         serverSendMsg:null,
         percentageNum:0,
@@ -162,7 +176,7 @@
         executeBtnShow:false,
         excResult: '',
         enviornment:[],
-        group: {
+        flowCase: {
           type:true,
           createdBy:null,
           createdTime:null,
@@ -174,8 +188,7 @@
           pId:0,
           updatedBy:null,
           updatedTime:null,
-          jobTime:'',
-          testCaseList:[]
+          testCases:[]
         },
         envs: [],
         system: '',
@@ -199,6 +212,12 @@
     },
     mounted() {
       this.getData()
+    },
+    computed:{
+      compiledMarkdown: function () {
+        // return this.excResult
+        return marked(this.excResult, {sanitize: true})
+      }
     },
     methods: {
       moveup,
@@ -243,7 +262,7 @@
       reCheck(){
         console.log('multipleSelection='+this.multipleSelection.length);
         var that = this;
-        this.group.testCaseList.forEach(function(e,index){
+        this.flowCase.testCases.forEach(function(e,index){
           if(e.checked){
             that.$refs.multipleTable.toggleRowSelection(e,true);
           }
@@ -251,7 +270,7 @@
       },
       getData() {
         this.executeBtnShow = false;//执行按钮隐藏
-        var groupID = this.$route.query.id;
+        var flowCaseID = this.$route.query.id;
         var vueThis = this;
         //获取环境列表select
           vueThis.testCaseAxios({
@@ -268,8 +287,8 @@
               });
               vueThis.enviornment = tempEnviornment;
               ///////////////////////获取环境信息成功之后 再去获取页面其他信息
-              if (groupID == 0){   //新增group页面
-                vueThis.group ={
+              if (flowCaseID == 0){   //新增flowCase页面
+                vueThis.flowCase ={
                   type:true,
                   createdBy:null,
                   createdTime:null,
@@ -281,25 +300,24 @@
                   pId:vueThis.$route.query.pId,
                   updatedBy:null,
                   updatedTime:null,
-                  jobTime:'',
-                  testCaseList:[]
+                  testCases:[]
                 }
-                console.log(vueThis.group.env)
-              }else{ // group编辑页面
-                // 获取group详情信息内容
+                console.log(vueThis.flowCase.env)
+              }else{ // flowCase编辑页面
+                // 获取flowCase详情信息内容
                 vueThis.executeBtnShow = true;//执行按钮显示
-                  vueThis.groupAxios({
+                  vueThis.testCaseAxios({
                     method: 'get',
                     data: {
                     },
-                    url:'getById?id='+groupID
+                    url:'flowCase/getById?id='+flowCaseID
                   })
                   .then(function(res){
                     if (res.data.code === 10000 ) {
-                      vueThis.group = res.data.data;
+                      vueThis.flowCase = res.data.data;
                       vueThis.$nextTick(()=>{
                         var that = vueThis;
-                        vueThis.group.testCaseList.forEach(function(e,index){
+                        vueThis.flowCase.testCases.forEach(function(e,index){
                           e.checked = true;
                           that.$refs.multipleTable.toggleRowSelection(e,true);
                         })
@@ -321,41 +339,21 @@
 //            vueThis.$message.error('抱歉，服务器异常！' );
 //          });
       },
-      //check 定时任务
-      checkTask(){
-        var vueThis = this;
-          vueThis.groupAxios({
-            method: 'get',
-            data: {
-            },
-            url: 'checkJobTime?jobTime='+vueThis.group.jobTime
-          })
-          .then(function(res){
-            if (res.data.code === 10000 ) {
-              vueThis.$message.success('恭喜，格式合法');
-            }else{
-              vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
-            }
-          })
-          .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
-          });
 
-      },
 
       // ------- 按钮事件  -------
       /*弹框确定*/
       dialogDone() {
         switch (this.dialog.contentType) {
           case 1: {   //1=添加接口
-            this.group.testCaseList = this.$refs.caseSelectView.getCases();
+            this.flowCase.testCases = this.$refs.caseSelectView.getCases();
             this.dialog.visible = false;
             this.changeState = true;
           }
             break;
           case 2: { //2=删除用例
             this.dialog.visible = false;
-            this.group.testCaseList.splice(this.removeApiIndex, 1)
+            this.flowCase.testCases.splice(this.removeApiIndex, 1)
           }
             break;
           case 3: { //3=执行
@@ -375,7 +373,7 @@
           }
             break;
           case 3: {
-            clearInterval(this.serverSendMsg)
+            this.closeWebSocket()
           }
             break;
           default:
@@ -421,71 +419,79 @@
 
       //执行弹窗方法
       execCase() {
-        this.dialog = {
-          title: '执行结果',
-          visible: true,
-          footerVisible: false,
-          contentType: 3,
-          width: '30%',
-          extend: {
-          }
-        }
 
-        this.percentageNum = 0;
-        var perThis = this;
-        var exectData = {
-          id : this.group.id,
-          testCaseList:this.selectedCaseArr
-        }
 
-        this.groupAxios({
-          method: 'get',
-          data: {
-          },
-          url: 'runGroup?id='+perThis.group.id
-        })
-        .then(function (res) {
-            if(res.data.code === 10000){
-              clearInterval(perThis.serverSendMsg)
-              perThis.serverSendMsg = setInterval(function(){
-                perThis.testCaseAxios({
-                  method: 'get',
-                  data: {},
-                  url: 'group/getProgress?groupId='+perThis.group.id
+        if(this.checkboxExecutable){
+          if(this.selectedApiArr.length > 0){
+            this.dialog = {
+              title: '执行结果',
+              visible: true,
+              footerVisible: false,
+              contentType: 3,
+              width: '60%',
+              extend: {
+              }
+            }
+
+            this.excResult = '';
+            var textArea_this = this;
+            var exectData = {
+              apiIds:this.selectedApiArr,
+              tcId:this.testCase.id
+            }
+            if ("WebSocket" in window) {
+              this.ws = new WebSocket("ws://"+ this.wsServer +"/case/webSocket/123");
+              //this.ws = new Object();
+              this.ws.onopen = function () {
+                textArea_this.testCaseAxios({
+                  method: 'post',
+                  data: exectData,
+                  url: "testCase/executeApis"
                 })
                   .then(function (res) {
                     if(res.data.code === 10000){
-                      perThis.percentageNum = res.data.data;
-                    }else if(res.data.code === 10001){
-                      clearInterval(perThis.serverSendMsg)
-                    }else{
-                      perThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
+                      console.log("传送caseId成功")
                     }
                   })
+                  .catch(function (err) {
+                    vueThis.$message.error('抱歉，服务器异常！' );
+                  });
 
-              }, 1000);
+                textArea_this.ws.send("");
+              };
 
-            }else{
-              perThis.$message.error('抱歉，执行失败：' + res.data.msg);
+              // 接收数据
+              this.ws.onmessage = function (evt) {
+                // 注意evt的数据类型
+                console.log('接收到的数据：', evt)
+                textArea_this.excResult =  textArea_this.excResult +  '\n' + evt.data;
+                // ws.broadcast('resultChanged', evt.data)
+              };
+
+              this.ws.onclose = function(){
+                console.log("close")
+              };
+
+            } else {
+              this.excResult = '浏览器不支持websocket，无法显示case执行结果。';
+
             }
-        })
+
+          }else{
+            this.$message.error('请先选择要执行的接口');
+          }
+        }else{
+          this.$message.error('抱歉，选中的某些接口是新增的，请先清除新增的接口');
+        }
 
 
 
+      },
 
-
-//        if(this.checkboxExecutable){
-//          if(this.selectedCaseArr.length > 0){
-//
-//            console.log(this.selectedCaseArr);
-//
-//          }else{
-//            this.$message.error('请先选择要执行的用例');
-//          }
-//        }else{
-//          this.$message.error('抱歉，选中的某些用例是新增的，请先清除新增的用例');
-//        }
-
+      // 关闭webscoket
+      closeWebSocket(){
+        this.ws.onclose();
+        this.ws = null;
       },
 
       //弹窗 右上角关闭事件
@@ -506,10 +512,10 @@
       //新增，编辑 确认按钮事件
       saveCase() {
         var caseID = this.$route.query.id;
-        this.$refs['group'].validate((valid) => {
+        this.$refs['flowCase'].validate((valid) => {
           if (valid) {
             if(caseID == 0){    /////////////////////////////////新增界面 确认按钮事件
-              this.group.pId = this.$route.query.pId;
+              this.flowCase.pId = this.$route.query.pId;
               this.submitGetData()
             }else{     /////////////////////////编辑界面 确认按钮事件
               this.submitGetData()
@@ -523,39 +529,39 @@
       //确认按钮  请求ajax
       submitGetData(){
         var vueThis = this;
-          vueThis.groupAxios({
+          vueThis.testCaseAxios({
             method: 'post',
-            data: vueThis.group,
-            url: 'save'
+            data: vueThis.flowCase,
+            url: 'flowCase/addOrUpdate'
           })
           .then(function (res) {
             if(res.data.code === 10000){
               vueThis.$message({
-                message: '恭喜你，保存测试集成功',
+                message: '恭喜你，保存成功',
                 type: 'success'
               });
 
 
               if(vueThis.$route.query.id == 0){
                 //存数据  树节点刷新
-                vueThis.$store.commit('changeGroupStatus', 1);
-                vueThis.group = res.data.data;
-                vueThis.$store.commit('setNewGroup', vueThis.group);
-                vueThis.$router.push({name: 'Group', query: {id: res.data.data.id}});
+                vueThis.$store.commit('changeFlowCaseStatus', 1);
+                vueThis.flowCase = res.data.data;
+                vueThis.$store.commit('setNewFlowCase', vueThis.flowCase);
+                vueThis.$router.push({name: 'FlowCase', query: {id: res.data.data.id}});
               }else{
                 //存数据  树节点刷新
-                vueThis.$store.commit('changeGroupStatus', 2);
-                vueThis.group = res.data.data;
+                vueThis.$store.commit('changeFlowCaseStatus', 2);
+                vueThis.flowCase = res.data.data;
                 vueThis.$nextTick(()=>{
                   var that = vueThis;
-                  vueThis.group.testCaseList.forEach(function(e,index){
+                  vueThis.flowCase.testCases.forEach(function(e,index){
                     e.checked = true;
                     that.$refs.multipleTable.toggleRowSelection(e,true);
                   })
                   vueThis.filterExecteId();
                 })
 
-                vueThis.$store.commit('setNewGroup', vueThis.group);
+                vueThis.$store.commit('setNewFlowCase', vueThis.flowCase);
               }
 
             }else{

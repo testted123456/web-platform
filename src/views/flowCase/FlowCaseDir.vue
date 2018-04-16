@@ -100,7 +100,7 @@
         flowCaseDirThis.testCaseAxios({
             method: 'post',
             data: flowCaseDirThis.flowCaseDirInfo,
-            url: 'addOrUpdate'
+            url: 'flowCase/addOrUpdate'
           })
           .then(function (res) {
             if(res.data.code === 10000){

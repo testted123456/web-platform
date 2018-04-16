@@ -95,7 +95,7 @@
 
       var that = this;
       this.tempApis.forEach(function(val,index,arr){
-        if(that.getString(val.name) > 20){
+        if(that.getString(val.name) > 50){
           val.name = that.cutstr(val.name , 50)
         }
       })

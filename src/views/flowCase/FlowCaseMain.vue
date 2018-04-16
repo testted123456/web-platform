@@ -71,8 +71,8 @@
       }
     },
     computed: {
-      isNewGroupSaved() {
-        return this.$store.state.group.isNewFlowCaseSaved;
+      isNewFlowCaseSaved() {
+        return this.$store.state.flowCase.isNewFlowCaseSaved;
       }
     },
     mounted(){

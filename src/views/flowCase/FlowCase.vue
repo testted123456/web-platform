@@ -127,11 +127,7 @@
           <div v-html="compiledMarkdown" class="markDown"></div>
         </div>
 
-        <!--<div v-if="dialog.contentType === 3" ref="executeCase" :selectedCheckBox="selectedCaseArr">-->
-          <!--<div style="text-align: center">-->
-            <!--<el-progress type="circle" :percentage="percentageNum"></el-progress>-->
-          <!--</div>-->
-        <!--</div>-->
+
 
         <!--弹窗footer-->
         <span v-if="dialog.footerVisible" slot="footer" class="dialog-footer">
@@ -253,6 +249,7 @@
         if(this.checkboxExecutable){
           this.selectedCaseArr = tempArr.concat();
         }
+        console.log(this.selectedCaseArr)
       },
       // 跳转到case页面
       transToCase(id){
@@ -420,9 +417,8 @@
       //执行弹窗方法
       execCase() {
 
-
         if(this.checkboxExecutable){
-          if(this.selectedApiArr.length > 0){
+          if(this.selectedCaseArr.length > 0){
             this.dialog = {
               title: '执行结果',
               visible: true,
@@ -436,8 +432,8 @@
             this.excResult = '';
             var textArea_this = this;
             var exectData = {
-              apiIds:this.selectedApiArr,
-              tcId:this.testCase.id
+              apiIds:this.selectedCaseArr,
+              tcId:this.flowCase.id
             }
             if ("WebSocket" in window) {
               this.ws = new WebSocket("ws://"+ this.wsServer +"/case/webSocket/123");
@@ -445,8 +441,8 @@
               this.ws.onopen = function () {
                 textArea_this.testCaseAxios({
                   method: 'post',
-                  data: exectData,
-                  url: "testCase/executeApis"
+                  data: textArea_this.flowCase,
+                  url: "flowCase/execute"
                 })
                   .then(function (res) {
                     if(res.data.code === 10000){
@@ -454,7 +450,7 @@
                     }
                   })
                   .catch(function (err) {
-                    vueThis.$message.error('抱歉，服务器异常！' );
+                    textArea_this.$message.error('抱歉，服务器异常！' );
                   });
 
                 textArea_this.ws.send("");

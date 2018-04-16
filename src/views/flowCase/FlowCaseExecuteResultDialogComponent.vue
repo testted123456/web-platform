@@ -2,34 +2,39 @@
   <el-container style="height:600px;">
     <el-main>
       <el-row>
-        <el-table v-show="apiResult.aa.length>0"
-                  :data="apiResult.aa"
+        <el-table v-show="apiResult.length>0"
+                  :data="apiResult"
                   style="width: 100%"
-                  ref="multipleTable">
+                  ref="multipleTable" border>
+
 
           <el-table-column
-            prop="name"
+            prop="apiName"
             label="名称"
             align="left"
           >
+            <template slot-scope="scope">
+              <el-button type="text" @click="getDetail(scope.row.id)">{{ scope.row.apiName }}</el-button>
+            </template>
+
           </el-table-column>
 
           <el-table-column
-            prop="step"
+            prop="apiStepName"
             label="步骤名称"
             align="left"
           >
           </el-table-column>
 
           <el-table-column
-            prop="system"
+            prop="createdTime"
             label="执行时间"
             align="left"
           >
           </el-table-column>
 
           <el-table-column
-            prop="branch"
+            prop="result"
             label="结果"
             align="left"
           >
@@ -39,55 +44,146 @@
 
         </el-table>
       </el-row>
-      <el-row class="hTitle">*请求为</el-row>
-      <el-row>
-        <div class="jsonContent" >
-          {{formatJson(JSON.stringify(apiResult.dd))}}
 
-        </div>
-      </el-row>
-      <el-row class="hTitle">*实际结果</el-row>
-      <el-row>
-        <div class="jsonContent" >
-          {{formatJson(JSON.stringify(apiResult.dd))}}
-          <!--<el-input-->
-            <!--type="textarea"-->
-            <!--autosize-->
-            <!--v-model="apiResult.dd">-->
-          <!--</el-input>-->
-        </div>
-      </el-row>
-      <el-row class="hTitle">*预期结果</el-row>
-      <el-row>
-        <div class="jsonContent" >
-          {{formatJson(JSON.stringify(apiResult.dd))}}
-
-        </div>
-      </el-row>
-      <el-row class="hTitle">*断言结果</el-row>
-      <el-row>
-        <el-table v-show="apiResult.aa.length>0"
-                  :data="apiResult.aa"
-                  style="width: 100%"
-                  ref="multipleTable">
-          <el-table-column
-            prop="system"
-            label="信息"
-            align="left"
-          >
-          </el-table-column>
-
-          <el-table-column
-            prop="branch"
-            label="结果"
-            align="left"
-          >
-          </el-table-column>
+      <div v-show="detailInfoShow" style="padding-top:40px;">
+        <el-row class="hTitle">*接口url为</el-row>
+        <el-row>
+          <div class="jsonContent" >
+            {{apiDetail.url}}
+          </div>
+        </el-row>
 
 
+        <el-row class="hTitle">*自定义变量</el-row>
+        <el-row>
+          <el-input
+            type="textarea"
+            autosize
+            readonly
+            resize="none"
+            placeholder=""
+            v-model="apiDetail.variables">
+          </el-input>
+        </el-row>
 
-        </el-table>
-      </el-row>
+        <el-row class="hTitle">*请求头</el-row>
+        <el-row>
+          headers
+          <el-table v-show="apiDetail.headers.length>0"
+                    :data="apiDetail.headers"
+                    style="width: 100%"
+                    ref="multipleTable" border>
+
+            <el-table-column
+              prop="Key"
+              label="Key"
+              align="left"
+            >
+            </el-table-column>
+
+            <el-table-column
+              prop="Value"
+              label="Value"
+              align="left"
+            >
+            </el-table-column>
+          </el-table>
+        </el-row>
+
+        <el-row class="hTitle">*请求参数</el-row>
+        <el-row>
+          <el-input
+            type="textarea"
+            autosize
+            readonly
+            resize="none"
+            placeholder="请输入内容"
+            v-model="apiDetail.requestBody">
+          </el-input>
+        </el-row>
+
+        <!--<el-row class="hTitle">*响应</el-row>-->
+        <!--<el-row>-->
+        <!--<el-input-->
+        <!--type="textarea"-->
+        <!--autosize-->
+        <!--readonly-->
+        <!--resize="none"-->
+        <!--placeholder=""-->
+        <!--v-model="apiDetail.responseBody">-->
+        <!--</el-input>-->
+        <!--</el-row>-->
+
+        <el-row class="hTitle">*实际响应</el-row>
+        <el-row>
+          <el-input
+            type="textarea"
+            autosize
+            readonly
+            resize="none"
+            placeholder=""
+            v-model="apiDetail.actualResponseBody">
+          </el-input>
+        </el-row>
+
+
+
+        <el-row class="hTitle">*预期结果</el-row>
+        <!--exception-->
+        <el-row>
+          <el-input
+            type="textarea"
+            autosize
+            readonly
+            resize="none"
+            placeholder=""
+            v-model="apiDetail.responseBody">
+          </el-input>
+        </el-row>
+
+        <el-row class="hTitle">*断言结果</el-row>
+        <el-row>
+          <el-table v-show="apiDetail.assertions.length>0"
+                    :data="apiDetail.assertions"
+                    style="width: 100%"
+                    ref="multipleTable" border>
+
+            <el-table-column
+              prop="actualResult"
+              label="预期结果"
+              align="left"
+            >
+            </el-table-column>
+
+            <el-table-column
+              prop="comparator"
+              label="比较符"
+              align="left"
+            >
+            </el-table-column>
+
+            <el-table-column
+              prop="expectResult"
+              label="实际结果"
+              align="left"
+            >
+            </el-table-column>
+
+            <el-table-column
+              prop="result"
+              label="结果"
+              align="left"
+            >
+            </el-table-column>
+
+
+
+          </el-table>
+
+        </el-row>
+
+      </div>
+
     </el-main>
   </el-container>
 </template>
@@ -98,24 +194,21 @@
   export default {
     props: [],
     components: {},
-    name: 'FlowCaseExecuteResultDialogComponent',
+    name: 'apiExecuteResultDialogComponent',
     data(){
       return {
+        detailInfoShow:false,
 
-        apiResult:{
-          'aa':[
-
-          ],
-          'dd':{
-            'a':1,
-            'b':2
-          },
-          c:{
-            "errorCode": "0000000",
-            "errorMessage": "处理成功",
-            "succeed": true,
-            "data": null
-          }
+        apiResult:[],
+        apiDetail:{
+          url:'',
+          variables:'',
+          headers:'',
+          requestBody:'',
+          responseBody:'',
+          exception:'',
+          assertions:'',
+          actualResponseBody:''
         }
 
       }
@@ -126,29 +219,60 @@
 
     },
     mounted() {
-      // this.getData()
+      this.getData()
     },
     methods: {
       formatJson,
       isJson,
       getData() {
         var vueThis = this;
-        var caseID = this.$route.query.testCaseId;
+        var caseID = this.$route.query.id;
         // 获取表格内容
         vueThis.testCaseAxios({
           method: 'get',
           data: {},
-          url: "testCase/checkCase?testCaseId=" + caseID
+          url: "report/getCaseReport?id=" + caseID
         })
           .then(function (res) {
             if (res.data.code === 10000) {
               vueThis.apiResult = res.data.data;
+              console.log(vueThis.apiResult )
+              vueThis.apiResult.forEach(function(val,index,arr){
+                if(val.result){
+                  val.result = 'true'
+                }else{
+                  val.result = 'false'
+                }
+              })
             }
           })
           .catch(function (err) {
             vueThis.$message.error('抱歉，服务器异常！');
           });
+
+
+
       },
+      getDetail(id){
+        this.detailInfoShow = true;
+        var that = this;
+        this.apiResult.forEach(function(val,index,arr){
+          if(val.id === id){
+            that.apiDetail = that.apiResult[index]
+            console.log(that.apiDetail)
+            that.apiDetail.requestBody = formatJson(that.apiDetail.requestBody)
+            that.apiDetail.variables = formatJson(that.apiDetail.variables)
+            that.apiDetail.responseBody = formatJson(that.apiDetail.responseBody)
+            that.apiDetail.actualResponseBody = formatJson(that.apiDetail.actualResponseBody)
+
+            that.apiDetail.headers = JSON.parse(that.apiDetail.headers)
+            that.apiDetail.assertions = JSON.parse(that.apiDetail.assertions)
+
+
+
+          }
+        })
+      }
     }
   }
 
@@ -166,7 +290,32 @@
     padding: 15px 0;
     font-size: 18px;
   }
-  textarea{
+  .textAreaStyle{
     outline: none !important;
+    resize: none;
+    display: block;
+    padding: 5px 15px;
+    line-height: 1.5;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: inherit;
+    color: #606266;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    text-indent: 0px;
+  }
+
+
+
+  .el-textarea.is-disabled .el-textarea__inner {
+    background-color: #f5f5f5;
+    border-color: #e4e7ed;
+    color: #606266;
+    cursor: not-allowed;
   }
 </style>

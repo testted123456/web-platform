@@ -13,12 +13,12 @@
           </el-tree>
         </div>
       </el-col>
-      <el-col :span="3">
+      <el-col :span="2">
         <div style="text-align: center;margin-left: 2px;margin-top: 80%">
           <div><input type="button" value=">" @click="addCase" style="border-radius: 60px;height: 40px;width: 40px"/></div>
         </div>
       </el-col>
-      <el-col :span="13">
+      <el-col :span="14">
         <div class="vue-transfer-tree">
           <label class="vue-transfer-label">已选用例</label>
           <el-table
@@ -30,7 +30,7 @@
             style="width: 100%; margin-top: 2px">
             <el-table-column
               prop="name"
-              label="名称">
+              label="名称" min-width="250">
             </el-table-column>
             <el-table-column
               prop="description"
@@ -93,7 +93,7 @@
 
       var that = this;
       this.tempCases.forEach(function(val,index,arr){
-        if(that.getString(val.name) > 20){
+        if(that.getString(val.name) > 50){
           val.name = that.cutstr(val.name , 50)
         }
       })
@@ -181,7 +181,7 @@
 
           console.log(this.case.name)
 
-          this.tempApis.push(this.case);
+          this.tempCases.push(this.case);
 
 
 

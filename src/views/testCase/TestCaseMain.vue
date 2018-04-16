@@ -218,7 +218,21 @@
       },
       showDelDialog(){
         this.closeMenu();
-        this.delDialogVisible = true;
+        // this.delDialogVisible = true;
+
+        this.$confirm('此操作将永久删除该接口, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.delCase();
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+
       },
 
       delCase(){ //右键删除case

@@ -10,7 +10,7 @@
           </el-input>
           <vue-content-menu :contextMenuData="contextMenuData"
                             @addDir="addDir"
-                            @addItem="addCase"
+                            @addItem="addGroup"
                             @delItem="showDelDialog"
                             @refreshApi="refreshApi"
           ></vue-content-menu>
@@ -214,7 +214,7 @@
         this.$router.push({name: 'GroupDir', query: {id: 0,pId: node.data.id}});
         this.closeMenu();
       },
-      addCase(){ //右键新增接口树节点
+      addGroup(){ //右键新增接口树节点
         var node = this.$refs.tree.currentNode.node;
 
         if (!node.expanded) {
@@ -226,10 +226,22 @@
       },
       showDelDialog(){
         this.closeMenu();
-        this.delDialogVisible = true;
+        // this.delDialogVisible = true;
+        this.$confirm('此操作将永久删除该接口, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.delGroup();
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
 
-      delCase(){ //右键删除case
+      delGroup(){ //右键删除group
         this.delDialogVisible = false;
         const node = this.$refs.tree.currentNode.node;
         const nodeId = node.data.id;

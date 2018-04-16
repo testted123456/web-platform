@@ -489,14 +489,29 @@
       },
 
       initSystems(){
-        this.$http.get(this.testCaseServer + "sysCfg/getAllAlias").then(function (res) {
-          if(res.data.code == '10000'){
-            let tempSystems = this.apiSystems;
+//        this.$http.get(this.testCaseServer + "sysCfg/getAllAlias").then(function (res) {
+//          if(res.data.code == '10000'){
+//            let tempSystems = this.apiSystems;
+//            res.data.data.forEach(function (e, index) {
+//              tempSystems.push({value: e, label: e})
+//            });
+//          }
+//        },function (res) {
+//        });
+
+        let vueThis = this;
+
+        this.testCaseAxios({
+          method: 'get',
+          url: 'sysCfg/getAllAlias'
+        }).then(function (res) {
+          if(res.data.code === 10000){
+            let tempSystems = vueThis.apiSystems;
             res.data.data.forEach(function (e, index) {
               tempSystems.push({value: e, label: e})
+//              this.apiSystems.push({value: e, label: e})
             });
           }
-        },function (res) {
         });
       },
 

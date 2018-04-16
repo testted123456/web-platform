@@ -6,12 +6,13 @@
              @select="handleSelect">
       <el-menu-item index="1">接口</el-menu-item>
       <el-menu-item index="2">测试用例</el-menu-item>
-      <el-menu-item index="3">测试集</el-menu-item>
-      <el-menu-item index="4">配置</el-menu-item>
-      <el-menu-item index="5">监控</el-menu-item>
-      <el-menu-item index="6">报表</el-menu-item>
-      <el-menu-item index="7">工具</el-menu-item>
-      <el-menu-item index="8">质量管理</el-menu-item>
+      <el-menu-item index="3">用例流</el-menu-item>
+      <el-menu-item index="4">测试集</el-menu-item>
+      <el-menu-item index="5">配置</el-menu-item>
+      <el-menu-item index="6">监控</el-menu-item>
+      <el-menu-item index="7">报表</el-menu-item>
+      <el-menu-item index="8">工具</el-menu-item>
+      <el-menu-item index="9">质量管理</el-menu-item>
     </el-menu>
   </el-header>
 </template>
@@ -26,6 +27,7 @@
         routers: [
             '/home/api',
             '/home/case',
+            '/home/flowCase',
             '/home/group',
             '/home/cfg',
             '/home/gjhgkjgkjhkhj',

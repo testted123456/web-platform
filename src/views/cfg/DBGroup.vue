@@ -18,7 +18,7 @@
           label="" >
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">
-              <el-button @click.native.prevent="deleteRow(scope.$index, appearDBGroups)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
+              <el-button @click.native.prevent="del(scope.$index, appearDBGroups)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
             </el-tooltip>
 
             <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAdd(scope.$index, appearDBGroups)">
@@ -82,7 +82,7 @@
             if(res.data.code === 10000){
               vueThis.dbGroups = res.data.data;
 
-              if(vueThis.dbGroups === null){
+              if(vueThis.dbGroups === null || vueThis.dbGroups.length === 0){
                 vueThis.dbGroups = [{
                     groupName: ''
                 }];
@@ -112,10 +112,27 @@
           }
         },
 
+        del(index, rows){
+          this.$confirm('此操作将永久删除该接口, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.deleteRow(index, rows);
+          }).catch((err) => {
+              console.log(err)
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        },
+
         //删除消息头中的一行
         deleteRow(index, rows) {
+          let vueThis = this;
+
           if(typeof(rows[index].id) != 'undefined'){
-            let vueThis = this;
 
             this.testCaseAxios({
               method: 'post',
@@ -132,7 +149,7 @@
                 }
 
                 vueThis.$message({
-                  message: '恭喜你，保存数据库分组成功',
+                  message: '恭喜你，删除数据库分组成功',
                   type: 'success'
                 });
               }else {
@@ -144,11 +161,11 @@
               return;
             });
           }else{
-            if(index == 0 && rows.length == 1 && this.currentPage === 1 && this.dbGroups.length <= this.pageSize){
+            if(index == 0 && rows.length == 1 && vueThis.currentPage === 1 && vueThis.dbGroups.length <= vueThis.pageSize){
               rows[index].groupName = '';
             }else {
-              let totalIndex = this.pageSize *(this.currentPage - 1) + index;
-              this.dbGroups.splice(totalIndex, 1);
+              let totalIndex = vueThis.pageSize *(this.currentPage - 1) + index;
+              vueThis.dbGroups.splice(totalIndex, 1);
             }
           }
         },
@@ -164,7 +181,7 @@
           }).then(function (res) {
             if(res.data.code === 10000){
               rows[index] = res.data.data;
-              vueThis.dbGroups.push(rows[index]);
+//              vueThis.dbGroups.push(rows[index]);
 
               vueThis.$message({
                 message: '恭喜你，保存数据库分组成功',

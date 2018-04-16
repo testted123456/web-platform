@@ -71,7 +71,7 @@
             label="" >
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">
-                <el-button @click.native.prevent="deleteRow(scope.$index, appearDBCfg)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
+                <el-button @click.native.prevent="del(scope.$index, appearDBCfg)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAdd(scope.$index, appearDBCfg)">
                 <el-button @click.native.prevent="addRow(scope.$index, appearDBCfg)"  type="text" size="small"><i class="el-icon-plus"></i></el-button>
@@ -192,11 +192,26 @@
 //          }
         },
 
+        del(index, rows){
+          this.$confirm('此操作将永久删除该接口, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.deleteRow(index, rows);
+          }).catch((err) => {
+//            console.log(err)
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        },
+
         //删除消息头中的一行
         deleteRow(index, rows) {
-          if(typeof(rows[index].id) != 'undefined' && rows[index].id != null){
-            let vueThis = this;
-
+          let vueThis = this;
+          if(typeof(rows[index].id) != 'undefined' ){
             this.testCaseAxios({
               method: 'post',
               data: rows[index],
@@ -205,8 +220,7 @@
               if(res.data.code === 10000){
 
                 if(index == 0 && rows.length == 1 && vueThis.currentPage === 1 && vueThis.dbCfg.length <= vueThis.pageSize){
-
-                    rows[index].id = null
+//                    rows[index].id = null
                     rows[index].name = ''
                     rows[index].ip = ''
                     rows[index].port = ''
@@ -233,9 +247,9 @@
             });
 
           }else{
-            if(index == 0 && rows.length == 1 && this.currentPage === 1 && this.dbCfg.length <= this.pageSize){
+            if(index == 0 && rows.length == 1 && vueThis.currentPage === 1 && vueThis.dbCfg.length <= vueThis.pageSize){
               rows[index] = {
-                id: null,
+//                id: null,
                 name: '',
                 ip: '',
                 port: '',
@@ -245,8 +259,8 @@
                 dbGroup: {}
               }
             }else {
-              let totalIndex = this.pageSize *(this.currentPage - 1) + index;
-              this.dbCfg.splice(totalIndex, 1);
+              let totalIndex = vueThis.pageSize *(vueThis.currentPage - 1) + index;
+              vueThis.dbCfg.splice(totalIndex, 1);
             }
             }
         },
@@ -261,8 +275,6 @@
           }).then(function (res) {
             if(res.data.code === 10000){
 //              rows[index] = res.data.data;
-//              rows.slice(index, 1)
-//              vueThis.dbCfg.push(res.data.data);
 
               vueThis.$message({
                 message: '恭喜你，保存数据库分组配置成功',

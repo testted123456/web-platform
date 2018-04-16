@@ -51,6 +51,10 @@
   methods: {
 
     login(){
+
+      this.$router.push('/home/welcome');
+
+      return;
       // 判断input是否为空
       var  vueThis = this;
       this.$refs['form'].validate((valid) => {

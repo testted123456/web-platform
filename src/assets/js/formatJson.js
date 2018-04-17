@@ -3,11 +3,11 @@
  */
 var formatJson =function (jsonStr) {
   if(jsonStr == null || jsonStr == 'null' || jsonStr == ''){
-    return false;
+    return ;
   }
-
   let jsonObj = JSON.parse(jsonStr);
   return JSON.stringify(jsonObj, null, 4);
+
 
 
 }

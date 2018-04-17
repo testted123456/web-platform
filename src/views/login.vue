@@ -27,8 +27,8 @@
       loginState:'登录',
       loading: false,
       formData: {
-        username:'123',
-        password:'12'
+        username:'',
+        password:''
       }
 
     };
@@ -52,9 +52,6 @@
 
     login(){
 
-//      this.$router.push('/home/welcome');
-//
-//      return;
       // 判断input是否为空
       var  vueThis = this;
       this.$refs['form'].validate((valid) => {
@@ -72,10 +69,14 @@
               vueThis.$router.push('/home/welcome');
             }else {
               vueThis.$message.error('登陆失败：' + res.data.msg);
+              this.loginState = '登录';
+              this.loading = false;
               return;
             }
           }).catch(function (err) {
             vueThis.$message.error('抱歉，服务器异常！' );
+            this.loginState = '登录';
+            this.loading = false;
             return;
           });
 

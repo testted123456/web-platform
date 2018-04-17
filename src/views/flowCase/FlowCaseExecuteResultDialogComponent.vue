@@ -56,14 +56,27 @@
 
         <el-row class="hTitle">*自定义变量</el-row>
         <el-row>
-          <el-input
-            type="textarea"
-            autosize
-            readonly
-            resize="none"
-            placeholder=""
-            v-model="apiDetail.variables">
-          </el-input>
+
+          <el-table v-show="apiDetail.variables.length>0"
+                    :data="apiDetail.variables"
+                    style="width: 100%"
+                    ref="multipleTable" border>
+
+            <el-table-column
+              prop="Key"
+              label="Key"
+              align="left"
+            >
+            </el-table-column>
+
+            <el-table-column
+              prop="Value"
+              label="Value"
+              align="left"
+            >
+            </el-table-column>
+          </el-table>
+
         </el-row>
 
         <el-row class="hTitle">*请求头</el-row>
@@ -202,7 +215,7 @@
         apiResult:[],
         apiDetail:{
           url:'',
-          variables:'',
+          variables:[],
           headers:[],
           requestBody:'',
           responseBody:'',
@@ -261,16 +274,22 @@
             console.log(that.apiDetail.headers)
             console.log(that.apiDetail.assertions)
             that.apiDetail.requestBody = formatJson(that.apiDetail.requestBody)
-            that.apiDetail.variables = formatJson(that.apiDetail.variables)
             that.apiDetail.responseBody = formatJson(that.apiDetail.responseBody)
             that.apiDetail.actualResponseBody = formatJson(that.apiDetail.actualResponseBody)
+
+            if(that.apiDetail.variables == null || that.apiDetail.variables == 'null' || that.apiDetail.variables.length == 0){
+              that.apiDetail.variables = [];
+            }else{
+              if(typeof(that.apiDetail.variables) == "string"){
+                that.apiDetail.variables = JSON.parse(that.apiDetail.variables)
+              }
+            }
 
             if(that.apiDetail.headers == null || that.apiDetail.headers == 'null' || that.apiDetail.headers.length == 0){
               that.apiDetail.headers = [];
             }else{
               if(typeof(that.apiDetail.headers) == "string"){
                 that.apiDetail.headers = JSON.parse(that.apiDetail.headers)
-
               }
             }
 

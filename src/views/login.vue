@@ -2,11 +2,11 @@
   <div v-if="ifLoginShow">
     <div class="login-center">
       <el-form ref="form"  label-width="1px" :model="formData">
-        <el-form-item label="" prop="account" :rules="[{ required: true, message: '用户名不能为空'} ]">
-          <el-input v-model="formData.account" placeholder="输入用户名"></el-input>
+        <el-form-item label="" prop="username" :rules="[{ required: true, message: '用户名不能为空'} ]">
+          <el-input v-model="formData.username" placeholder="输入用户名"></el-input>
         </el-form-item>
-        <el-form-item label=""  prop="pws" :rules="[{ required: true, message: '密码不能为空'} ]">
-          <el-input type="password"  v-model="formData.pws" placeholder="输入密码"  @keyup.native="checkSubmit"></el-input>
+        <el-form-item label=""  prop="password" :rules="[{ required: true, message: '密码不能为空'} ]">
+          <el-input type="password"  v-model="formData.password" placeholder="输入密码"  @keyup.native="checkSubmit"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="login" style="width:330px;" :loading="loading">{{loginState}}</el-button>
@@ -27,8 +27,8 @@
       loginState:'登录',
       loading: false,
       formData: {
-        account:'123',
-        pws:'12'
+        username:'123',
+        password:'12'
       }
 
     };
@@ -52,9 +52,9 @@
 
     login(){
 
-      this.$router.push('/home/welcome');
-
-      return;
+//      this.$router.push('/home/welcome');
+//
+//      return;
       // 判断input是否为空
       var  vueThis = this;
       this.$refs['form'].validate((valid) => {
@@ -65,10 +65,7 @@
 
           vueThis.usrAxios({
             method: 'post',
-            data: {
-              "username":"yaoyinbing",
-              "password":"Init1234#"
-            },
+            data: this.formData,
             url: 'user/login'
           }).then(function (res) {
             if(res.data.code === 10000){

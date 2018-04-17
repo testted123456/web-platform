@@ -194,7 +194,7 @@
   export default {
     props: [],
     components: {},
-    name: 'apiExecuteResultDialogComponent',
+    name: 'FlowCaseExecuteResultDialogComponent',
     data(){
       return {
         detailInfoShow:false,

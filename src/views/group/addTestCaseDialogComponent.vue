@@ -1,7 +1,7 @@
 <template>
-  <el-container>
-    <el-row >
-      <el-col :span="8">
+  <el-container >
+    <el-row>
+      <el-col :span="8" style="border:1px solid #ccc;border-radius:3px;">
         <div class="vue-transfer-tree">
           <label class="vue-transfer-label">用例</label>
           <input class="vue-transfer-input" placeholder="输入用例名称搜索"/>
@@ -11,14 +11,24 @@
                    :props="defaultProps"
                    @node-click="handleNodeClick">
           </el-tree>
+
+          <label class="vue-transfer-label" style="margin-top:18px;">用例流</label>
+          <input class="vue-transfer-input" placeholder="输入用例流名称搜索"/>
+          <el-tree :load="loadNode2"
+                   lazy
+                   ref="tree2"
+                   :props="defaultProps2"
+                   @node-click="handleNodeClick2">
+          </el-tree>
+
         </div>
       </el-col>
-      <el-col :span="3">
+      <el-col :span="2">
         <div style="text-align: center;margin-left: 2px;margin-top: 80%">
           <div><input type="button" value=">" @click="addCase" style="border-radius: 60px;height: 40px;width: 40px"/></div>
         </div>
       </el-col>
-      <el-col :span="13">
+      <el-col :span="14" style="border:1px solid #ccc;border-radius:3px;">
         <div class="vue-transfer-tree">
           <label class="vue-transfer-label">已选用例</label>
           <el-table
@@ -30,7 +40,10 @@
             style="width: 100%; margin-top: 2px">
             <el-table-column
               prop="name"
-              label="名称">
+              label="名称" min-width="250">
+              <template slot-scope="scope">
+                <el-button type="text">{{ scope.row.name }}</el-button>
+              </template>
             </el-table-column>
             <el-table-column
               prop="description"
@@ -72,8 +85,14 @@
           isLeaf: 'type',
           children: 'children'
         },
+        defaultProps2:{
+          label: 'name',
+          isLeaf: 'type',
+          children: 'children'
+        },
         case:{},
-        tempCases:[]
+        tempCases:[],
+        currentNode:{}
       }
     },
 
@@ -83,7 +102,13 @@
 
     methods: {
       handleNodeClick(data, node, instance) {
-//          console.log('xxx');
+        this.currentNode =  this.$refs.tree.currentNode.node;
+        console.log(this.currentNode.data)
+      },
+      handleNodeClick2(data, node, instance) {
+        this.currentNode =  this.$refs.tree2.currentNode.node;
+        console.log(this.currentNode.data)
+
       },
       loadNode(node, resolve) {
         if(node.level === 0){
@@ -111,11 +136,38 @@
           });
         }
       },
-      addCase(){
-        var node = this.$refs.tree.currentNode.node;
-        this.case = node.data;
+      loadNode2(node, resolve) {
+        if(node.level === 0){
+          return resolve([{ name:  '测试用例流', id: 0 , type: false}]);
+        }else if(node.isLeaf === true){
+          return;
+        }else{
 
-        if(node.data.type){
+          var vueThis = this;
+          vueThis.testCaseAxios({
+            method: 'get',
+            data: {
+            },
+            url: "flowCase/getTreeByPId?pId=" + node.data.id
+          })
+            .then(function (res) {
+              if(res.data.code === 10000){
+                var apiTreeInfo = res.data.data;
+                return resolve(res.data.data);
+              }
+              return;
+            })
+            .catch(function (err) {
+              vueThis.$message.error('抱歉，服务器异常！' );
+            });
+        }
+      },
+      addCase(){
+        // var node = this.$refs.tree.currentNode.node;
+        // this.case = node.data;
+
+        this.case = this.currentNode.data;
+        if(this.currentNode.data.type){
             var obj = JSON.stringify(this.case);
             obj = JSON.parse(obj)
           this.tempCases.push(obj);
@@ -162,10 +214,10 @@
     overflow-x: hidden;
   }
   .vue-transfer-tree {
-    border: 0.5px solid;
+    /*border: 0.5px solid;*/
     border-radius: 5px;
-    min-height: 300px;
-    height: 300px;
+    min-height: 500px;
+    height: 500px;
     margin-left: 2px;
     margin-right: 2px;
     padding-right: 1px;

@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-row >
-      <el-col :span="8">
+      <el-col :span="8" style="border:1px solid #ccc;border-radius:3px;">
         <div class="vue-transfer-tree">
           <label class="vue-transfer-label">用例</label>
           <input class="vue-transfer-input" placeholder="输入用例名称搜索"/>
@@ -18,7 +18,7 @@
           <div><input type="button" value=">" @click="addCase" style="border-radius: 60px;height: 40px;width: 40px"/></div>
         </div>
       </el-col>
-      <el-col :span="14">
+      <el-col :span="14" style="border:1px solid #ccc;border-radius:3px;">
         <div class="vue-transfer-tree">
           <label class="vue-transfer-label">已选用例</label>
           <el-table
@@ -31,6 +31,9 @@
             <el-table-column
               prop="name"
               label="名称" min-width="250">
+              <template slot-scope="scope">
+                <el-button type="text">{{ scope.row.name }}</el-button>
+              </template>
             </el-table-column>
             <el-table-column
               prop="description"
@@ -231,7 +234,7 @@
     overflow-x: hidden;
   }
   .vue-transfer-tree {
-    border: 0.5px solid;
+    /*border: 0.5px solid;*/
     border-radius: 5px;
     min-height: 300px;
     height: 300px;

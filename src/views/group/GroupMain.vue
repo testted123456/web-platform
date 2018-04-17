@@ -32,7 +32,7 @@
           <span>确认删除？</span>
           <span slot="footer" class="dialog-footer">
                     <el-button @click="delDialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="delCase">确 定</el-button>
+                    <el-button type="primary" @click="delGroup">确 定</el-button>
                   </span>
         </el-dialog>
       </div>
@@ -150,18 +150,6 @@
         } else if (node.isLeaf === true) {
           return;
         } else {
-//          return resolve([
-//              {
-//                name: '测试集1',
-//                id: 1,
-//                type: true
-//              },
-//              {
-//                name: '测试集2',
-//                id: 2,
-//                type: true
-//              }
-//          ]);
             var vueThis = this;
             vueThis.groupAxios({
               method: 'get',

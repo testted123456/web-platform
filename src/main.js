@@ -44,7 +44,9 @@ Vue.prototype.apiAxios = axios.create({
 });
 
 Vue.prototype.groupAxios = axios.create({
-  baseURL: 'http://192.168.32.88:8082/group/'
+  // baseURL: 'http://192.168.32.234:8082/group/'
+  baseURL: 'http://192.168.32.88:8084/group/'
+
 });
 
 Vue.prototype.usrAxios = axios.create({

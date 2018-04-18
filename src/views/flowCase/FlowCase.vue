@@ -317,6 +317,7 @@
                         vueThis.flowCase.testCases.forEach(function(e,index){
                           e.checked = true;
                           that.$refs.multipleTable.toggleRowSelection(e,true);
+
                         })
                         vueThis.filterExecteId();
                       })
@@ -553,6 +554,7 @@
                   vueThis.flowCase.testCases.forEach(function(e,index){
                     e.checked = true;
                     that.$refs.multipleTable.toggleRowSelection(e,true);
+
                   })
                   vueThis.filterExecteId();
                 })

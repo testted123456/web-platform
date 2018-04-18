@@ -608,7 +608,7 @@
 
         var vueThis = this;
 
-        this.apiAxios.post('api/addApi', tempApi).then(function (res) {
+        this.apiAxios.post('api/updateApi', tempApi).then(function (res) {
           if(res.data.code === 10000){
             vueThis.$message({
               message: '恭喜你，更新接口成功',

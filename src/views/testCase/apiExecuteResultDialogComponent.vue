@@ -46,6 +46,8 @@
       </el-row>
 
       <div v-show="detailInfoShow" style="padding-top:40px;">
+        <div style="width:100%;padding:10px 0;text-align: center;font-size: 24px;">接口执行信息</div>
+
         <el-row class="hTitle">*接口url为</el-row>
         <el-row>
           <div class="jsonContent" >

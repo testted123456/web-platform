@@ -2,50 +2,71 @@
   <el-container style="height:600px;">
     <el-main>
       <el-row>
-        <el-table v-show="apiResult.length>0"
-                  :data="apiResult"
-                  style="width: 100%"
-                  ref="multipleTable" border>
+        <el-col :span="6">
+          <el-table v-show="records.length>0"
+                    :data="records"
+                    style="width: 100%"
+                    ref="multipleTable" border>
 
 
-          <el-table-column
-            prop="apiName"
-            label="名称"
-            align="left"
-          >
-            <template slot-scope="scope">
-              <el-button type="text" @click="getDetail(scope.row.id)">{{ scope.row.apiName }}</el-button>
-            </template>
+            <el-table-column
+              prop="createdTime"
+              label="时间"
+              align="left"
+            >
+              <template slot-scope="scope">
+                <el-button type="text" @click="getCase(scope.row.id)">{{ scope.row.createdTime }}</el-button>
+              </template>
 
-          </el-table-column>
-
-          <el-table-column
-            prop="apiStepName"
-            label="步骤名称"
-            align="left"
-          >
-          </el-table-column>
-
-          <el-table-column
-            prop="createdTime"
-            label="执行时间"
-            align="left"
-          >
-          </el-table-column>
-
-          <el-table-column
-            prop="result"
-            label="结果"
-            align="left"
-          >
-          </el-table-column>
+            </el-table-column>
 
 
 
-        </el-table>
+          </el-table>
+        </el-col>
+        <el-col :span="16" style="margin-left:40px;">
+          <el-table v-show="apiResult.length>0"
+                    :data="apiResult"
+                    style="width: 100%"
+                    ref="multipleTable" border>
+
+            <el-table-column
+              prop="apiName"
+              label="名称"
+              align="left"
+            >
+              <template slot-scope="scope">
+                <el-button type="text" @click="getDetail(scope.row.id)">{{ scope.row.apiName }}</el-button>
+              </template>
+
+            </el-table-column>
+
+            <el-table-column
+              prop="apiStepName"
+              label="步骤名称"
+              align="left"
+            >
+            </el-table-column>
+
+            <el-table-column
+              prop="createdTime"
+              label="执行时间"
+              align="left"
+            >
+            </el-table-column>
+
+            <el-table-column
+              prop="result"
+              label="结果"
+              align="left"
+            >
+            </el-table-column>
+          </el-table>
+        </el-col>
       </el-row>
 
-      <div v-show="detailInfoShow" style="padding-top:40px;">
+      <div v-show="detailInfoShow" style="padding-top:60px;">
+        <div style="width:100%;padding:10px 0;text-align: center;font-size: 24px;">接口执行信息</div>
         <el-row class="hTitle">*接口url为</el-row>
         <el-row>
           <div class="jsonContent" >
@@ -211,7 +232,7 @@
     data(){
       return {
         detailInfoShow:false,
-
+        records:[],
         apiResult:[],
         apiDetail:{
           url:'',
@@ -243,7 +264,23 @@
         // 获取表格内容
         vueThis.testCaseAxios({
           method: 'get',
-          url: "report/getCaseReport?id=" + caseID
+          url: "report/getGroupRunHistory?id=" + caseID
+        })
+          .then(function (res) {
+            if (res.data.code === 10000) {
+              vueThis.records = res.data.data;
+
+            }
+          })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！');
+          });
+      },
+      getCase(id){
+        var vueThis = this;
+        vueThis.testCaseAxios({
+          method: 'get',
+          url: "report/getGroupReport?historyId=" + id
         })
           .then(function (res) {
             if (res.data.code === 10000) {
@@ -261,9 +298,6 @@
           .catch(function (err) {
             vueThis.$message.error('抱歉，服务器异常！');
           });
-
-
-
       },
       getDetail(id){
         this.detailInfoShow = true;

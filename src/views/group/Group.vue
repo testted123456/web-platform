@@ -310,8 +310,11 @@
                       vueThis.$nextTick(()=>{
                         var that = vueThis;
                         vueThis.group.testCaseList.forEach(function(e,index){
-                          e.checked = true;
-                          that.$refs.multipleTable.toggleRowSelection(e,true);
+                          // e.checked = true;
+                          // that.$refs.multipleTable.toggleRowSelection(e,true);
+                          if(e.checked){
+                            that.$refs.multipleTable.toggleRowSelection(e,true);
+                          }
                         })
                         vueThis.filterExecteId();
                       })
@@ -431,15 +434,7 @@
 
       //执行弹窗方法
       execCase() {
-        this.dialog = {
-          title: '执行结果',
-          visible: true,
-          footerVisible: false,
-          contentType: 3,
-          width: '30%',
-          extend: {
-          }
-        }
+
 
         this.percentageNum = 0;
         var perThis = this;
@@ -456,6 +451,17 @@
         })
         .then(function (res) {
             if(res.data.code === 10000){
+
+              perThis.dialog = {
+                title: '执行结果',
+                visible: true,
+                footerVisible: false,
+                contentType: 3,
+                width: '30%',
+                extend: {
+                }
+              }
+
               clearInterval(perThis.serverSendMsg)
               perThis.serverSendMsg = setInterval(function(){
                 perThis.testCaseAxios({
@@ -466,14 +472,15 @@
                   .then(function (res) {
                     if(res.data.code === 10000){
                       perThis.percentageNum = res.data.data;
-                    }else if(res.data.code === 10001){
+                    }else if(res.data.code === 10002){
                       clearInterval(perThis.serverSendMsg)
+                      perThis.percentageNum = 100;
                     }else{
                       perThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
                     }
                   })
 
-              }, 1000);
+              }, 500);
 
             }else{
               perThis.$message.error('抱歉，执行失败：' + res.data.msg);
@@ -559,8 +566,11 @@
                 vueThis.$nextTick(()=>{
                   var that = vueThis;
                   vueThis.group.testCaseList.forEach(function(e,index){
-                    e.checked = true;
-                    that.$refs.multipleTable.toggleRowSelection(e,true);
+                    // e.checked = true;
+                    // that.$refs.multipleTable.toggleRowSelection(e,true);
+                    if(e.checked){
+                      that.$refs.multipleTable.toggleRowSelection(e,true);
+                    }
                   })
                   vueThis.filterExecteId();
                 })

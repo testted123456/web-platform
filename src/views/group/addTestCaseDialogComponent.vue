@@ -3,23 +3,32 @@
     <el-row>
       <el-col :span="8" style="border:1px solid #ccc;border-radius:3px;">
         <div class="vue-transfer-tree">
-          <label class="vue-transfer-label">用例</label>
-          <input class="vue-transfer-input" placeholder="输入用例名称搜索"/>
-          <el-tree :load="loadNode"
-                   lazy
-                   ref="tree"
-                   :props="defaultProps"
-                   @node-click="handleNodeClick">
-          </el-tree>
 
-          <label class="vue-transfer-label" style="margin-top:18px;">用例流</label>
-          <input class="vue-transfer-input" placeholder="输入用例流名称搜索"/>
-          <el-tree :load="loadNode2"
-                   lazy
-                   ref="tree2"
-                   :props="defaultProps2"
-                   @node-click="handleNodeClick2">
-          </el-tree>
+          <el-tabs type="border-card">
+            <el-tab-pane label="用例" >
+
+              <!--<label class="vue-transfer-label">用例</label>-->
+              <input class="vue-transfer-input" placeholder="输入用例名称搜索"/>
+              <el-tree :load="loadNode"
+                       lazy
+                       ref="tree"
+                       :props="defaultProps"
+                       @node-click="handleNodeClick">
+              </el-tree>
+            </el-tab-pane>
+            <el-tab-pane label="用例流">
+
+              <!--<label class="vue-transfer-label" style="margin-top:18px;">用例流</label>-->
+              <input class="vue-transfer-input" placeholder="输入用例流名称搜索"/>
+              <el-tree :load="loadNode2"
+                       lazy
+                       ref="tree2"
+                       :props="defaultProps2"
+                       @node-click="handleNodeClick2">
+              </el-tree>
+            </el-tab-pane>
+
+          </el-tabs>
 
         </div>
       </el-col>
@@ -218,9 +227,9 @@
     border-radius: 5px;
     min-height: 500px;
     height: 500px;
-    margin-left: 2px;
-    margin-right: 2px;
-    padding-right: 1px;
+    /*margin-left: 2px;*/
+    /*margin-right: 2px;*/
+    /*padding-right: 1px;*/
     overflow-y: auto;
     overflow-x: auto;
   }
@@ -244,6 +253,9 @@
     margin-top: 10px;
     min-height: 32px;
     border-width: 0.5px;
+  }
+  .el-tabs{
+    height: 100%;
   }
 
 </style>

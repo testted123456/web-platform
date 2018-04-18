@@ -32,6 +32,21 @@ String.prototype.trim = function () {
   return this.replace(/(^\s*)|(\s*$)/g, "");
 }
 
+
+Vue.prototype.rights = {
+  testCaseAdd:false
+
+}
+
+// kkkk = false;
+//
+// if(right = 22 || right = 23){
+//   kkkk = true;
+// }else{
+//   kkkk = false;
+// }
+
+
 Vue.prototype.testCaseAxios = axios.create({
   baseURL: 'http://192.168.32.88:8083/case/'
 });

@@ -15,7 +15,7 @@
               align="left"
             >
               <template slot-scope="scope">
-                <el-button type="text" @click="getCase(scope.row.id)">{{ scope.row.createdTime }}</el-button>
+                <el-button type="text" @click="getGroup(scope.row.id)">{{ scope.row.createdTime }}</el-button>
               </template>
 
             </el-table-column>
@@ -25,34 +25,20 @@
           </el-table>
         </el-col>
         <el-col :span="16" style="margin-left:40px;">
-          <el-table v-show="apiResult.length>0"
-                    :data="apiResult"
+          <el-table v-show="groupList.length>0"
+                    :data="groupList"
                     style="width: 100%"
                     ref="multipleTable" border>
 
             <el-table-column
-              prop="apiName"
+              prop="name"
               label="名称"
               align="left"
             >
               <template slot-scope="scope">
-                <el-button type="text" @click="getDetail(scope.row.id)">{{ scope.row.apiName }}</el-button>
+                <el-button type="text" @click="getCase(scope.$index)">{{ scope.row.name }}</el-button>
               </template>
 
-            </el-table-column>
-
-            <el-table-column
-              prop="apiStepName"
-              label="步骤名称"
-              align="left"
-            >
-            </el-table-column>
-
-            <el-table-column
-              prop="createdTime"
-              label="执行时间"
-              align="left"
-            >
             </el-table-column>
 
             <el-table-column
@@ -61,10 +47,53 @@
               align="left"
             >
             </el-table-column>
+
+
           </el-table>
         </el-col>
       </el-row>
 
+      <el-row style="margin-top:50px;" v-show="caseInfoShow">
+        <div style="width:100%;padding:10px 0;text-align: center;font-size: 24px;">case详情</div>
+
+        <el-table v-show="apiResult.length>0"
+                  :data="apiResult"
+                  style="width: 100%"
+                  ref="multipleTable" border>
+
+          <el-table-column
+            prop="apiName"
+            label="名称"
+            align="left"
+          >
+            <template slot-scope="scope">
+              <el-button type="text" @click="getDetail(scope.$index)">{{ scope.row.apiName }}</el-button>
+            </template>
+
+          </el-table-column>
+
+          <el-table-column
+            prop="apiStepName"
+            label="步骤名称"
+            align="left"
+          >
+          </el-table-column>
+
+          <el-table-column
+            prop="createdTime"
+            label="执行时间"
+            align="left"
+          >
+          </el-table-column>
+
+          <el-table-column
+            prop="result"
+            label="结果"
+            align="left"
+          >
+          </el-table-column>
+        </el-table>
+      </el-row>
       <div v-show="detailInfoShow" style="padding-top:60px;">
         <div style="width:100%;padding:10px 0;text-align: center;font-size: 24px;">接口执行信息</div>
         <el-row class="hTitle">*接口url为</el-row>
@@ -232,6 +261,8 @@
     data(){
       return {
         detailInfoShow:false,
+        caseInfoShow:false,
+        groupList:[],
         records:[],
         apiResult:[],
         apiDetail:{
@@ -276,7 +307,7 @@
             vueThis.$message.error('抱歉，服务器异常！');
           });
       },
-      getCase(id){
+      getGroup(id){
         var vueThis = this;
         vueThis.testCaseAxios({
           method: 'get',
@@ -284,59 +315,57 @@
         })
           .then(function (res) {
             if (res.data.code === 10000) {
-              vueThis.apiResult = res.data.data;
-              console.log(vueThis.apiResult )
-              vueThis.apiResult.forEach(function(val,index,arr){
+              vueThis.groupList = res.data.data;
+
+              vueThis.groupList.forEach(function(val,index,arr){
                 if(val.result){
                   val.result = 'true'
                 }else{
                   val.result = 'false'
                 }
               })
+
             }
           })
           .catch(function (err) {
             vueThis.$message.error('抱歉，服务器异常！');
           });
       },
-      getDetail(id){
+      getCase(index){
+        this.apiResult = this.groupList[index].data;
+        this.caseInfoShow = true;
+      },
+      getDetail(index){
         this.detailInfoShow = true;
-        var that = this;
-        this.apiResult.forEach(function(val,index,arr){
-          if(val.id === id){
-            that.apiDetail = that.apiResult[index]
-            console.log(that.apiDetail.headers)
-            console.log(that.apiDetail.assertions)
-            that.apiDetail.requestBody = formatJson(that.apiDetail.requestBody)
-            that.apiDetail.responseBody = formatJson(that.apiDetail.responseBody)
-            that.apiDetail.actualResponseBody = formatJson(that.apiDetail.actualResponseBody)
+        this.apiDetail = this.apiResult[index]
+        this.apiDetail.requestBody = formatJson(this.apiDetail.requestBody)
+        this.apiDetail.responseBody = formatJson(this.apiDetail.responseBody)
+        this.apiDetail.actualResponseBody = formatJson(this.apiDetail.actualResponseBody)
 
-            if(that.apiDetail.variables == null || that.apiDetail.variables == 'null' || that.apiDetail.variables.length == 0){
-              that.apiDetail.variables = [];
-            }else{
-              if(typeof(that.apiDetail.variables) == "string"){
-                that.apiDetail.variables = JSON.parse(that.apiDetail.variables)
-              }
-            }
-
-            if(that.apiDetail.headers == null || that.apiDetail.headers == 'null' || that.apiDetail.headers.length == 0){
-              that.apiDetail.headers = [];
-            }else{
-              if(typeof(that.apiDetail.headers) == "string"){
-                that.apiDetail.headers = JSON.parse(that.apiDetail.headers)
-              }
-            }
-
-
-            if(that.apiDetail.assertions == null || that.apiDetail.assertions == 'null' || that.apiDetail.assertions.length == 0){
-              that.apiDetail.assertions = [];
-            }else{
-              if(typeof(that.apiDetail.assertions) == "string"){
-                that.apiDetail.assertions = JSON.parse(that.apiDetail.assertions)
-              }
-            }
+        if(this.apiDetail.variables == null || this.apiDetail.variables == 'null' || this.apiDetail.variables.length == 0){
+          this.apiDetail.variables = [];
+        }else{
+          if(typeof(this.apiDetail.variables) == "string"){
+            this.apiDetail.variables = JSON.parse(this.apiDetail.variables)
           }
-        })
+        }
+
+        if(this.apiDetail.headers == null || this.apiDetail.headers == 'null' || this.apiDetail.headers.length == 0){
+          this.apiDetail.headers = [];
+        }else{
+          if(typeof(this.apiDetail.headers) == "string"){
+            this.apiDetail.headers = JSON.parse(this.apiDetail.headers)
+          }
+        }
+
+
+        if(this.apiDetail.assertions == null || this.apiDetail.assertions == 'null' || this.apiDetail.assertions.length == 0){
+          this.apiDetail.assertions = [];
+        }else{
+          if(typeof(this.apiDetail.assertions) == "string"){
+            this.apiDetail.assertions = JSON.parse(this.apiDetail.assertions)
+          }
+        }
       }
     }
   }

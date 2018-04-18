@@ -8,7 +8,27 @@
   export default {
     name: 'App',
     mounted() {
-     console.log('first')
+      console.log('first')
+      this.getRights();
+    },
+    methods:{
+      getRights(){
+        var vueThis = this;
+        vueThis.testCaseAxios({
+          method: 'get',
+          data: {
+          },
+          url: "testCase/getCaseById?id=" + 1
+        })
+          .then(function (res) {
+            if(res.data.code === 10000){
+              console.log('jkhkjhkjhjhkjhkjhkhhjkhjkhjkhkjhjjk')
+            }
+          })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
+          });
+      }
     }
   }
 </script>

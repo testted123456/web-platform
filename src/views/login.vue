@@ -34,21 +34,25 @@
     };
   },
    created() {
-     this.ifLoginShow = true;
-
-     // 第一步判断是否登录
-//     this.$http.post("http://localhost:8082/inter/api/addApi").then(function (res) {
-//       if(res.data.succeed){
-//         this.$router.push('/home/welcome');
-//       }else{
-//         this.ifLoginShow = true; //登录界面显示
-//       }
-//     }, function (res) {
-//       this.ifLoginShow = true; //登录界面显示
-//     });
-
+     this.checkLogin();
    },
   methods: {
+    checkLogin(){
+        var vueThis = this;
+        vueThis.usrAxios({
+          method: 'get',
+          url: 'env/getAllEnvs'
+        }).then(function (res) {
+          if(res.data.code === 10000){
+            vueThis.$router.push('/home/welcome');
+          }else {
+            this.ifLoginShow = true;
+          }
+        }).catch(function (err) {
+          this.ifLoginShow = true;
+          vueThis.$message.error('抱歉，服务器异常！' );
+        });
+    },
 
     login(){
 

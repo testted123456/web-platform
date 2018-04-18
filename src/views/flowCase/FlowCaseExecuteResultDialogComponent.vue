@@ -14,7 +14,7 @@
             align="left"
           >
             <template slot-scope="scope">
-              <el-button type="text" @click="getDetail(scope.row.id)">{{ scope.row.apiName }}</el-button>
+              <el-button type="text" @click="getDetail(scope.$index)">{{ scope.row.apiName }}</el-button>
             </template>
 
           </el-table-column>
@@ -267,44 +267,39 @@
 
 
       },
-      getDetail(id){
+      getDetail(index){
         this.detailInfoShow = true;
         var that = this;
-        this.apiResult.forEach(function(val,index,arr){
-          if(val.id === id){
-            that.apiDetail = that.apiResult[index]
-            console.log(that.apiDetail.headers)
-            console.log(that.apiDetail.assertions)
-            that.apiDetail.requestBody = formatJson(that.apiDetail.requestBody)
-            that.apiDetail.responseBody = formatJson(that.apiDetail.responseBody)
-            that.apiDetail.actualResponseBody = formatJson(that.apiDetail.actualResponseBody)
 
-            if(that.apiDetail.variables == null || that.apiDetail.variables == 'null' || that.apiDetail.variables.length == 0){
-              that.apiDetail.variables = [];
-            }else{
-              if(typeof(that.apiDetail.variables) == "string"){
-                that.apiDetail.variables = JSON.parse(that.apiDetail.variables)
-              }
-            }
+        that.apiDetail = that.apiResult[index]
+        that.apiDetail.requestBody = formatJson(that.apiDetail.requestBody)
+        that.apiDetail.responseBody = formatJson(that.apiDetail.responseBody)
+        that.apiDetail.actualResponseBody = formatJson(that.apiDetail.actualResponseBody)
 
-            if(that.apiDetail.headers == null || that.apiDetail.headers == 'null' || that.apiDetail.headers.length == 0){
-              that.apiDetail.headers = [];
-            }else{
-              if(typeof(that.apiDetail.headers) == "string"){
-                that.apiDetail.headers = JSON.parse(that.apiDetail.headers)
-              }
-            }
-
-
-            if(that.apiDetail.assertions == null || that.apiDetail.assertions == 'null' || that.apiDetail.assertions.length == 0){
-              that.apiDetail.assertions = [];
-            }else{
-              if(typeof(that.apiDetail.assertions) == "string"){
-                that.apiDetail.assertions = JSON.parse(that.apiDetail.assertions)
-              }
-            }
+        if(that.apiDetail.variables == null || that.apiDetail.variables == 'null' || that.apiDetail.variables.length == 0){
+          that.apiDetail.variables = [];
+        }else{
+          if(typeof(that.apiDetail.variables) == "string"){
+            that.apiDetail.variables = JSON.parse(that.apiDetail.variables)
           }
-        })
+        }
+
+        if(that.apiDetail.headers == null || that.apiDetail.headers == 'null' || that.apiDetail.headers.length == 0){
+          that.apiDetail.headers = [];
+        }else{
+          if(typeof(that.apiDetail.headers) == "string"){
+            that.apiDetail.headers = JSON.parse(that.apiDetail.headers)
+          }
+        }
+
+
+        if(that.apiDetail.assertions == null || that.apiDetail.assertions == 'null' || that.apiDetail.assertions.length == 0){
+          that.apiDetail.assertions = [];
+        }else{
+          if(typeof(that.apiDetail.assertions) == "string"){
+            that.apiDetail.assertions = JSON.parse(that.apiDetail.assertions)
+          }
+        }
       }
     }
   }

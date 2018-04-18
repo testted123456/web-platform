@@ -18,8 +18,8 @@
                 <span>数据库配置</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="2-1">分组</el-menu-item>
-                <el-menu-item index="2-2">地址</el-menu-item>
+                <el-menu-item index="2-1">数据库分组</el-menu-item>
+                <el-menu-item index="2-2">数据库地址</el-menu-item>
               </el-menu-item-group>
 
             </el-submenu>
@@ -47,8 +47,8 @@
                 <span>系统配置</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="4-1">git</el-menu-item>
-                <el-menu-item index="4-2">分支</el-menu-item>
+                <el-menu-item index="4-1">git地址</el-menu-item>
+                <el-menu-item index="4-2">git分支</el-menu-item>
               </el-menu-item-group>
 
             </el-submenu>

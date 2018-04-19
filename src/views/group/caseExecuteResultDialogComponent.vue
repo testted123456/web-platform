@@ -1,60 +1,64 @@
 <template>
   <el-container style="height:600px;">
     <el-main>
-      <el-row>
-        <el-col :span="6">
-          <el-table v-show="records.length>0"
-                    :data="records"
-                    style="width: 100%"
-                    ref="multipleTable" border>
+      <el-tabs  type="card" @tab-click="handleClick">
+
+        <el-tab-pane v-for="tab in records" :label="tab.createdTime"></el-tab-pane>
+
+      </el-tabs>
 
 
-            <el-table-column
-              prop="createdTime"
-              label="时间"
-              align="left"
-            >
-              <template slot-scope="scope">
-                <el-button type="text" @click="getGroup(scope.row.id)">{{ scope.row.createdTime }}</el-button>
-              </template>
+      <!--执行详情-->
+      <el-row style="margin-top:30px;">
+        <!--<el-col :span="6">-->
+        <!--<el-table v-show="records.length>0"-->
+        <!--:data="records"-->
+        <!--style="width: 100%"-->
+        <!--ref="multipleTable" border>-->
+        <!--<el-table-column-->
+        <!--prop="createdTime"-->
+        <!--label="时间"-->
+        <!--align="left"-->
+        <!--&gt;-->
+        <!--<template slot-scope="scope">-->
+        <!--<el-button type="text" @click="getGroup(scope.row.id)">{{ scope.row.createdTime }}</el-button>-->
+        <!--</template>-->
 
-            </el-table-column>
+        <!--</el-table-column>-->
+        <!--</el-table>-->
+        <!--</el-col>-->
+        <!--<el-col :span="24" style="margin-left:40px;">-->
+        <!---->
+        <!--</el-col>-->
+        <el-table v-show="groupList.length>0"
+                  :data="groupList"
+                  style="width: 100%"
+                  ref="multipleTable" border>
+
+          <el-table-column
+            prop="name"
+            label="名称"
+            align="left"
+          >
+            <template slot-scope="scope">
+              <el-button type="text" @click="getCase(scope.$index)">{{ scope.row.name }}</el-button>
+            </template>
+
+          </el-table-column>
+
+          <el-table-column
+            prop="result"
+            label="结果"
+            align="left"
+          >
+          </el-table-column>
 
 
-
-          </el-table>
-        </el-col>
-        <el-col :span="16" style="margin-left:40px;">
-          <el-table v-show="groupList.length>0"
-                    :data="groupList"
-                    style="width: 100%"
-                    ref="multipleTable" border>
-
-            <el-table-column
-              prop="name"
-              label="名称"
-              align="left"
-            >
-              <template slot-scope="scope">
-                <el-button type="text" @click="getCase(scope.$index)">{{ scope.row.name }}</el-button>
-              </template>
-
-            </el-table-column>
-
-            <el-table-column
-              prop="result"
-              label="结果"
-              align="left"
-            >
-            </el-table-column>
-
-
-          </el-table>
-        </el-col>
+        </el-table>
       </el-row>
 
       <el-row style="margin-top:50px;" v-show="caseInfoShow">
-        <div style="width:100%;padding:10px 0;text-align: center;font-size: 24px;">case详情</div>
+        <div style="width:100%;padding:20px 0;text-align: center;font-size: 24px;">case详情</div>
 
         <el-table v-show="apiResult.length>0"
                   :data="apiResult"
@@ -247,6 +251,10 @@
 
       </div>
 
+
+
+
+
     </el-main>
   </el-container>
 </template>
@@ -260,6 +268,7 @@
     name: 'caseExecuteResultDialogComponent',
     data(){
       return {
+
         detailInfoShow:false,
         caseInfoShow:false,
         groupList:[],
@@ -289,6 +298,38 @@
     methods: {
       formatJson,
       isJson,
+      handleClick(tab, event) {
+        console.log(tab.index);
+        this.detailInfoShow=false;
+        this.caseInfoShow=false;
+
+        var index = tab.index;
+
+        var id = this.records[index].id
+
+        var vueThis = this;
+        vueThis.testCaseAxios({
+          method: 'get',
+          url: "report/getGroupReport?historyId=" + id
+        })
+          .then(function (res) {
+            if (res.data.code === 10000) {
+              vueThis.groupList = res.data.data;
+
+              vueThis.groupList.forEach(function(val,index,arr){
+                if(val.result){
+                  val.result = 'true'
+                }else{
+                  val.result = 'false'
+                }
+              })
+
+            }
+          })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！');
+          });
+      },
       getData() {
         var vueThis = this;
         var caseID = this.$route.query.id;
@@ -300,6 +341,31 @@
           .then(function (res) {
             if (res.data.code === 10000) {
               vueThis.records = res.data.data;
+
+
+              //获取最近一次执行的 group信息
+              var id = vueThis.records[0].id
+              vueThis.testCaseAxios({
+                method: 'get',
+                url: "report/getGroupReport?historyId=" + id
+              })
+              .then(function (res) {
+                if (res.data.code === 10000) {
+                  vueThis.groupList = res.data.data;
+
+                  vueThis.groupList.forEach(function(val,index,arr){
+                    if(val.result){
+                      val.result = 'true'
+                    }else{
+                      val.result = 'false'
+                    }
+                  })
+
+                }
+              })
+              .catch(function (err) {
+                vueThis.$message.error('抱歉，服务器异常！');
+              });
 
             }
           })

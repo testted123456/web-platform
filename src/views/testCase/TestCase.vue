@@ -59,6 +59,9 @@
                 <div class="pd12">
                   <el-button  type="text" @click="pastApi">粘贴接口</el-button>
                 </div>
+                <div class="pd12">
+                  <el-button  type="text" @click="pastCase" v-if="copyCaseShow">粘贴测试用例</el-button>
+                </div>
               </el-col>
             </el-form-item>
           </el-form>
@@ -174,6 +177,8 @@
         </div>
         <!--执行结果弹窗-->
         <api-execute-result-dialog-component v-if="dialog.contentType === 8" ></api-execute-result-dialog-component>
+        <!--粘贴case弹窗-->
+        <copy-case-dialog-component v-if="dialog.contentType === 9" ref="copyCaseInfo" ></copy-case-dialog-component>
 
         <!--弹窗footer-->
         <span v-if="dialog.footerVisible" slot="footer" class="dialog-footer">
@@ -198,17 +203,20 @@
   import editApiDialogComponent from '@/views/testCase/editApiDialogComponent.vue';
   import searchApiDialogComponent from '@/views/testCase/searchApiDialogComponent.vue';
   import apiExecuteResultDialogComponent from '@/views/testCase/apiExecuteResultDialogComponent.vue';
+  import copyCaseDialogComponent from '@/views/testCase/copyCaseDialogComponent.vue';
+
   import {moveup, movedown} from  "@/assets/js/tableRowMove.js";
   import marked from 'marked';
   import {lodash} from 'lodash';
 
   export default {
-    components: {editApiDialogComponent, addApiDialogComponent, intellCheckDialogComponent,searchApiDialogComponent,apiExecuteResultDialogComponent},
+    components: {editApiDialogComponent, addApiDialogComponent, intellCheckDialogComponent,searchApiDialogComponent,apiExecuteResultDialogComponent,copyCaseDialogComponent},
 
     name: 'TestCase',
 
     data () {
       return {
+        copyCaseShow:false,
         changeState:false,
         checkboxExecutable:true,
         multipleSelection:[],
@@ -387,6 +395,7 @@
                       system:vueThis.apiSystems[0].value
                     }
                     vueThis.testCase.testCaseInterfaces = [];
+                    vueThis.copyCaseShow = true;
                   }else{
                     // case编辑页面
                     // 获取测试用例详情信息内容
@@ -596,6 +605,48 @@
             this.dialog.visible = false;
           }
             break;
+          case 9: {   //9=粘贴用例
+            this.dialog.visible = false;
+
+            var caseInfo = this.$refs.copyCaseInfo.getCase();
+
+            if(caseInfo.length > 0){
+              var id = caseInfo[0].id;
+              var vueThis = this;
+              vueThis.testCaseAxios({
+                method: 'get',
+                data: {
+                },
+                url: "testCase/getCaseById?id=" + id
+              })
+                .then(function (res) {
+                  if(res.data.code === 10000){
+                    vueThis.testCase = res.data.data;
+                    vueThis.testCase.id = null;
+                    if(vueThis.testCase.caseType){
+                      vueThis.testCase.caseType = "true"
+                    }else{
+                      vueThis.testCase.caseType = "false"
+                    }
+                    vueThis.$nextTick(()=>{
+                      var that = vueThis;
+                      vueThis.testCase.testCaseInterfaces.forEach(function(e,index){
+                        e.checked = true;
+                        that.$refs.multipleTable.toggleRowSelection(e,true);
+
+                      });
+                      vueThis.filterExecteId();
+                    })
+                  }
+                })
+                .catch(function (err) {
+                  vueThis.$message.error('抱歉，服务器异常！' );
+                });
+
+            }
+
+          }
+            break;
           default:
             break;
         }
@@ -646,6 +697,17 @@
           visible: true,   //整个弹窗显示与否
           footerVisible: true,
           contentType: 1,  //弹窗内容显示什么
+          width: '90%',
+          extend: {}
+        }
+      },
+      /*粘贴测试用例*/
+      pastCase(){
+        this.dialog = {
+          title: '粘贴测试用例',
+          visible: true,   //整个弹窗显示与否
+          footerVisible: true,
+          contentType: 9,  //弹窗内容显示什么
           width: '90%',
           extend: {}
         }

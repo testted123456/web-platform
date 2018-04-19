@@ -32,6 +32,9 @@
                 <div class="pd12">
                   <el-button type="text" @click="caseExecuteResult" v-if="executeBtnShow" >执行结果</el-button>
                 </div>
+                <div class="pd12">
+                  <el-button  type="text" @click="pastFlowCase" v-if="copyFlowCaseShow">粘贴用例流</el-button>
+                </div>
               </el-col>
             </el-form-item>
           </el-form>
@@ -113,6 +116,9 @@
         <add-flow-case-dialog-component ref="caseSelectView" v-if="dialog.contentType === 1"  :selectedCases="flowCase.testCases"></add-flow-case-dialog-component>
         <!--执行结果弹窗-->
         <flow-case-execute-result-dialog-component v-if="dialog.contentType === 4" ></flow-case-execute-result-dialog-component>
+        <!--粘贴用例流弹窗-->
+        <copy-flow-case-dialog-component ref="copyFlowCase" v-if="dialog.contentType === 5" ></copy-flow-case-dialog-component>
+
         <!--删除接口弹窗-->
         <span v-if="dialog.contentType === 2" >是否删除此用例？</span>
         <!--执行弹窗-->
@@ -149,6 +155,7 @@
 
   import addFlowCaseDialogComponent from '@/views/flowCase/addFlowCaseDialogComponent.vue';
   import flowCaseExecuteResultDialogComponent from '@/views/flowCase/FlowCaseExecuteResultDialogComponent.vue';
+  import copyFlowCaseDialogComponent from '@/views/flowCase/copyFlowCaseDialogComponent.vue'
   import {moveup, movedown} from  "@/assets/js/tableRowMove.js";
   import marked from 'marked';
   import {lodash} from 'lodash';
@@ -156,10 +163,11 @@
 
 
   export default {
-    components: {ElRow, addFlowCaseDialogComponent,flowCaseExecuteResultDialogComponent},
+    components: {ElRow, addFlowCaseDialogComponent,flowCaseExecuteResultDialogComponent,copyFlowCaseDialogComponent},
     name: 'FlowCase',
     data () {
       return {
+        copyFlowCaseShow:false,
         ws:null,
         changeState:false,
         serverSendMsg:null,
@@ -299,7 +307,7 @@
                   updatedTime:null,
                   testCases:[]
                 }
-                console.log(vueThis.flowCase.env)
+                vueThis.copyFlowCaseShow = true;
               }else{ // flowCase编辑页面
                 // 获取flowCase详情信息内容
                 vueThis.executeBtnShow = true;//执行按钮显示
@@ -358,6 +366,46 @@
             this.dialog.visible = false;
           }
             break;
+          case 5: { //5=粘贴用例流
+            this.dialog.visible = false;
+            var flowcaseInfo = this.$refs.copyFlowCase.getFlowCase();
+
+            if(flowcaseInfo.length > 0){
+              var flowCaseID = flowcaseInfo[0].id;
+              var vueThis = this;
+              vueThis.testCaseAxios({
+                method: 'get',
+                data: {
+                },
+                url:'flowCase/getById?id='+flowCaseID
+              })
+                .then(function(res){
+                  if (res.data.code === 10000 ) {
+                    vueThis.flowCase = res.data.data;
+                    vueThis.flowCase.id = null;
+
+                    vueThis.$nextTick(()=>{
+                      var that = vueThis;
+                      vueThis.flowCase.testCases.forEach(function(e,index){
+                        e.checked = true;
+                        that.$refs.multipleTable.toggleRowSelection(e,true);
+
+                      })
+                      vueThis.filterExecteId();
+                    })
+                  }else{
+                    vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
+                  }
+                })
+                .catch(function (err) {
+                  vueThis.$message.error('抱歉，服务器异常！' );
+                });
+
+            }
+
+          }
+            break;
+
           default:
             break;
         }
@@ -386,6 +434,17 @@
           visible: true,   //整个弹窗显示与否
           footerVisible: true,
           contentType: 1,  //弹窗内容显示什么
+          width: '80%',
+          extend: {}
+        }
+      },
+      /*粘贴用例流*/
+      pastFlowCase(){
+        this.dialog = {
+          title: '粘贴用例流',
+          visible: true,   //整个弹窗显示与否
+          footerVisible: true,
+          contentType: 5,  //弹窗内容显示什么
           width: '80%',
           extend: {}
         }

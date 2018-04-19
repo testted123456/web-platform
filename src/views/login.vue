@@ -1,6 +1,9 @@
 <template>
-  <div v-if="ifLoginShow">
+  <div class="loginShow" v-if="ifLoginShow">
     <div class="login-center">
+      <div class="logo"><img src="../assets/logo88.png" alt="element-logo" ></div>
+      <!--<div style="color:#444;font-size:24px;padding-bottom: 6px;">测试平台</div>-->
+
       <el-form ref="form"  label-width="1px" :model="formData">
         <el-form-item label="" prop="username" :rules="[{ required: true, message: '用户名不能为空'} ]">
           <el-input v-model="formData.username" placeholder="输入用户名"></el-input>
@@ -38,7 +41,9 @@
    },
   methods: {
     checkLogin(){
-        var vueThis = this;
+      this.ifLoginShow = true;
+
+      var vueThis = this;
         vueThis.usrAxios({
           method: 'get',
           url: 'env/getAllEnvs'
@@ -121,9 +126,32 @@
     width:100%;
     height:100%;
   }
+  .loginShow{
+    width:100%;
+    height:100%;
+    position: fixed;
+    top:0;
+    left:0;
+    background-image: url("../assets/loginbg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
   .login-center{
-    width:330px;
-    margin:200px auto 0;
+    width: 330px;
+    margin: 200px auto 0;
+    /*border: 1px solid #ccc;*/
+    padding: 51px 50px 20px;
+    border-radius: 5px;
+    background: #fff;
+  }
+  .logo{
+    width:100px;
+    height:100px;
+    margin:0 auto;
+  }
+  .logo img{
+    width:100%;
   }
 </style>
 

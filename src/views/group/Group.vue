@@ -42,6 +42,9 @@
                 <div class="pd12">
                   <el-button type="text" @click="caseExecuteResult" v-if="executeBtnShow" >执行结果</el-button>
                 </div>
+                <div class="pd12">
+                  <el-button  type="text" @click="pastGroup" v-if="copyGroupShow">粘贴测试集</el-button>
+                </div>
               </el-col>
             </el-form-item>
           </el-form>
@@ -121,6 +124,8 @@
       >
         <!--添加接口弹窗-->
         <add-test-case-dialog-component ref="caseSelectView" v-if="dialog.contentType === 1"  :selectedCases="group.testCaseList"></add-test-case-dialog-component>
+        <!--粘贴测试集弹窗-->
+        <copy-group-dialog-component ref="copyGroupInfo" v-if="dialog.contentType === 5"  ></copy-group-dialog-component>
         <!--执行结果弹窗-->
         <case-execute-result-dialog-component v-if="dialog.contentType === 4" ></case-execute-result-dialog-component>
         <!--删除接口弹窗-->
@@ -151,16 +156,19 @@
 
   import addTestCaseDialogComponent from '@/views/group/addTestCaseDialogComponent.vue';
   import caseExecuteResultDialogComponent from '@/views/group/caseExecuteResultDialogComponent.vue';
+  import copyGroupDialogComponent from '@/views/group/copyGroupDialogComponent.vue';
+
   import {moveup, movedown} from  "@/assets/js/tableRowMove.js";
   import marked from 'marked';
   import {lodash} from 'lodash';
   import ElRow from "element-ui/packages/row/src/row";
 
   export default {
-    components: {ElRow, addTestCaseDialogComponent,caseExecuteResultDialogComponent},
+    components: {ElRow, addTestCaseDialogComponent,caseExecuteResultDialogComponent,copyGroupDialogComponent},
     name: 'Group',
     data () {
       return {
+        copyGroupShow:false,
         changeState:false,
         serverSendMsg:null,
         percentageNum:0,
@@ -294,6 +302,7 @@
                   jobTime:'',
                   testCaseList:[]
                 }
+                vueThis.copyGroupShow = true;
                 console.log(vueThis.group.env)
               }else{ // group编辑页面
                 // 获取group详情信息内容
@@ -375,6 +384,49 @@
             this.dialog.visible = false;
           }
             break;
+          case 5: {   //5=粘贴测试集
+            this.dialog.visible = false;
+
+            var groupInfo = this.$refs.copyGroupInfo.getGroup();
+
+            if(groupInfo.length > 0){
+              var groupID = groupInfo[0].id;
+              var vueThis = this;
+
+              vueThis.groupAxios({
+                method: 'get',
+                data: {
+                },
+                url:'getById?id='+groupID
+              })
+                .then(function(res){
+                  if (res.data.code === 10000 ) {
+                    vueThis.group = res.data.data;
+                    vueThis.group.id = null;
+
+                    vueThis.$nextTick(()=>{
+                      var that = vueThis;
+                      vueThis.group.testCaseList.forEach(function(e,index){
+                        // e.checked = true;
+                        // that.$refs.multipleTable.toggleRowSelection(e,true);
+                        if(e.checked){
+                          that.$refs.multipleTable.toggleRowSelection(e,true);
+                        }
+                      })
+                      vueThis.filterExecteId();
+                    })
+                  }else{
+                    vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
+                  }
+                })
+                .catch(function (err) {
+                  vueThis.$message.error('抱歉，服务器异常！' );
+                });
+
+            }
+          }
+            break;
+
           default:
             break;
         }
@@ -403,6 +455,17 @@
           visible: true,   //整个弹窗显示与否
           footerVisible: true,
           contentType: 1,  //弹窗内容显示什么
+          width: '80%',
+          extend: {}
+        }
+      },
+      /*粘贴group*/
+      pastGroup(){
+        this.dialog = {
+          title: '粘贴测试集',
+          visible: true,   //整个弹窗显示与否
+          footerVisible: true,
+          contentType: 5,  //弹窗内容显示什么
           width: '80%',
           extend: {}
         }

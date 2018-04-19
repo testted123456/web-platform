@@ -1,28 +1,64 @@
 <template>
-  <el-container id="envDB">
+  <el-container id="user">
     <el-main>
-      <div style="width: 60%;padding-left: 20%;border: 1px">
+      <div style="width: 100%;border: 1px">
       <el-table
-        :data="appearENVs"
+        :data="appearUsers"
         stripe
       >
         <el-table-column
-          label="环境"
+          label="姓名"
           >
           <template slot-scope="scope">
-            <el-input v-model="appearENVs[scope.$index].name"></el-input>
+            <el-input v-model="appearUsers[scope.$index].username"></el-input>
           </template>
         </el-table-column>
 
         <el-table-column
-          label="数据库分组"
+          label="中文名"
         >
           <template slot-scope="scope">
-            <el-select v-model="appearENVs[scope.$index].dbGroup.id" placeholder="请选择">
+            <el-input v-model="appearUsers[scope.$index].nickname"></el-input>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="备份人"
+        >
+          <template slot-scope="scope">
+            <el-input v-model="appearUsers[scope.$index].backUp"></el-input>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="上级"
+        >
+          <template slot-scope="scope">
+            <el-input v-model="appearUsers[scope.$index].superior"></el-input>
+          </template>
+        </el-table-column>
+
+
+
+        <el-table-column
+          label="角色"
+        >
+          <template slot-scope="scope">
+
+            <!--<el-select v-model="appearUsers[scope.$index].dbGroup.id" placeholder="请选择">-->
+              <!--<el-option-->
+                <!--v-for="item in dbGroups"-->
+                <!--:key="item.id"-->
+                <!--:label="item.groupName"-->
+                <!--:value="item.id">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+
+            <el-select v-model="appearUsers[scope.$index].roles" multiple placeholder="请选择">
               <el-option
-                v-for="item in dbGroups"
+                v-for="item in roles"
                 :key="item.id"
-                :label="item.groupName"
+                :label="item.roleName"
                 :value="item.id">
               </el-option>
             </el-select>
@@ -33,13 +69,13 @@
           label="" >
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">
-              <el-button @click.native.prevent="del(scope.$index, appearENVs)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
+              <el-button @click.native.prevent="del(scope.$index, appearUsers)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAdd(scope.$index, appearENVs)">
-              <el-button @click.native.prevent="addRow(scope.$index, appearENVs)"  type="text" size="small"><i class="el-icon-plus"></i></el-button>
+            <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAdd(scope.$index, appearUsers)">
+              <el-button @click.native.prevent="addRow(scope.$index, appearUsers)"  type="text" size="small"><i class="el-icon-plus"></i></el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="保存" placement="top">
-              <el-button @click.native.prevent="save(scope.$index, appearENVs)" type="text" size="small"><i class="el-icon-location-outline"></i></el-button>
+              <el-button @click.native.prevent="save(scope.$index, appearUsers)" type="text" size="small"><i class="el-icon-location-outline"></i></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -51,7 +87,7 @@
         :current-page.sync="currentPage"
         :page-size="pageSize"
         layout="prev, pager, next, jumper"
-        :total="envs.length"
+        :total="users.length"
         >
       </el-pagination>
       </div>
@@ -75,10 +111,8 @@
 
       data() {
           return {
-              envs:[
-              ],
-              dbGroups:[
-              ],
+              users:[],
+              roles: [],
               currentPage: 1,
               pageSize: 10,
               delDialogVisible: false,
@@ -88,9 +122,9 @@
       },
 
       computed:{
-        appearENVs(){
-          var maxIndex = Math.min(this.pageSize *this.currentPage, this.envs.length);
-          var arr = this.envs.slice(this.pageSize *(this.currentPage - 1), maxIndex)
+        appearUsers(){
+          var maxIndex = Math.min(this.pageSize *this.currentPage, this.users.length);
+          var arr = this.users.slice(this.pageSize *(this.currentPage - 1), maxIndex)
           return arr;
         }
       },
@@ -103,17 +137,40 @@
         init(){
           var vueThis = this;
 
-          this.testCaseAxios({
+          this.usrAxios({
             method: 'get',
-            url: 'env/getAllEnvs'
+            url: 'user/getAllRoles'
+          }).then(function (res) {
+            if(res.data.code === 10000){
+              vueThis.roles = res.data.data;
+
+//              if(vueThis.roles === null || vueThis.roles.length === 0){
+//                vueThis.roles = [{
+//                  id:'',
+//                  roleName: ''
+//                }];
+//              }
+            }else {
+              this.$message.error('抱歉，获取角色失败：' + res.data.msg);
+            }
+          }).catch(function (err) {
+            this.$message.error('抱歉，服务器异常！' );
+          });
+
+          this.usrAxios({
+            method: 'get',
+            url: 'user/getAllUsers'
           }).then(function (res) {
               if(res.data.code === 10000){
-                vueThis.envs = res.data.data;
+                vueThis.users = res.data.data;
 
-                if(vueThis.envs === null || vueThis.envs.length === 0){
-                    vueThis.envs =[{
-                      name: '',
-                      dbGroup:{}
+                if(vueThis.users === null || vueThis.users.length === 0){
+                    vueThis.users =[{
+                      userName: '',
+                      nickName:'',
+                      backUp: '',
+                      superior:'',
+                      roles:[]
                     }]
                 }
               }else{

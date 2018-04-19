@@ -119,11 +119,11 @@
             }
             break;
             case '6':{
-
+              this.$router.push({name: 'Role'});
             }
             break;
             case '7':{
-
+              this.$router.push({name: 'User'});
             }
               break;
           }

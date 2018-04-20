@@ -38,3 +38,8 @@ function saveCookie (name, value, hours)
 
 
 export default {saveCookie: saveCookie, getCookie: getCookie}
+
+
+
+//          this.cookieManager.saveCookie("name",this.formData.account,"23");
+//          this.cookieManager.getCookie("name");

@@ -32,19 +32,15 @@ String.prototype.trim = function () {
   return this.replace(/(^\s*)|(\s*$)/g, "");
 }
 
-
+Vue.prototype.userInfo = {
+  name:''
+}
 Vue.prototype.rights = {
-  testCaseAdd:false
-
+  testCaseAdd:true,
+  dbGroupRight:true
 }
 
-// kkkk = false;
-//
-// if(right = 22 || right = 23){
-//   kkkk = true;
-// }else{
-//   kkkk = false;
-// }
+
 
 
 Vue.prototype.testCaseAxios = axios.create({
@@ -65,7 +61,7 @@ Vue.prototype.groupAxios = axios.create({
 });
 
 Vue.prototype.usrAxios = axios.create({
-  baseURL: 'http://192.168.32.88:8080'
+  baseURL: 'http://192.168.32.88:8088'
 });
 
 Vue.prototype.apiAxios.interceptors.response.use(data => {
@@ -99,5 +95,8 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
+
+
+
 
 

@@ -216,6 +216,7 @@
 
     data () {
       return {
+        testCaseAdd:false,
         copyCaseShow:false,
         changeState:false,
         checkboxExecutable:true,
@@ -351,6 +352,8 @@
       },
       //获取数据
       getData() {
+        console.log(this.rights.testCaseAdd)
+
         this.executeBtnShow = false;//执行按钮隐藏
         var caseID = this.$route.query.id;
         this.intellCheckData = [];
@@ -792,7 +795,7 @@
               tcId:this.testCase.id
             }
             if ("WebSocket" in window) {
-              this.ws = new WebSocket("ws://"+ this.wsServer +"/case/webSocket/123");
+              this.ws = new WebSocket("ws://"+ this.wsServer +"/case/webSocket/"+ this.$route.query.id +'/'+ this.userInfo.name);
               //this.ws = new Object();
               this.ws.onopen = function () {
                 textArea_this.testCaseAxios({

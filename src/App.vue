@@ -8,26 +8,40 @@
   export default {
     name: 'App',
     mounted() {
-      console.log('first')
       this.getRights();
     },
     methods:{
       getRights(){
         var vueThis = this;
-        vueThis.testCaseAxios({
+        vueThis.usrAxios({
           method: 'get',
-          data: {
-          },
-          url: "testCase/getCaseById?id=" + 1
+
+          url: '/user/getUserBySession'
         })
-          .then(function (res) {
-            if(res.data.code === 10000){
-              console.log('jkhkjhkjhjhkjhkjhkhhjkhjkhjkhkjhjjk')
+        .then(function (res) {
+          if(res.data.code === 10000){
+            var roles = res.data.data.roles;
+            var roleName = roles[0].roleName;
+
+            if(roles.length == 0){
+              vueThis.$message.error('请去联系管理员添加角色' );
+            }else if(roles.length == 1){
+              if(roleName == 'tester'){
+                vueThis.rights.testCaseAdd = false;
+              }
+              console.log(vueThis.rights.testCaseAdd)
+
+
+
             }
-          })
-          .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
-          });
+          }
+        })
+        .catch(function (err) {
+          console.log(err)
+          vueThis.$message.error('抱歉，服务器异常！9999999999' );
+          vueThis.$router.push({name: 'Login'});
+
+        });
       }
     }
   }

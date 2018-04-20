@@ -32,19 +32,15 @@ String.prototype.trim = function () {
   return this.replace(/(^\s*)|(\s*$)/g, "");
 }
 
-
+Vue.prototype.userInfo = {
+  name:''
+}
 Vue.prototype.rights = {
-  testCaseAdd:false
-
+  testCaseAdd:true,
+  dbGroupRight:true
 }
 
-// kkkk = false;
-//
-// if(right = 22 || right = 23){
-//   kkkk = true;
-// }else{
-//   kkkk = false;
-// }
+
 
 
 Vue.prototype.testCaseAxios = axios.create({
@@ -99,5 +95,8 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
+
+
+
 
 

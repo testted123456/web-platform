@@ -41,20 +41,19 @@
    },
   methods: {
     checkLogin(){
-      this.ifLoginShow = true;
 
-      var vueThis = this;
+        var vueThis = this;
         vueThis.usrAxios({
           method: 'get',
-          url: 'env/getAllEnvs'
+          url: '/user/getUserBySession'
         }).then(function (res) {
           if(res.data.code === 10000){
             vueThis.$router.push('/home/welcome');
           }else {
-            this.ifLoginShow = true;
+            vueThis.ifLoginShow = true;   //让登录输入框显示出来
           }
         }).catch(function (err) {
-          this.ifLoginShow = true;
+          vueThis.ifLoginShow = true;
           vueThis.$message.error('抱歉，服务器异常！' );
         });
     },
@@ -88,22 +87,6 @@
             this.loading = false;
             return;
           });
-
-
-
-//          this.cookieManager.saveCookie("name",this.formData.account,"23");
-//          this.cookieManager.saveCookie("pws",this.formData.pws,"23");
-//          this.cookieManager.getCookie("name");
-//          this.cookieManager.getCookie("pws");
-
-
-//          this.$http.post("http://localhost:8082/inter/api/addApi").then(function (res) {
-//            if(res.data.succeed){
-//              this.$router.push('/home/welcome');
-//            }else{
-//            }
-//          }, function (res) {
-//          });
 
 
         } else {

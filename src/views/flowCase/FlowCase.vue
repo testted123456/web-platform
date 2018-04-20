@@ -496,7 +496,7 @@
               tcId:this.flowCase.id
             }
             if ("WebSocket" in window) {
-              this.ws = new WebSocket("ws://"+ this.wsServer +"/case/webSocket/123");
+              this.ws = new WebSocket("ws://"+ this.wsServer +"/case/webSocket/"+ this.$route.query.id +'/'+ this.userInfo.name);
               //this.ws = new Object();
               this.ws.onopen = function () {
                 textArea_this.testCaseAxios({

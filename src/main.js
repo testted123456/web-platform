@@ -65,7 +65,7 @@ Vue.prototype.groupAxios = axios.create({
 });
 
 Vue.prototype.usrAxios = axios.create({
-  baseURL: 'http://192.168.32.88:8080'
+  baseURL: 'http://192.168.32.88:8088'
 });
 
 Vue.prototype.apiAxios.interceptors.response.use(data => {

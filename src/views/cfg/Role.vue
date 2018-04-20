@@ -1,16 +1,16 @@
 <template>
-  <el-container id="dbGroup">
+  <el-container id="Role">
     <el-main>
       <div style="width: 60%;padding-left: 20%;border: 1px">
       <el-table
-        :data="appearDBGroups"
+        :data="appearRoles"
         stripe
       >
         <el-table-column
-          label="数据库组"
+          label="角色"
           >
           <template slot-scope="scope">
-            <el-input v-model="appearDBGroups[scope.$index].groupName"></el-input>
+            <el-input v-model="appearRoles[scope.$index].roleName"></el-input>
           </template>
         </el-table-column>
 
@@ -18,15 +18,15 @@
           label="" >
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">
-              <el-button @click.native.prevent="del(scope.$index, appearDBGroups)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
+              <el-button @click.native.prevent="del(scope.$index, appearRoles)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
             </el-tooltip>
 
-            <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAdd(scope.$index, appearDBGroups)">
-              <el-button @click.native.prevent="addRow(scope.$index, appearDBGroups)"  type="text" size="small"><i class="el-icon-plus"></i></el-button>
+            <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAdd(scope.$index, appearRoles)">
+              <el-button @click.native.prevent="addRow(scope.$index, appearRoles)"  type="text" size="small"><i class="el-icon-plus"></i></el-button>
             </el-tooltip>
 
             <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="保存" placement="top">
-              <el-button @click.native.prevent="save(scope.$index, appearDBGroups)" type="text" size="small"><i class="el-icon-location-outline"></i></el-button>
+              <el-button @click.native.prevent="save(scope.$index, appearRoles)" type="text" size="small"><i class="el-icon-location-outline"></i></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -38,7 +38,7 @@
         :current-page.sync="currentPage"
         :page-size="pageSize"
         layout="prev, pager, next, jumper"
-        :total="dbGroups.length"
+        :total="roles.length"
         >
       </el-pagination>
       </div>
@@ -50,19 +50,19 @@
   import {formatJson, isJson} from "@/assets/js/formatJson.js";
 
   export default{
-      name: 'DBGroup',
+      name: 'Role',
       data() {
           return {
-              dbGroups:[],
+              roles:[],
               currentPage: 1,
               pageSize: 10
           }
       },
 
       computed:{
-        appearDBGroups(){
-          var maxIndex = Math.min(this.pageSize *this.currentPage, this.dbGroups.length);
-          var arr = this.dbGroups.slice(this.pageSize *(this.currentPage - 1), maxIndex);
+        appearRoles(){
+          var maxIndex = Math.min(this.pageSize *this.currentPage, this.roles.length);
+          var arr = this.roles.slice(this.pageSize *(this.currentPage - 1), maxIndex);
           return arr;
         }
       },
@@ -75,20 +75,21 @@
         init(){
           var vueThis = this;
 
-          this.testCaseAxios({
+          this.usrAxios({
             method: 'get',
-            url: 'db/getAllDBGroup'
+            url: 'user/getAllRoles'
           }).then(function (res) {
             if(res.data.code === 10000){
-              vueThis.dbGroups = res.data.data;
+              vueThis.roles = res.data.data;
 
-              if(vueThis.dbGroups === null || vueThis.dbGroups.length === 0){
-                vueThis.dbGroups = [{
-                    groupName: ''
+              if(vueThis.roles === null || vueThis.roles.length === 0){
+                vueThis.roles = [{
+                    id:'',
+                    roleName: ''
                 }];
               }
             }else {
-              this.$message.error('抱歉，获取数据库分组失败：' + res.data.msg);
+              this.$message.error('抱歉，获取角色失败：' + res.data.msg);
             }
           }).catch(function (err) {
             this.$message.error('抱歉，服务器异常！' );
@@ -96,7 +97,7 @@
         },
 
         showAdd(index, rows){
-          if(rows.length == index + 1 && (rows[index].groupName != '')){
+          if(rows.length == index + 1 && (rows[index].roleName != '')){
             return true;
           }else{
             return false;
@@ -105,9 +106,9 @@
 
         //新增消息头一行
         addRow(index, rows){
-          if(rows.length == index + 1 && (rows[index].groupName != '' )){
+          if(rows.length == index + 1 && (rows[index].roleName != '' )){
             rows.push({
-              groupName: ''
+              roleName: ''
             })
           }
         },
@@ -134,26 +135,26 @@
 
           if(typeof(rows[index].id) != 'undefined'){
 
-            this.testCaseAxios({
+            this.usrAxios({
               method: 'post',
               data: rows[index],
-              url: 'db/delDBGroup'
+              url: 'user/delRole'
             }).then(function (res) {
               if(res.data.code === 10000){
 
-                if(index == 0 && rows.length == 1 && vueThis.currentPage === 1 && vueThis.dbGroups.length <= vueThis.pageSize){
-                  rows[index].groupName = '';
+                if(index == 0 && rows.length == 1 && vueThis.currentPage === 1 && vueThis.roles.length <= vueThis.pageSize){
+                  rows[index].roleName = '';
                 }else {
                   let totalIndex = vueThis.pageSize *(vueThis.currentPage - 1) + index;
-                  vueThis.dbGroups.splice(totalIndex, 1);
+                  vueThis.roles.splice(totalIndex, 1);
                 }
 
                 vueThis.$message({
-                  message: '恭喜你，删除数据库分组成功',
+                  message: '恭喜你，删除角色成功',
                   type: 'success'
                 });
               }else {
-                vueThis.$message.error('抱歉，获取数据库分组失败：' + res.data.msg);
+                vueThis.$message.error('抱歉，获取角色失败：' + res.data.msg);
                 return;
               }
             }).catch(function (err) {
@@ -161,39 +162,37 @@
               return;
             });
           }else{
-            if(index == 0 && rows.length == 1 && vueThis.currentPage === 1 && vueThis.dbGroups.length <= vueThis.pageSize){
-              rows[index].groupName = '';
+            if(index == 0 && rows.length == 1 && vueThis.currentPage === 1 && vueThis.roles.length <= vueThis.pageSize){
+              rows[index].roleName = '';
             }else {
               let totalIndex = vueThis.pageSize *(this.currentPage - 1) + index;
-              vueThis.dbGroups.splice(totalIndex, 1);
+              vueThis.roles.splice(totalIndex, 1);
             }
           }
         },
 
-        //保存dbgroup
+        //保存role
         save(index, rows){
           let vueThis = this;
 
-          this.testCaseAxios({
+          this.usrAxios({
             method: 'post',
             data: rows[index],
-            url: 'db/addDBGroup'
+            url: 'user/addRole'
           }).then(function (res) {
             if(res.data.code === 10000){
               rows[index] = res.data.data;
-//              vueThis.dbGroups.push(rows[index]);
 
               vueThis.$message({
-                message: '恭喜你，保存数据库分组成功',
+                message: '恭喜你，保存角色成功',
                 type: 'success'
               });
             }else{
-              vueThis.$message({
-                message: '抱歉，保存数据库分组失败' + res.data.msg,
-                type: 'success'
-              });
+              vueThis.$message.error('抱歉，保存角色失败：' + res.data.msg);
+
             }
           }).catch(function (err) {
+              console.log(err)
             vueThis.$message.error('服务器请求失败！');
           })
         },

@@ -6,6 +6,8 @@ import EnvDB from '@/views/cfg/EnvDB'
 import SysGit from '@/views/cfg/SysGit'
 import SysBranch from '@/views/cfg/SysBranch'
 import EnvSys from '@/views/cfg/EnvSys'
+import Role from '@/views/cfg/Role'
+import User from '@/views/cfg/User'
 
 export default {
   path: 'cfg',
@@ -46,6 +48,16 @@ export default {
       path: 'sysBranch',
       name: 'SysBranch',
       component: SysBranch
+    },
+    {
+      path: 'role',
+      name: 'Role',
+      component: Role
+    },
+    {
+      path: 'user',
+      name: 'User',
+      component: User
     }
   ]
 }

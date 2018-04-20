@@ -56,7 +56,7 @@
             label="" >
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">
-                <el-button @click.native.prevent="deleteRow(scope.$index, appearENVs)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
+                <el-button @click.native.prevent="del(scope.$index, appearENVs)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAdd(scope.$index, appearENVs)">
                 <el-button @click.native.prevent="addRow(scope.$index, appearENVs)"  type="text" size="small"><i class="el-icon-plus"></i></el-button>
@@ -215,25 +215,31 @@
         }
       },
 
-      deleteRow(index, rows){
-          this.delDialogVisible = true;
-          this.delIndex = index;
-          this.delEnvSys = rows;
+      del(index, rows){
+        this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.deleteRow(index, rows);
+        }).catch((err) => {
+          console.log(err)
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
 
       //删除消息头中的一行
-      del() {
-        this.delDialogVisible = false;
-        let index = this.delIndex;
-        let rows = this.delEnvSys;
+      deleteRow(index, rows) {
 
         if(typeof(rows[index].id) != 'undefined' ){
           let vueThis = this;
 
           this.testCaseAxios({
             method: 'post',
-            data: rows[index],
-            url: 'sysEnv/del'
+            url: 'sysEnv/del?id=' + rows[index].id
           }).then(function (res) {
             if(res.data.code === 10000){
 

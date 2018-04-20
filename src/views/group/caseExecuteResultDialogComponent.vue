@@ -3,7 +3,7 @@
     <el-main>
       <el-tabs  type="card" @tab-click="handleClick">
 
-        <el-tab-pane v-for="tab in records" :label="tab.createdTime"></el-tab-pane>
+        <el-tab-pane v-for="tab in records" :label="tab.createdTime" :key="tab.id"></el-tab-pane>
 
       </el-tabs>
 

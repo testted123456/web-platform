@@ -8,6 +8,7 @@ import SysBranch from '@/views/cfg/SysBranch'
 import EnvSys from '@/views/cfg/EnvSys'
 import Role from '@/views/cfg/Role'
 import User from '@/views/cfg/User'
+import Privilege from '@/views/cfg/Privilege'
 
 export default {
   path: 'cfg',
@@ -58,6 +59,11 @@ export default {
       path: 'user',
       name: 'User',
       component: User
+    },
+    {
+      path: 'privilege',
+      name: 'Privilege',
+      component: Privilege
     }
   ]
 }

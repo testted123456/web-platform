@@ -61,8 +61,8 @@
               <el-menu-item-group>
                 <el-menu-item index="6">角色</el-menu-item>
                 <el-menu-item index="7">用户</el-menu-item>
+                <el-menu-item index="8">权限</el-menu-item>
               </el-menu-item-group>
-
             </el-submenu>
           </el-menu>
     </el-aside>
@@ -124,6 +124,10 @@
             break;
             case '7':{
               this.$router.push({name: 'User'});
+            }
+            break;
+            case '8':{
+              this.$router.push({name: 'Privilege'});
             }
               break;
           }

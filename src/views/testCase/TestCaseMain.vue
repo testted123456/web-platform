@@ -157,8 +157,6 @@
           var vueThis = this;
           vueThis.testCaseAxios({
             method: 'get',
-            data: {
-            },
             url: "testCase/getCaseTreeByPId?pId=" + node.data.id
           })
           .then(function (res) {
@@ -243,8 +241,6 @@
         if(node.isLeaf === false){//删除case目录
           vueThis.testCaseAxios({
             method: 'get',
-            data: {
-            },
             url: 'testCase/deleteTestCaseDir?id='+nodeId
           })
           .then(function (res) {
@@ -263,8 +259,6 @@
         }else{ //删除某个case
           vueThis.testCaseAxios({
             method: 'get',
-            data: {
-            },
             url: "testCase/deleteCase?id=" + nodeId
           })
           .then(function (res) {

@@ -59,8 +59,6 @@
         }else{
           vueThis.groupAxios({
             method: 'get',
-            data: {
-            },
             url: 'getById?id='+ groupDirID
           })
           .then(function (res) {

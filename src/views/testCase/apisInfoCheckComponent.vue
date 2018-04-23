@@ -168,8 +168,6 @@
         // 获取表格内容
         vueThis.testCaseAxios({
           method: 'get',
-          data: {
-          },
           url: "testCase/checkCase?testCaseId=" + caseID
         })
         .then(function (res) {
@@ -188,8 +186,6 @@
           separate.scrollIntoView();
         vueThis.testCaseAxios({
           method: 'get',
-          data: {
-          },
           url: "testCaseInterface/checkApi?id="+ data.id +"&apiId="+ data.apiId + "&lastBranch="+ branch
         })
         .then(function (res) {

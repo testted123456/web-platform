@@ -360,8 +360,6 @@
         //获取系统
         vueThis.testCaseAxios({
           method: 'get',
-          data: {
-          },
           url: "sysCfg/getAllAlias"
         })
         .then(function (res) {
@@ -375,8 +373,6 @@
             //获取环境列表select
             vueThis.testCaseAxios({
               method: 'get',
-              data: {
-              },
               url: "env/getAllEnvs"
             })
               .then(function (res) {
@@ -403,8 +399,6 @@
                     vueThis.executeBtnShow = true;//执行按钮显示
                     vueThis.testCaseAxios({
                       method: 'get',
-                      data: {
-                      },
                       url: "testCase/getCaseById?id=" + caseID
                     })
                       .then(function (res) {
@@ -616,8 +610,6 @@
               var vueThis = this;
               vueThis.testCaseAxios({
                 method: 'get',
-                data: {
-                },
                 url: "testCase/getCaseById?id=" + id
               })
                 .then(function (res) {

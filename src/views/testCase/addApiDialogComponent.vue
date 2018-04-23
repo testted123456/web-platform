@@ -152,8 +152,6 @@
           var vueThis = this;
           vueThis.apiAxios({
             method: 'get',
-            data: {
-            },
             url: "api/getApiTreeByPId?pId=" + node.data.id
           })
           .then(function (res) {

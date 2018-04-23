@@ -132,8 +132,6 @@
           var vueThis = this;
           vueThis.testCaseAxios({
             method: 'get',
-            data: {
-            },
             url: "testCase/getCaseTreeByPId?pId=" + node.data.id
           })
           .then(function (res) {
@@ -158,8 +156,6 @@
           var vueThis = this;
           vueThis.testCaseAxios({
             method: 'get',
-            data: {
-            },
             url: "flowCase/getTreeByPId?pId=" + node.data.id
           })
             .then(function (res) {

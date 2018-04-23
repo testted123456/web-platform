@@ -129,8 +129,6 @@
           var vueThis = this;
           vueThis.groupAxios({
             method: 'get',
-            data: {
-            },
             url: 'getByPid?pid='+node.data.id
           })
             .then(function (res) {

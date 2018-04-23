@@ -153,8 +153,6 @@
             var vueThis = this;
             vueThis.groupAxios({
               method: 'get',
-              data: {
-              },
               url: 'getByPid?pid='+node.data.id
             })
             .then(function(res){
@@ -237,8 +235,6 @@
         if(node.isLeaf === false){//删除case目录
           vueThis.groupAxios({
             method: 'get',
-            data: {
-            },
             url: "deleteGroup?id=" + nodeId
           })
           .then(function (res) {
@@ -259,8 +255,6 @@
         }else{ //删除某个case
           vueThis.groupAxios({
             method: 'get',
-            data: {
-            },
             url: "deleteGroup?id=" + nodeId
           })
           .then(function (res) {

@@ -7,7 +7,7 @@
           stripe
         >
           <el-table-column
-            label="环境"
+            label="环境" sortable
           >
             <template slot-scope="scope">
               <el-select v-model="appearENVs[scope.$index].env.id" placeholder="请选择">
@@ -22,7 +22,7 @@
           </el-table-column>
 
           <el-table-column
-            label="系统"
+            label="系统" sortable
           >
             <template slot-scope="scope">
               <el-select v-model="appearENVs[scope.$index].systemCfg.id" placeholder="请选择">

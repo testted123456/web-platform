@@ -3,11 +3,6 @@
         <el-main>
             <div style="width: 60%;padding-left: 20%;border: 1px">
 
-                <el-button :disabled='!$store.state.permission.dbgroup.del' @click.native.prevent="del(scope.$index, appearDBGroups)"
-                           type="text" size="small"><i class="el-icon-delete"></i></el-button>
-
-                <el-button :disabled='!$store.state.permission.dbgroup.edit' @click.native.prevent="del(scope.$index, appearDBGroups)"
-                           type="text" size="small"><i class="el-icon-delete"></i></el-button>
 
                 <el-table
                     :data="appearDBGroups"

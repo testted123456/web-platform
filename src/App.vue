@@ -35,7 +35,7 @@
                 vueThis.userInfo.name = res.data.data.username;
 
                 var permissData={
-                  del:true,
+                  del:false,
                   edit:false
                 }
                 vueThis.$store.commit( 'permission/' + 'changeDBgroup', permissData)

@@ -77,6 +77,8 @@
               vueThis.$router.push('/home/welcome');
 
               vueThis.userInfo.name = res.data.data.username;
+              console.log(vueThis.userInfo.name)
+
 
             }else {
               vueThis.$message.error('登陆失败：' + res.data.msg);

@@ -40,7 +40,7 @@
                 }
                 vueThis.$store.commit( 'permission/' + 'changeDBgroup', permissData)
 
-                console.log(permissData)
+                console.log(vueThis.userInfo.name)
               }
             }
           }

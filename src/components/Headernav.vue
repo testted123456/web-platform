@@ -1,6 +1,7 @@
 <template>
   <el-header class="qcHeader">
     <div class="header-logo"><img src="../assets/logo3.png" alt="element-logo" ></div>
+    <div class="user">{{$store.state.permission.userInfo.nickname}}</div>
 
     <el-menu :default-active="portalActiveIndex" class="el-menu-demo header-operations" mode="horizontal"
              @select="handleSelect">
@@ -9,10 +10,11 @@
       <el-menu-item index="3">用例流</el-menu-item>
       <el-menu-item index="4">测试集</el-menu-item>
       <el-menu-item index="5">配置</el-menu-item>
-      <el-menu-item index="6">监控</el-menu-item>
-      <el-menu-item index="7">报表</el-menu-item>
-      <el-menu-item index="8">工具</el-menu-item>
-      <el-menu-item index="9">质量管理</el-menu-item>
+      <el-menu-item index="6">报表</el-menu-item>
+      <el-menu-item index="7">工具</el-menu-item>
+      <el-menu-item index="8">质量管理</el-menu-item>
+      <el-menu-item index="9" @click="loginOut">退出</el-menu-item>
+
     </el-menu>
   </el-header>
 </template>
@@ -30,7 +32,8 @@
             '/home/flowCase',
             '/home/group',
             '/home/cfg',
-            '/home/gjhgkjgkjhkhj',
+            '/home/report',
+            '/home/report',
             '/home/report'
         ]
     };
@@ -45,6 +48,25 @@
         if(index > 8){return}
         var routerName = this.routers[index - 1];
         this.$router.push(routerName);
+    },
+    loginOut(){
+      console.log('out')
+      var vueThis = this;
+      vueThis.usrAxios({
+        method: 'get',
+        url: 'user/logout'
+      }).then(function (res) {
+        if(res.data.code === 10000){
+          vueThis.$router.push({name:'Login'});
+
+        }else {
+          vueThis.$message.error('退出失败：' + res.data.msg);
+
+        }
+      }).catch(function (err) {
+        vueThis.$message.error('抱歉，服务器异常！' );
+
+      });
     }
   }
 }
@@ -53,6 +75,12 @@
 <style>
   a{
     text-decoration:none;
+  }
+  .user{
+    float: left;
+    color: white;
+    font-size: 18px;
+    padding-top: 14px;
   }
     .qcHeader{
         width:100%;

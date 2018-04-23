@@ -24,7 +24,6 @@ Vue.prototype.ApiCopyId = 0;
 Vue.prototype.ApiCopyData = {};
 Vue.prototype.apiServer = 'http://192.168.32.88:8082/inter/';
 Vue.prototype.testCaseServer = 'http://192.168.32.88:8083/case/';
-Vue.prototype.wsServer = '192.168.32.88:8083';
 Vue.prototype.groupServer = 'http://192.168.32.150:8082/group/';
 Vue.prototype.apisInfoCheckaddress = 'http://localhost:8080/#/';
 Vue.prototype.aceManager = aceManager
@@ -32,11 +31,13 @@ String.prototype.trim = function () {
   return this.replace(/(^\s*)|(\s*$)/g, "");
 }
 
-Vue.prototype.userInfo = {
-  name:''
-}
+// Vue.prototype.userInfo = {
+//   username:'',
+//   nickname:''
+// }
 
 
+Vue.prototype.wsServer = '192.168.32.138:8083';
 
 
 Vue.prototype.testCaseAxios = axios.create({

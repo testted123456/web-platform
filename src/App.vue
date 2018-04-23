@@ -32,21 +32,23 @@
             }else if(roles.length == 1){
               if(roleName == 'tester'){
 
-                vueThis.userInfo.name = res.data.data.username;
+                var userInfo={
+                  username:res.data.data.username,
+                  nickname:res.data.data.nickname
+                }
+                vueThis.$store.commit( 'permission/' + 'changeUserInfo', userInfo)
 
                 var permissData={
-                  del:false,
+                  del:true,
                   edit:false
                 }
                 vueThis.$store.commit( 'permission/' + 'changeDBgroup', permissData)
 
-                console.log(vueThis.userInfo.name)
               }
             }
           }
         })
         .catch(function (err) {
-          // vueThis.$message.error('抱歉，服务器异常！9999999999' );
           vueThis.$router.push({name: 'Login'});
 
         });

@@ -36,12 +36,11 @@
 
     };
   },
-   created() {
+   mounted() {
      this.checkLogin();
    },
   methods: {
     checkLogin(){
-
         var vueThis = this;
         vueThis.usrAxios({
           method: 'get',
@@ -54,7 +53,6 @@
           }
         }).catch(function (err) {
           vueThis.ifLoginShow = true;
-          // vueThis.$message.error('抱歉，服务器异常！' );
         });
     },
 
@@ -76,8 +74,16 @@
             if(res.data.code === 10000){
               vueThis.$router.push('/home/welcome');
 
-              vueThis.userInfo.name = res.data.data.username;
-              console.log(vueThis.userInfo.name)
+              // vueThis.userInfo.username = res.data.data.username;
+              // vueThis.userInfo.nickname = res.data.data.nickname;
+
+              // console.log(vueThis.userInfo.username)
+
+              var userInfo={
+                username:res.data.data.username,
+                nickname:res.data.data.nickname
+              }
+              vueThis.$store.commit( 'permission/' + 'changeUserInfo', userInfo)
 
 
             }else {

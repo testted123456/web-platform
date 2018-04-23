@@ -773,7 +773,6 @@
       },
       //执行弹窗方法
       execCase: function () {
-
         if(this.checkboxExecutable){
           if(this.selectedApiArr.length > 0){
             this.dialog = {
@@ -793,10 +792,14 @@
               tcId:this.testCase.id
             }
 
+            
             if ("WebSocket" in window) {
-              this.ws = new WebSocket("ws://"+ this.wsServer +"/case/webSocket/"+ this.$route.query.id + this.userInfo.name + '1');
+              this.ws = new WebSocket("ws://"+ this.wsServer +"/case/webSocket/"+ this.$route.query.id + textArea_this.$store.state.permission.userInfo.username + '1');
               //this.ws = new Object();
+
+
               this.ws.onopen = function () {
+
                 textArea_this.testCaseAxios({
                   method: 'post',
                   data: exectData,

@@ -68,12 +68,12 @@
 
             <el-table-column
               prop="name"
-              label="测试用例名称"
+              label="名称"
               align="left"
               min-width="170"
             >
               <template slot-scope="scope">
-                <el-button type="text" @click="transToCase(scope.row.id)">{{ scope.row.name }}</el-button>
+                <el-button type="text" @click="transToCase(scope.row.id,scope.row.divisionType)">{{ scope.row.name }}</el-button>
               </template>
             </el-table-column>
 
@@ -254,8 +254,12 @@
         }
       },
       // 跳转到case页面
-      transToCase(id){
-        this.$router.push({name: 'TestCase', query: {id: id}});
+      transToCase(id,type){
+        if(type){
+          this.$router.push({name: 'TestCase', query: {id: id}});
+        }else{
+          this.$router.push({name: 'FlowCase', query: {id: id}});
+        }
       },
       //因存储地址变了  复选之前已经选中的复选框
       reCheck(){
@@ -371,6 +375,7 @@
         switch (this.dialog.contentType) {
           case 1: {   //1=添加接口
             this.group.testCaseList = this.$refs.caseSelectView.getCases();
+            console.log(this.group.testCaseList)
             this.dialog.visible = false;
             this.changeState = true;
           }

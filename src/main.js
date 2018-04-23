@@ -35,10 +35,6 @@ String.prototype.trim = function () {
 Vue.prototype.userInfo = {
   name:''
 }
-Vue.prototype.rights = {
-  testCaseAdd:true,
-  dbGroupRight:true
-}
 
 
 

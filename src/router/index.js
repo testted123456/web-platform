@@ -6,6 +6,7 @@ import ApisInfoCheck from '@/views/testCase/apisInfoCheckComponent.vue'
 import AceTest from '@/views/AceTest'
 import Echart from '@/views/echartDemo'
 
+
 Vue.use(Router)
 
 export default new Router({

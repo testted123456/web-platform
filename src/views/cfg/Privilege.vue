@@ -85,7 +85,8 @@
               pageSize: 10,
               delDialogVisible: false,
               delIndex: '',
-              delEnv: {}
+              delEnv: {},
+              role:[]
           }
       },
 
@@ -129,7 +130,11 @@
                     vueThis.privileges =[{
                       system: '',
                       url:'',
-                      roles:[]
+                      roles:[
+                        {"id":'',
+                          "roleName":''
+                        }
+                      ]
                     }]
                 }
               }else{
@@ -179,10 +184,14 @@
         addRow(index, rows){
           if(rows.length == index + 1 && rows[index].name != ''  ){
             rows.push({
-              name: '',
-              dbGroup:{}
+              system: '',
+              url:'',
+              roles:[
+                  {"id":'',
+                "roleName":''
+              }]
             })
-            this.envs.push(rows[index+1]);
+            this.privileges.push(rows[index+1]);
           }
         },
 
@@ -204,6 +213,8 @@
         //删除消息头中的一行
         deleteRow(index, rows) {
           let vueThis = this;
+
+          console.log(this.privileges)
 
           if(typeof(rows[index].id) != 'undefined' ){
             this.testCaseAxios({

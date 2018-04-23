@@ -46,7 +46,7 @@
           }
         })
         .catch(function (err) {
-          vueThis.$message.error('抱歉，服务器异常！9999999999' );
+          // vueThis.$message.error('抱歉，服务器异常！9999999999' );
           vueThis.$router.push({name: 'Login'});
 
         });

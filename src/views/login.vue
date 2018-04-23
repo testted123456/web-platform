@@ -54,7 +54,7 @@
           }
         }).catch(function (err) {
           vueThis.ifLoginShow = true;
-          vueThis.$message.error('抱歉，服务器异常！' );
+          // vueThis.$message.error('抱歉，服务器异常！' );
         });
     },
 

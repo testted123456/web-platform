@@ -75,16 +75,19 @@
           }).then(function (res) {
             if(res.data.code === 10000){
               vueThis.$router.push('/home/welcome');
+
+              vueThis.userInfo.name = res.data.data.username;
+
             }else {
               vueThis.$message.error('登陆失败：' + res.data.msg);
-              this.loginState = '登录';
-              this.loading = false;
+              vueThis.loginState = '登录';
+              vueThis.loading = false;
               return;
             }
           }).catch(function (err) {
             vueThis.$message.error('抱歉，服务器异常！' );
-            this.loginState = '登录';
-            this.loading = false;
+            vueThis.loginState = '登录';
+            vueThis.loading = false;
             return;
           });
 

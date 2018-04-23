@@ -8,11 +8,15 @@
   export default {
     name: 'App',
     mounted() {
+      console.log('first')
       this.getRights();
     },
     methods:{
+      //获取用户权限
       getRights(){
+
         var vueThis = this;
+
         vueThis.usrAxios({
           method: 'get',
 
@@ -27,17 +31,21 @@
               vueThis.$message.error('请去联系管理员添加角色' );
             }else if(roles.length == 1){
               if(roleName == 'tester'){
-                vueThis.rights.testCaseAdd = false;
+
+                vueThis.userInfo.name = res.data.data.username;
+
+                var permissData={
+                  del:true,
+                  edit:false
+                }
+                vueThis.$store.commit( 'permission/' + 'changeDBgroup', permissData)
+
+                console.log(permissData)
               }
-              console.log(vueThis.rights.testCaseAdd)
-
-
-
             }
           }
         })
         .catch(function (err) {
-          console.log(err)
           vueThis.$message.error('抱歉，服务器异常！9999999999' );
           vueThis.$router.push({name: 'Login'});
 

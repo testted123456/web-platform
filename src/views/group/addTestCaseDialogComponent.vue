@@ -112,10 +112,13 @@
     methods: {
       handleNodeClick(data, node, instance) {
         this.currentNode =  this.$refs.tree.currentNode.node;
+        this.currentNode.data.divisionType = true;
         console.log(this.currentNode.data)
       },
       handleNodeClick2(data, node, instance) {
         this.currentNode =  this.$refs.tree2.currentNode.node;
+        this.currentNode.data.divisionType = false;
+
         console.log(this.currentNode.data)
 
       },

@@ -35,20 +35,16 @@ String.prototype.trim = function () {
 Vue.prototype.userInfo = {
   name:''
 }
-Vue.prototype.rights = {
-  testCaseAdd:true,
-  dbGroupRight:true
-}
 
 
 
 
 Vue.prototype.testCaseAxios = axios.create({
-  baseURL: 'http://192.168.32.88:8083/case/'
+  baseURL: 'http://192.168.32.138:8083/case/'
 });
 
 Vue.prototype.apiAxios = axios.create({
-  baseURL: 'http://192.168.32.88:8082/inter/',
+  baseURL: 'http://192.168.32.138:8082/inter/',
   // headers: {'Access-Control-Allow-Origin': '*'}
   withCredentials: true
 
@@ -56,12 +52,12 @@ Vue.prototype.apiAxios = axios.create({
 
 Vue.prototype.groupAxios = axios.create({
   // baseURL: 'http://192.168.32.234:8082/group/'
-  baseURL: 'http://192.168.32.88:8084/group/'
+  baseURL: 'http://192.168.32.138:8084/group/'
 
 });
 
 Vue.prototype.usrAxios = axios.create({
-  baseURL: 'http://192.168.32.88:8088'
+  baseURL: 'http://192.168.32.138:8088'
 });
 
 Vue.prototype.apiAxios.interceptors.response.use(data => {

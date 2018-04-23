@@ -190,7 +190,7 @@
     </el-main>
     <!--页面最底部 footer-->
     <el-footer style="text-align: right">
-      <el-button type="primary" @click="saveCase" :disabled='rights.testCaseAdd' >确认</el-button>
+      <el-button type="primary" @click="saveCase"  >确认</el-button>
       <el-button type="success" @click="execCase()" v-if="executeBtnShow">执行</el-button>
     </el-footer>
   </el-container>
@@ -352,8 +352,6 @@
       },
       //获取数据
       getData() {
-        console.log(this.rights.testCaseAdd)
-
         this.executeBtnShow = false;//执行按钮隐藏
         var caseID = this.$route.query.id;
         this.intellCheckData = [];
@@ -794,6 +792,7 @@
               apiIds:this.selectedApiArr,
               tcId:this.testCase.id
             }
+
             if ("WebSocket" in window) {
               this.ws = new WebSocket("ws://"+ this.wsServer +"/case/webSocket/"+ this.$route.query.id +'/'+ this.userInfo.name);
               //this.ws = new Object();

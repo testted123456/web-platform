@@ -9,10 +9,11 @@
       <el-menu-item index="3">用例流</el-menu-item>
       <el-menu-item index="4">测试集</el-menu-item>
       <el-menu-item index="5">配置</el-menu-item>
-      <el-menu-item index="6">监控</el-menu-item>
+      <!--<el-menu-item index="6">监控</el-menu-item>-->
       <el-menu-item index="7">报表</el-menu-item>
       <el-menu-item index="8">工具</el-menu-item>
       <el-menu-item index="9">质量管理</el-menu-item>
+      <el-menu-item index="10">注销</el-menu-item>
     </el-menu>
   </el-header>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <el-header class="qcHeader">
     <div class="header-logo"><img src="../assets/logo3.png" alt="element-logo" ></div>
-    <div class="user">{{$store.state.permission.userInfo.nickname}}</div>
+    <div class="user">欢迎，{{$store.state.permission.userInfo.nickname}}</div>
 
     <el-menu :default-active="portalActiveIndex" class="el-menu-demo header-operations" mode="horizontal"
              @select="handleSelect">

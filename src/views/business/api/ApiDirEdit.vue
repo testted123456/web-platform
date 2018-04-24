@@ -81,7 +81,7 @@
 
         this.apiAxios({
           method: 'post',
-          data: vueThis.api,
+          data: api,
           url: 'api/updateApiDir'
         }).then(function (res) {
           if(res.data.code === 10000){

@@ -540,7 +540,7 @@
 
         this.apiAxios({
           method: 'post',
-          data: vueThis.tempApi,
+          data: tempApi,
           url: "api/addApi"
         })
 //        this.$http.post(this.apiServer + "api/addApi", tempApi)

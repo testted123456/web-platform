@@ -736,7 +736,7 @@
          visible: true,
          footerVisible: false,
          contentType: 8,
-         width: '80%',
+         width: '90%',
          extend: {}
         }
       },

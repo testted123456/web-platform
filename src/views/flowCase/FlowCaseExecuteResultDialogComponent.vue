@@ -7,10 +7,20 @@
                   style="width: 100%"
                   ref="multipleTable" border>
 
+          <el-table-column
+            prop="apiName"
+            label="接口名称"
+            align="left"
+          >
+            <template slot-scope="scope">
+              <span>{{ scope.row.tcName }}</span>
+            </template>
+
+          </el-table-column>
 
           <el-table-column
             prop="apiName"
-            label="名称"
+            label="用例名称"
             align="left"
           >
             <template slot-scope="scope">
@@ -18,6 +28,8 @@
             </template>
 
           </el-table-column>
+
+
 
           <el-table-column
             prop="apiStepName"
@@ -117,17 +129,6 @@
           </el-input>
         </el-row>
 
-        <!--<el-row class="hTitle">*响应</el-row>-->
-        <!--<el-row>-->
-        <!--<el-input-->
-        <!--type="textarea"-->
-        <!--autosize-->
-        <!--readonly-->
-        <!--resize="none"-->
-        <!--placeholder=""-->
-        <!--v-model="apiDetail.responseBody">-->
-        <!--</el-input>-->
-        <!--</el-row>-->
 
         <el-row class="hTitle">*实际响应</el-row>
         <el-row>
@@ -245,7 +246,7 @@
         // 获取表格内容
         vueThis.testCaseAxios({
           method: 'get',
-          url: "report/getCaseReport?id=" + caseID
+          url: "report/getCaseReport?id=" + caseID + '&type=1'
         })
           .then(function (res) {
             if (res.data.code === 10000) {

@@ -498,7 +498,7 @@
             this.msgQueue = [];
             this.msgLock = 1;
             this.socketArrLength = 0;
-            
+
             if ("WebSocket" in window) {
 
               this.ws = new WebSocket("ws://"+ this.wsServer +"/case/webSocket/"+ this.$route.query.id + textArea_this.$store.state.permission.userInfo.username + '2');

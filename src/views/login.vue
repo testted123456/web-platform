@@ -133,7 +133,7 @@
   }
   .login-center{
     width: 330px;
-    margin: 200px auto 0;
+    margin: 160px auto 0;
     /*border: 1px solid #ccc;*/
     padding: 51px 50px 20px;
     border-radius: 5px;

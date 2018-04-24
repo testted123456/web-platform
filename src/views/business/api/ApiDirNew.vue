@@ -44,24 +44,32 @@
       saveApi(){
         this.api.pId = this.$route.query.pId;
 
-        this.$http.post(this.apiServer+"api/addApiDir", this.api).then(function (res) {
+        let vueThis = this;
+
+        this.apiAxios({
+          method: 'post',
+          data: vueThis.api,
+          url: "api/addApiDir"
+        })
+//        this.$http.post(this.apiServer+"api/addApiDir", this.api)
+          .then(function (res) {
 
           if(res.data.code == '10000') {
-            this.$message({
+            vueThis.$message({
               message: '恭喜你，新增接口成功',
               type: 'success'
             });
 
-            this.api.id = res.data.data.id;
-            this.api.type = false;
-            this.$store.commit('changeApiStatus', 1);
-            this.$store.commit('setNewApi', this.api);
-            this.$router.push({ name: 'ApiDirEdit', params: { id: this.api.id }});
+            vueThis.api.id = res.data.data.id;
+            vueThis.api.type = false;
+            vueThis.$store.commit('changeApiStatus', 1);
+            vueThis.$store.commit('setNewApi', vueThis.api);
+            vueThis.$router.push({ name: 'ApiDirEdit', params: { id: vueThis.api.id }});
           }else{
-            this.$message.error('抱歉，新增接口失败：' + res.data.msg);
+            vueThis.$message.error('抱歉，新增接口失败：' + res.data.msg);
           }
         },function (res) {
-          this.$message.error('服务器请求失败！');
+            vueThis.$message.error('服务器请求失败！');
         })
       }
     }

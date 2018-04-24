@@ -402,15 +402,36 @@
 
       //初始化页面
       init(){
-        this.$http.get(this.testCaseServer + "sysCfg/getAllAlias").then(function (res) {
-          if(res.data.code === 10000){
-            let tempSystems = this.apiSystems;
+
+        let vueThis = this;
+
+        this.testCaseAxios({
+          method: 'get',
+          url: 'sysCfg/getAllAlias'
+        }).then(function (res) {
+          if(res.data.code == '10000'){
+            if(res.data.code === 10000){
+            let tempSystems = vueThis.apiSystems;
             res.data.data.forEach(function (e, index) {
               tempSystems.push({value: e, label: e})
             });
           }
-        },function (res) {
+          }else{
+            vueThis.$message.error('抱歉，获取系统失败：' + res.data.msg);
+          }
+        }).catch(function (err) {
+          vueThis.$message.error('抱歉，服务器异常！' );
         });
+
+//        this.$http.get(this.testCaseServer + "sysCfg/getAllAlias").then(function (res) {
+//          if(res.data.code === 10000){
+//            let tempSystems = this.apiSystems;
+//            res.data.data.forEach(function (e, index) {
+//              tempSystems.push({value: e, label: e})
+//            });
+//          }
+//        },function (res) {
+//        });
       },
 
       handleClick(tab, event) {
@@ -515,23 +536,31 @@
           return;
         }
 
-        this.$http.post(this.apiServer + "api/addApi", tempApi).then(function (res) {
+        let vueThis = this;
+
+        this.apiAxios({
+          method: 'post',
+          data: vueThis.tempApi,
+          url: "api/addApi"
+        })
+//        this.$http.post(this.apiServer + "api/addApi", tempApi)
+          .then(function (res) {
             if(res.data.code === 10000){
 
-              this.$message({
+              vueThis.$message({
                 message: '恭喜你，新增接口成功',
                 type: 'success'
               });
 
-              this.$store.commit('changeApiStatus', 1);
-              this.api.id = res.data.data.id;
-              this.$store.commit('setNewApi', this.api);
-              this.$router.push({ name: 'ApiEdit', params: { id: this.api.id }})
+              vueThis.$store.commit('changeApiStatus', 1);
+              vueThis.api.id = res.data.data.id;
+              vueThis.$store.commit('setNewApi', vueThis.api);
+              vueThis.$router.push({ name: 'ApiEdit', params: { id: this.api.id }})
             }else{
-              this.$message.error('抱歉，新增接口失败：' + res.data.msg);
+              vueThis.$message.error('抱歉，新增接口失败：' + res.data.msg);
             }
         }, function (res) {
-          this.$message.error('服务器请求失败！');
+            vueThis.$message.error('服务器请求失败！');
         });
       }
     }

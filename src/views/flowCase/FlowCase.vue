@@ -167,6 +167,11 @@
     name: 'FlowCase',
     data () {
       return {
+        msgQueue:[],
+        msgLock:1,
+        shortMessage:'',
+        socketArrLength:0,
+
         copyFlowCaseShow:false,
         ws:null,
         changeState:false,
@@ -489,6 +494,11 @@
               apiIds:this.selectedCaseArr,
               tcId:this.flowCase.id
             }
+
+            this.msgQueue = [];
+            this.msgLock = 1;
+            this.socketArrLength = 0;
+            
             if ("WebSocket" in window) {
 
               this.ws = new WebSocket("ws://"+ this.wsServer +"/case/webSocket/"+ this.$route.query.id + textArea_this.$store.state.permission.userInfo.username + '2');
@@ -515,8 +525,21 @@
               this.ws.onmessage = function (evt) {
                 // 注意evt的数据类型
                 console.log('接收到的数据：', evt)
-                textArea_this.excResult =  textArea_this.excResult +  '\n' + evt.data;
+                // textArea_this.excResult =  textArea_this.excResult +  '\n' + evt.data;
                 // ws.broadcast('resultChanged', evt.data)
+
+                if(evt.data === 'end'){
+                  textArea_this.ws.onclose();
+                }else{
+                  textArea_this.msgQueue.push(evt.data);
+
+                  if(textArea_this.msgLock >= 1){
+                    textArea_this.checkMsg();
+                    console.log(11111111111111)
+                  }
+
+                }
+
               };
 
               this.ws.onclose = function(){
@@ -538,6 +561,42 @@
 
 
       },
+
+      checkMsg() {
+
+        // if (this.msgLock === 0) {
+        //   return;
+        // }
+
+        var vue_this = this;
+
+        if(this.msgQueue.length > this.socketArrLength){
+          if (this.msgQueue.length > 0) {
+
+            this.msgLock--;
+            this.socketArrLength = this.msgQueue.length;
+
+            var len = this.msgQueue.length;
+            for (var i = 0; i < len; i++) {
+              this.shortMessage += this.msgQueue[i] + '\n';
+            }
+            this.excResult = this.shortMessage;
+
+            console.log(this.excResult);
+            this.shortMessage = '';
+
+            setTimeout(function () {
+              vue_this.msgLock++;
+              vue_this.checkMsg();
+            }, 1000);
+          }
+        }else{
+          return
+        }
+
+
+      },
+
 
       // 关闭webscoket
       closeWebSocket(){

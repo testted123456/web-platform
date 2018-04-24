@@ -141,6 +141,17 @@
           </el-input>
         </el-row>
 
+        <el-row class="hTitle" v-show="isExceptionShow">*异常</el-row>
+        <el-row v-show="isExceptionShow">
+          <el-input
+            type="textarea"
+            autosize
+            readonly
+            resize="none"
+            placeholder=""
+            v-model="apiDetail.exception">
+          </el-input>
+        </el-row>
 
 
         <el-row class="hTitle">*预期结果</el-row>
@@ -212,8 +223,8 @@
     name: 'apiExecuteResultDialogComponent',
     data(){
       return {
+        isExceptionShow:true,
         detailInfoShow:false,
-
         apiResult:[],
         apiDetail:{
           url:'',
@@ -223,7 +234,7 @@
           responseBody:'',
           exception:'',
           assertions:[],
-          actualResponseBody:''
+          actualResponseBody:'',
         }
 
       }
@@ -275,6 +286,10 @@
         that.apiDetail.requestBody = formatJson(that.apiDetail.requestBody)
         that.apiDetail.responseBody = formatJson(that.apiDetail.responseBody)
         that.apiDetail.actualResponseBody = formatJson(that.apiDetail.actualResponseBody)
+        that.apiDetail.exception = formatJson(that.apiDetail.exception)
+        if(that.apiDetail.exception == null){
+          this.isExceptionShow = false;
+        }
 
 
         if(this.apiDetail.variables == null || this.apiDetail.variables == 'null' || this.apiDetail.variables.length == 0){

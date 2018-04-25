@@ -10,26 +10,7 @@
 
       <!--执行详情-->
       <el-row style="margin-top:30px;">
-        <!--<el-col :span="6">-->
-        <!--<el-table v-show="records.length>0"-->
-        <!--:data="records"-->
-        <!--style="width: 100%"-->
-        <!--ref="multipleTable" border>-->
-        <!--<el-table-column-->
-        <!--prop="createdTime"-->
-        <!--label="时间"-->
-        <!--align="left"-->
-        <!--&gt;-->
-        <!--<template slot-scope="scope">-->
-        <!--<el-button type="text" @click="getGroup(scope.row.id)">{{ scope.row.createdTime }}</el-button>-->
-        <!--</template>-->
 
-        <!--</el-table-column>-->
-        <!--</el-table>-->
-        <!--</el-col>-->
-        <!--<el-col :span="24" style="margin-left:40px;">-->
-        <!---->
-        <!--</el-col>-->
         <el-table v-show="groupList.length>0"
                   :data="groupList"
                   style="width: 100%"
@@ -57,6 +38,7 @@
         </el-table>
       </el-row>
 
+      <!--case详情-->
       <el-row style="margin-top:50px;" v-show="caseInfoShow">
         <div style="width:100%;padding:20px 0;text-align: center;font-size: 24px;">case详情</div>
 
@@ -95,170 +77,169 @@
             label="结果"
             align="left"
           >
+            <template slot-scope="scope">
+              <el-button type="text" v-bind:class="{ fontRed: !scope.row.result }">{{ scope.row.result?"true":"false" }}</el-button>
+            </template>
           </el-table-column>
         </el-table>
       </el-row>
-      <div v-show="detailInfoShow" style="padding-top:60px;">
-        <div style="width:100%;padding:10px 0;text-align: center;font-size: 24px;">接口执行信息</div>
-        <el-row class="hTitle">*接口url为</el-row>
-        <el-row>
-          <div class="jsonContent" >
-            {{apiDetail.url}}
-          </div>
-        </el-row>
 
 
-        <el-row class="hTitle">*自定义变量</el-row>
-        <el-row>
+      <!--api详情-->
+      <div ref = "separate">
+        <div v-show="detailInfoShow"  style="padding-top:40px;">
 
-          <el-table v-show="apiDetail.variables.length>0"
-                    :data="apiDetail.variables"
-                    style="width: 100%"
-                    ref="multipleTable" border>
+          <div style="width:100%;padding:10px 0;text-align: center;font-size: 24px;">接口: {{apiDetail.apiName}} 的执行信息</div>
 
-            <el-table-column
-              prop="Key"
-              label="Key"
-              align="left"
-            >
-            </el-table-column>
+          <el-row class="hTitle">*接口url为</el-row>
+          <el-row>
+            <div class="jsonContent" >
+              {{apiDetail.url}}
+            </div>
+          </el-row>
 
-            <el-table-column
-              prop="Value"
-              label="Value"
-              align="left"
-            >
-            </el-table-column>
-          </el-table>
+          <el-row class="hTitle">*自定义变量</el-row>
+          <el-row>
+            <el-table v-show="apiDetail.variables.length>0"
+                      :data="apiDetail.variables"
+                      style="width: 100%"
+                      ref="multipleTable" border>
 
-        </el-row>
+              <el-table-column
+                prop="Key"
+                label="Key"
+                align="left"
+              >
+              </el-table-column>
 
-        <el-row class="hTitle">*请求头</el-row>
-        <el-row>
+              <el-table-column
+                prop="Value"
+                label="Value"
+                align="left"
+              >
+              </el-table-column>
+            </el-table>
 
-          <el-table v-show="apiDetail.headers.length>0"
-                    :data="apiDetail.headers"
-                    style="width: 100%"
-                    ref="multipleTable" border>
+          </el-row>
 
-            <el-table-column
-              prop="Key"
-              label="Key"
-              align="left"
-            >
-            </el-table-column>
+          <el-row class="hTitle">*请求头</el-row>
+          <el-row>
 
-            <el-table-column
-              prop="Value"
-              label="Value"
-              align="left"
-            >
-            </el-table-column>
-          </el-table>
-        </el-row>
+            <el-table v-show="apiDetail.headers.length>0"
+                      :data="apiDetail.headers"
+                      style="width: 100%"
+                      ref="multipleTable" border>
 
-        <el-row class="hTitle">*请求参数</el-row>
-        <el-row>
-          <el-input
-            type="textarea"
-            autosize
-            readonly
-            resize="none"
-            placeholder="请输入内容"
-            v-model="apiDetail.requestBody">
-          </el-input>
-        </el-row>
+              <el-table-column
+                prop="Key"
+                label="Key"
+                align="left"
+              >
+              </el-table-column>
 
-        <!--<el-row class="hTitle">*响应</el-row>-->
-        <!--<el-row>-->
-        <!--<el-input-->
-        <!--type="textarea"-->
-        <!--autosize-->
-        <!--readonly-->
-        <!--resize="none"-->
-        <!--placeholder=""-->
-        <!--v-model="apiDetail.responseBody">-->
-        <!--</el-input>-->
-        <!--</el-row>-->
+              <el-table-column
+                prop="Value"
+                label="Value"
+                align="left"
+              >
+              </el-table-column>
+            </el-table>
+          </el-row>
 
-        <el-row class="hTitle">*实际响应</el-row>
-        <el-row>
-          <el-input
-            type="textarea"
-            autosize
-            readonly
-            resize="none"
-            placeholder=""
-            v-model="apiDetail.actualResponseBody">
-          </el-input>
-        </el-row>
+          <el-row class="hTitle">*请求参数</el-row>
+          <el-row v-show="apiDetail.requestBody !== null">
+            <el-input
+              type="textarea"
+              autosize
+              readonly
+              resize="none"
+              placeholder="请输入内容"
+              v-model="requestBodyResult">
+            </el-input>
+          </el-row>
 
-        <el-row class="hTitle" v-show="isExceptionShow">*异常</el-row>
-        <el-row v-show="isExceptionShow">
-          <el-input
-            type="textarea"
-            autosize
-            readonly
-            resize="none"
-            placeholder=""
-            v-model="apiDetail.exception">
-          </el-input>
-        </el-row>
 
-        <el-row class="hTitle">*预期结果</el-row>
-        <!--exception-->
-        <el-row>
-          <el-input
-            type="textarea"
-            autosize
-            readonly
-            resize="none"
-            placeholder=""
-            v-model="apiDetail.responseBody">
-          </el-input>
-        </el-row>
+          <el-row class="hTitle">*实际响应</el-row>
+          <el-row v-show="apiDetail.actualResponseBody !== null">
+            <el-input
+              type="textarea"
+              autosize
+              readonly
+              resize="none"
+              placeholder=""
+              v-model="actualResponseBodyResult">
+            </el-input>
+          </el-row>
 
-        <el-row class="hTitle">*断言结果</el-row>
-        <el-row>
-          <el-table v-show="apiDetail.assertions.length>0"
-                    :data="apiDetail.assertions"
-                    style="width: 100%"
-                    ref="multipleTable" border>
+          <el-row class="hTitle" >*异常</el-row>
+          <el-row v-show="apiDetail.exception !== null">
+            <el-input
+              type="textarea"
+              autosize
+              readonly
+              resize="none"
+              placeholder=""
+              v-model="exceptionResult">
+            </el-input>
+          </el-row>
 
-            <el-table-column
-              prop="actualResult"
-              label="预期结果"
-              align="left"
-            >
-            </el-table-column>
 
-            <el-table-column
-              prop="comparator"
-              label="比较符"
-              align="left"
-            >
-            </el-table-column>
-
-            <el-table-column
-              prop="expectResult"
-              label="实际结果"
-              align="left"
-            >
-            </el-table-column>
-
-            <el-table-column
-              prop="result"
-              label="结果"
-              align="left"
-            >
-            </el-table-column>
+          <el-row class="hTitle">*预期结果:{{ apiDetail.responseBody == null ? "" : (apiDetail.responseBody.staus?"成功":"失败") }}</el-row>
+          <el-row v-show="apiDetail.responseBody !== null">
+            <el-input
+              type="textarea"
+              autosize
+              readonly
+              resize="none"
+              placeholder=""
+              v-model="responseBodyResult">
+            </el-input>
+          </el-row>
 
 
 
-          </el-table>
+          <el-row class="hTitle">*断言结果</el-row>
+          <el-row>
+            <el-table v-show="apiDetail.assertions.length>0"
+                      :data="apiDetail.assertions"
+                      style="width: 100%"
+                      ref="multipleTable" border>
 
-        </el-row>
+              <el-table-column
+                prop="actualResult"
+                label="预期结果"
+                align="left"
+              >
+              </el-table-column>
 
+              <el-table-column
+                prop="comparator"
+                label="比较符"
+                align="left"
+              >
+              </el-table-column>
+
+              <el-table-column
+                prop="expectResult"
+                label="实际结果"
+                align="left"
+              >
+              </el-table-column>
+
+              <el-table-column
+                prop="result"
+                label="结果"
+                align="left"
+              >
+              </el-table-column>
+
+
+
+            </el-table>
+
+          </el-row>
+
+        </div>
       </div>
 
 
@@ -278,6 +259,11 @@
     name: 'caseExecuteResultDialogComponent',
     data(){
       return {
+        requestBodyResult:null,
+        responseBodyResult:null,
+        exceptionResult:null,
+        actualResponseBodyResult:null,
+
         isExceptionShow:true,
         detailInfoShow:false,
         caseInfoShow:false,
@@ -411,40 +397,87 @@
         this.apiResult = this.groupList[index].data;
         this.caseInfoShow = true;
       },
+
       getDetail(index){
-        this.detailInfoShow = true;
+
+        //详情数据对象
         this.apiDetail = this.apiResult[index]
-        this.apiDetail.requestBody = formatJson(this.apiDetail.requestBody)
-        this.apiDetail.responseBody = formatJson(this.apiDetail.responseBody)
-        this.apiDetail.actualResponseBody = formatJson(this.apiDetail.actualResponseBody)
-        that.apiDetail.exception = formatJson(that.apiDetail.exception)
-        if(that.apiDetail.exception == null){
-          this.isExceptionShow = false;
-        }
+        console.log(JSON.stringify(this.apiDetail))
+        // 显示详情页面
+        this.detailInfoShow = true;
+        var separate = this.$refs.separate;
+        separate.scrollIntoView();
 
-        if(this.apiDetail.variables == null || this.apiDetail.variables == 'null' || this.apiDetail.variables.length == 0){
-          this.apiDetail.variables = [];
-        }else{
-          if(typeof(this.apiDetail.variables) == "string"){
-            this.apiDetail.variables = JSON.parse(this.apiDetail.variables)
+        try {
+
+
+          // *请求参数
+          this.requestBodyResult = this.apiDetail.requestBody
+
+          if(typeof(this.apiDetail.requestBody) === "object" && this.apiDetail.requestBody !== null){
+            this.requestBodyResult = JSON.stringify(this.requestBodyResult)
+            this.requestBodyResult = JSON.parse(this.requestBodyResult)
+            this.requestBodyResult = formatJson(this.requestBodyResult)
           }
-        }
+          console.log(this.requestBodyResult)
 
-        if(this.apiDetail.headers == null || this.apiDetail.headers == 'null' || this.apiDetail.headers.length == 0){
-          this.apiDetail.headers = [];
-        }else{
-          if(typeof(this.apiDetail.headers) == "string"){
-            this.apiDetail.headers = JSON.parse(this.apiDetail.headers)
+
+
+
+
+
+          //*实际响应
+          this.actualResponseBodyResult = this.apiDetail.actualResponseBody
+
+          if(typeof(this.apiDetail.actualResponseBody) === "object" && this.apiDetail.actualResponseBody !== null){
+            this.actualResponseBodyResult = JSON.stringify(this.actualResponseBodyResult)
+            this.actualResponseBodyResult = JSON.parse(this.actualResponseBodyResult)
+            this.actualResponseBodyResult = formatJson(this.actualResponseBodyResult)
           }
-        }
+          console.log(this.actualResponseBodyResult)
 
 
-        if(this.apiDetail.assertions == null || this.apiDetail.assertions == 'null' || this.apiDetail.assertions.length == 0){
-          this.apiDetail.assertions = [];
-        }else{
-          if(typeof(this.apiDetail.assertions) == "string"){
-            this.apiDetail.assertions = JSON.parse(this.apiDetail.assertions)
+
+
+
+
+
+
+          //*异常
+          this.exceptionResult = this.apiDetail.exception
+
+          if(typeof(this.apiDetail.exception) === "object" && this.apiDetail.exception !== null){
+            this.exceptionResult = JSON.stringify(this.exceptionResult)
+            this.exceptionResult = JSON.parse(this.exceptionResult)
+            this.exceptionResult = formatJson(this.exceptionResult)
           }
+          console.log(this.exceptionResult)
+
+
+
+
+
+
+
+          // *预期结果
+          if(typeof(this.apiDetail.responseBody) === "object" && this.apiDetail.responseBody !== null){
+
+            this.responseBodyResult = this.apiDetail.responseBody.result;
+            this.responseBodyResult = JSON.stringify(this.responseBodyResult)
+            this.responseBodyResult = JSON.parse(this.responseBodyResult)
+            this.responseBodyResult = formatJson(this.responseBodyResult);
+
+          }else{
+            this.responseBodyResult = null;
+          }
+
+          console.log(this.responseBodyResult)
+
+
+
+
+
+        } catch(err) {
         }
       }
     }
@@ -453,6 +486,9 @@
 </script>
 
 <style scoped>
+  .fontRed{
+    color:red;
+  }
   .jsonContent{
     border:1px solid #bcbec2;
     padding:8px;

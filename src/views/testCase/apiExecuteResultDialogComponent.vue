@@ -159,6 +159,8 @@
             </el-input>
           </el-row>
 
+
+
           <el-row class="hTitle">*断言结果</el-row>
           <el-row>
             <el-table v-show="apiDetail.assertions.length>0"
@@ -202,6 +204,7 @@
 
         </div>
       </div>
+
     </el-main>
   </el-container>
 </template>
@@ -270,6 +273,7 @@
 
           //详情数据对象
           this.apiDetail = this.apiResult[index]
+          console.log(JSON.stringify(this.apiDetail))
           // 显示详情页面
           this.detailInfoShow = true;
           var separate = this.$refs.separate;
@@ -303,8 +307,6 @@
             }
             console.log(this.actualResponseBodyResult)
 
-            // this.apiDetail.actualResponseBody = formatJson(this.apiDetail.actualResponseBody)
-            // console.log(this.apiDetail.actualResponseBody)
 
 
 

@@ -4,7 +4,11 @@
     <div class="user">欢迎，{{$store.state.permission.userInfo.nickname}}</div>
 
     <el-menu :default-active="portalActiveIndex" class="el-menu-demo header-operations" mode="horizontal"
-             @select="handleSelect">
+             @select="handleSelect"
+             background-color="#428bca"
+             text-color="#fff"
+             active-text-color="#fff"
+    >
       <el-menu-item index="1">接口</el-menu-item>
       <el-menu-item index="2">测试用例</el-menu-item>
       <el-menu-item index="3">用例流</el-menu-item>
@@ -86,7 +90,7 @@
   }
     .qcHeader{
         width:100%;
-        height: 60px !important;
+        height: 61px !important;
         border-bottom: solid 1px #e6e6e6;
         background-color: #428bca;
     }
@@ -107,26 +111,26 @@
       height: 100%;
       background-color: transparent;
   }
-  .el-menu--horizontal {
-      border-right: none;
-      border-bottom: none;
-  }
+  /*.el-menu--horizontal {*/
+      /*border-right: none;*/
+      /*border-bottom: none;*/
+  /*}*/
 
-  .el-menu--horizontal>.el-menu-item {
-      color: #fff;
-  }
-  .el-menu--horizontal>.el-menu-item.is-active {
-      border-bottom:4px solid #fff;
-      color: #fff;
-      background-color: transparent;
-  }
-  .el-menu--horizontal .el-menu-item:not(.is-disabled):focus, .el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
-      outline: 0;
-      color: #fff;
-      background-color: #428bca;
-      border-bottom:4px solid #fff;
-  }
-  .el-menu--horizontal>.el-menu-item a, .el-menu--horizontal>.el-menu-item a:hover {
-      color: inherit;
-  }
+  /*.el-menu--horizontal>.el-menu-item {*/
+      /*color: #fff;*/
+  /*}*/
+  /*.el-menu--horizontal>.el-menu-item.is-active {*/
+      /*border-bottom:4px solid #fff;*/
+      /*color: #fff;*/
+      /*background-color: transparent;*/
+  /*}*/
+  /*.el-menu--horizontal .el-menu-item:not(.is-disabled):focus, .el-menu--horizontal .el-menu-item:not(.is-disabled):hover {*/
+      /*outline: 0;*/
+      /*color: #fff;*/
+      /*background-color: #428bca;*/
+      /*border-bottom:4px solid #fff;*/
+  /*}*/
+  /*.el-menu--horizontal>.el-menu-item a, .el-menu--horizontal>.el-menu-item a:hover {*/
+      /*color: inherit;*/
+  /*}*/
 </style>

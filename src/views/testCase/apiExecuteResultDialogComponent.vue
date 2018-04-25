@@ -1,13 +1,12 @@
 <template>
   <el-container style="height:600px;">
     <el-main>
+        <!--数据列表-->
       <el-row>
         <el-table v-show="apiResult.length>0"
                   :data="apiResult"
                   style="width: 100%"
                   ref="multipleTable" border>
-
-
           <el-table-column
             prop="apiName"
             label="名称"
@@ -39,18 +38,21 @@
             align="left"
           >
             <template slot-scope="scope">
-              <el-button type="text" v-bind:class="{ fontRed: !isActive }">{{ scope.row.result }}</el-button>
+              <el-button type="text" v-bind:class="{ fontRed: !scope.row.result }">{{ scope.row.result?"true":"false" }}</el-button>
             </template>
 
           </el-table-column>
-
-
         </el-table>
       </el-row>
 
-      <div ref = "separate">
+
+
+
+        <!--详情-->
+        <div ref = "separate">
         <div v-show="detailInfoShow"  style="padding-top:40px;">
-          <div style="width:100%;padding:10px 0;text-align: center;font-size: 24px;">接口: {{apiName}} 的执行信息</div>
+
+          <div style="width:100%;padding:10px 0;text-align: center;font-size: 24px;">接口: {{apiDetail.apiName}} 的执行信息</div>
 
           <el-row class="hTitle">*接口url为</el-row>
           <el-row>
@@ -59,10 +61,8 @@
             </div>
           </el-row>
 
-
           <el-row class="hTitle">*自定义变量</el-row>
           <el-row>
-
             <el-table v-show="apiDetail.variables.length>0"
                       :data="apiDetail.variables"
                       style="width: 100%"
@@ -110,52 +110,52 @@
           </el-row>
 
           <el-row class="hTitle">*请求参数</el-row>
-          <el-row v-show="isrequestBodyShow">
+          <el-row v-show="apiDetail.requestBody !== null">
             <el-input
               type="textarea"
               autosize
               readonly
               resize="none"
               placeholder="请输入内容"
-              v-model="apiDetail.requestBody">
+              v-model="requestBodyResult">
             </el-input>
           </el-row>
 
 
           <el-row class="hTitle">*实际响应</el-row>
-          <el-row v-show="isactualResponseBodyShow">
+          <el-row v-show="apiDetail.actualResponseBody !== null">
             <el-input
               type="textarea"
               autosize
               readonly
               resize="none"
               placeholder=""
-              v-model="apiDetail.actualResponseBody">
+              v-model="actualResponseBodyResult">
             </el-input>
           </el-row>
 
           <el-row class="hTitle" >*异常</el-row>
-          <el-row v-show="isExceptionShow">
+          <el-row v-show="apiDetail.exception !== null">
             <el-input
               type="textarea"
               autosize
               readonly
               resize="none"
               placeholder=""
-              v-model="apiDetail.exception">
+              v-model="exceptionResult">
             </el-input>
           </el-row>
 
 
-          <el-row class="hTitle">*预期结果:{{exceptResult}}</el-row>
-          <el-row v-show="isResponseBodyShow">
+          <el-row class="hTitle">*预期结果:{{ apiDetail.responseBody == null ? "" : (apiDetail.responseBody.staus?"成功":"失败") }}</el-row>
+          <el-row v-show="apiDetail.responseBody !== null">
             <el-input
               type="textarea"
               autosize
               readonly
               resize="none"
               placeholder=""
-              v-model="apiDetail.responseBody">
+              v-model="responseBodyResult">
             </el-input>
           </el-row>
 
@@ -202,8 +202,6 @@
 
         </div>
       </div>
-
-
     </el-main>
   </el-container>
 </template>
@@ -217,26 +215,23 @@
     name: 'apiExecuteResultDialogComponent',
     data(){
       return {
-        apiName:'',
-        isResponseBodyShow:true,
-        isactualResponseBodyShow:true,
-        exceptResult:'',
-        isActive:true,
-        isrequestBodyShow:true,
-        isExceptionShow:true,
+        requestBodyResult:null,
+        responseBodyResult:null,
+        exceptionResult:null,
+        actualResponseBodyResult:null,
+
         detailInfoShow:false,
         apiResult:[],
         apiDetail:{
           url:'',
           variables:[],
           headers:[],
+          assertions:[],
           requestBody:'',
           responseBody:'',
           exception:'',
-          assertions:[],
           actualResponseBody:'',
         }
-
       }
     },
     created(){
@@ -253,129 +248,106 @@
       getData() {
         var vueThis = this;
         var caseID = this.$route.query.id;
+
+
         // 获取表格内容
-        vueThis.testCaseAxios({
-          method: 'get',
-          url: "report/getCaseReport?id=" + caseID + '&type=0'
-        })
-        .then(function (res) {
-          if (res.data.code === 10000) {
-            vueThis.apiResult = res.data.data;
-            console.log(JSON.stringify(vueThis.apiResult) )
-            vueThis.apiResult.forEach(function(val,index,arr){
+       vueThis.testCaseAxios({
+         method: 'get',
+         url: "report/getCaseReport?id=" + caseID + '&type=0'
+       })
+       .then(function (res) {
+         if (res.data.code === 10000) {
+           vueThis.apiResult = res.data.data;
 
-              if(val.result){
-                val.result = 'true'
-                vueThis.isActive = true;
-              }else{
-                vueThis.isActive = false;
-                val.result = 'false'
-
-              }
-            })
-          }
-        })
-        .catch(function (err) {
-          vueThis.$message.error('抱歉，服务器异常！');
-        });
-
-
-
+         }
+       })
+       .catch(function (err) {
+         vueThis.$message.error('抱歉，服务器异常！');
+       });
       },
+
       getDetail(index){
-        this.detailInfoShow = true;
-        var that = this;
-        var separate = this.$refs.separate;
-        separate.scrollIntoView();
 
-        that.apiDetail = that.apiResult[index]
-        // console.log(JSON.stringify(that.apiDetail))
-
+          //详情数据对象
+          this.apiDetail = this.apiResult[index]
+          // 显示详情页面
+          this.detailInfoShow = true;
+          var separate = this.$refs.separate;
+          separate.scrollIntoView();
 
         try {
 
-          this.apiName = that.apiDetail.apiName;
 
-          if(that.apiDetail.requestBody == null){
-            this.isrequestBodyShow = false
-          }else{
-            that.apiDetail.requestBody = formatJson(that.apiDetail.requestBody)
-          }
+            // *请求参数
+            this.requestBodyResult = this.apiDetail.requestBody
+
+            if(typeof(this.apiDetail.requestBody) === "object" && this.apiDetail.requestBody !== null){
+              this.requestBodyResult = JSON.stringify(this.requestBodyResult)
+              this.requestBodyResult = JSON.parse(this.requestBodyResult)
+              this.requestBodyResult = formatJson(this.requestBodyResult)
+            }
+            console.log(this.requestBodyResult)
 
 
-          if(that.apiDetail.responseBody == null){
-            this.exceptResult = '';
-            this.isResponseBodyShow = false;
-          }else{
-            that.apiDetail.responseBody = formatJson(that.apiDetail.responseBody)
-            that.apiDetail.responseBody = JSON.parse(that.apiDetail.responseBody)
 
-            if(that.apiDetail.responseBody.staus){
-              this.exceptResult = '成功'
+
+
+
+            //*实际响应
+            this.actualResponseBodyResult = this.apiDetail.actualResponseBody
+
+            if(typeof(this.apiDetail.actualResponseBody) === "object" && this.apiDetail.actualResponseBody !== null){
+              this.actualResponseBodyResult = JSON.stringify(this.actualResponseBodyResult)
+              this.actualResponseBodyResult = JSON.parse(this.actualResponseBodyResult)
+              this.actualResponseBodyResult = formatJson(this.actualResponseBodyResult)
+            }
+            console.log(this.actualResponseBodyResult)
+
+            // this.apiDetail.actualResponseBody = formatJson(this.apiDetail.actualResponseBody)
+            // console.log(this.apiDetail.actualResponseBody)
+
+
+
+
+
+
+
+            //*异常
+            this.exceptionResult = this.apiDetail.exception
+
+            if(typeof(this.apiDetail.exception) === "object" && this.apiDetail.exception !== null){
+              this.exceptionResult = JSON.stringify(this.exceptionResult)
+              this.exceptionResult = JSON.parse(this.exceptionResult)
+              this.exceptionResult = formatJson(this.exceptionResult)
+            }
+            console.log(this.exceptionResult)
+
+
+
+
+
+
+
+            // *预期结果
+            if(typeof(this.apiDetail.responseBody) === "object" && this.apiDetail.responseBody !== null){
+
+              this.responseBodyResult = this.apiDetail.responseBody.result;
+              this.responseBodyResult = JSON.stringify(this.responseBodyResult)
+              this.responseBodyResult = JSON.parse(this.responseBodyResult)
+              this.responseBodyResult = formatJson(this.responseBodyResult);
+
             }else{
-              this.exceptResult = '失败'
+              this.responseBodyResult = null;
             }
 
-            if(JSON.stringify(that.apiDetail.responseBody.result) == "{}"){
-              this.isResponseBodyShow = false;
-            }else{
-
-              that.apiDetail.responseBody = formatJson(that.apiDetail.responseBody.result);
-            }
-
-          }
+            console.log(this.responseBodyResult)
 
 
-          if(that.apiDetail.actualResponseBody == null){
-            this.isactualResponseBodyShow = false;
-          }else{
-            that.apiDetail.actualResponseBody = formatJson(that.apiDetail.actualResponseBody)
-          }
 
 
-          if(that.apiDetail.exception == null){
-            this.isExceptionShow = false;
-          }else{
-            that.apiDetail.exception = formatJson(that.apiDetail.exception)
-          }
-
-
-          if(this.apiDetail.variables == null || this.apiDetail.variables == 'null' ){
-            this.apiDetail.variables = [];
-          }else if(this.apiDetail.variables.length == 0){
-            this.apiDetail.variables = [];
-          }else{
-            if(typeof(this.apiDetail.variables) == "string"){
-              this.apiDetail.variables = JSON.parse(this.apiDetail.variables)
-            }
-          }
-
-          if(that.apiDetail.headers == null || that.apiDetail.headers == 'null' ){
-            that.apiDetail.headers = [];
-          }else if(this.apiDetail.headers.length == 0){
-            this.apiDetail.headers = [];
-          }else{
-            if(typeof(that.apiDetail.headers) == "string"){
-              that.apiDetail.headers = JSON.parse(that.apiDetail.headers)
-            }
-          }
-
-
-          if(that.apiDetail.assertions == null || that.apiDetail.assertions == 'null' ){
-            that.apiDetail.assertions = [];
-          }else if(this.apiDetail.assertions.length == 0){
-            this.apiDetail.assertions = [];
-          }else{
-            if(typeof(that.apiDetail.assertions) == "string"){
-              that.apiDetail.assertions = JSON.parse(that.apiDetail.assertions)
-            }
-          }
 
         } catch(err) {
-          // alert('error')
         }
-
-
       }
     }
   }

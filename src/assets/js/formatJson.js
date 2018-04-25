@@ -1,15 +1,21 @@
 /**
  * Created by ted on 2018/1/11.
  */
-var formatJson =function (jsonStr) {
-  if(jsonStr == null || jsonStr == 'null' || jsonStr == ''){
-    return ;
+var formatJson =function (jsonVal) {
+  if(jsonVal == null || jsonVal == 'null' ){
+    return null;
   }
-  let jsonObj = JSON.parse(jsonStr);
-  return JSON.stringify(jsonObj, null, 4);
+  if (typeof jsonVal === 'object'){
+    return JSON.stringify(jsonVal, null, 4);
+  }else{
+    try{
+      let jsonObj = JSON.parse(jsonVal);
+      return JSON.stringify(jsonObj, null, 4);
+    }catch(err) {
 
+    }
 
-
+  }
 }
 
 //判断字符串是否为json

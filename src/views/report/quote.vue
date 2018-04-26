@@ -24,7 +24,7 @@
       }
 
       var option =  {
-        color: ['#006699', '#4cabce', '#4cabce', '#e5323e'],
+        color: ['#539970', '#ce52b0'],
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -32,10 +32,10 @@
           }
         },
         legend: {
-          data: ['Forest', 'Steppe', 'Desert', 'Wetland']
+          data: ['引用', '未引用']
         },
         toolbox: {
-          show: true,
+          show: false,
           orient: 'vertical',
           left: 'right',
           top: 'center',
@@ -62,31 +62,19 @@
         ],
         series: [
           {
-            name: 'Forest',
+            name: '引用',
             type: 'bar',
             barGap: 0,
             // label: labelOption,
             data: []
           },
           {
-            name: 'Steppe',
+            name: '未引用',
             type: 'bar',
             // label: labelOption,
             data: []
           }
-          // ,
-          // {
-          //   name: 'Desert',
-          //   type: 'bar',
-          //   // label: labelOption,
-          //   data: []
-          // },
-          // {
-          //   name: 'Wetland',
-          //   type: 'bar',
-          //   // label: labelOption,
-          //   data: []
-          // }
+
         ]
       }
 

@@ -15,7 +15,7 @@
           </template>
           <el-menu-item-group>
             <el-menu-item index="1-1">按系统分</el-menu-item>
-            <el-menu-item index="1-2">系统分支</el-menu-item>
+            <el-menu-item index="1-2">按引用统计</el-menu-item>
             <el-menu-item index="1-3">接口数</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
@@ -81,7 +81,7 @@
           }
             break;
           case '1-2':{
-            this.$router.push({name: 'ApiBranch'});
+            this.$router.push({name: 'Quote'});
           }
             break;
 

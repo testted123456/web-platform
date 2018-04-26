@@ -379,7 +379,7 @@
       },
       //动态库查询 点击跳转新页面
       intellCheck(){
-        window.open('https://www.baidu.com')
+        window.open(this.testCaseServer +'func/index.html')
       },
       // tempApiDetailInfo 页面赋值
       updateTempApiDetailInfo(obj){

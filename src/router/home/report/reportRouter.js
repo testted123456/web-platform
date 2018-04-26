@@ -1,6 +1,6 @@
 import ReportMain from  '@/views/report/reportMain'
 import ApiSystem from  '@/views/report/apiSystem'
-import ApiBranch from  '@/views/report/apiBranch'
+import Quote from  '@/views/report/quote'
 
 export default {
   path: 'report',
@@ -13,9 +13,9 @@ export default {
       component: ApiSystem
     },
     {
-      path: 'apiBranch',
-      name: 'ApiBranch',
-      component: ApiBranch
+      path: 'quote',
+      name: 'Quote',
+      component: Quote
     }
   ]
 }

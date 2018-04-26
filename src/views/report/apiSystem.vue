@@ -2,7 +2,13 @@
   <el-container>
     <el-main>
       <div>
-        <chart :options="polar"></chart>
+        <chart :options="sysBar" @click="sysBarClick"></chart>
+      </div>
+      <div>
+        <chart :options="sysBarSystem" @click="sysBarSystemClick" v-if="ifsysBarSystemShow"></chart>
+      </div>
+      <div>
+        <chart :options="lineModule" v-if="iflineModuleShow"></chart>
       </div>
     </el-main>
   </el-container>
@@ -15,49 +21,230 @@ export default {
   name: 'welcome',
   components:{'chart': ECharts},
   data () {
-    let data = []
-    for (let i = 0; i <= 360; i++) {
-      let t = i / 180 * Math.PI
-      let r = Math.sin(2 * t) * Math.cos(2 * t)
-      data.push([r, i])
-    }
     return {
-      polar: {
-        title: {
-          text: '极坐标双数值轴'
-        },
-        legend: {
-          data: ['line']
-        },
-        polar: {
-          center: ['50%', '54%']
-        },
-        tooltip: {
+      sysBar:{
+        color: ['#3398DB'],
+        tooltip : {
           trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
+          axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
         },
-        angleAxis: {
-          type: 'value',
-          startAngle: 0
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
         },
-        radiusAxis: {
-          min: 0
-        },
-        series: [
+        xAxis : [
           {
-            coordinateSystem: 'polar',
-            name: 'line',
-            type: 'line',
-            showSymbol: false,
-            data: data
+            type : 'category',
+            data : [],
+            axisTick: {
+              alignWithLabel: true
+            }
           }
         ],
-        animationDuration: 2000
-      }
+        yAxis : [
+          {
+            type : 'value'
+          }
+        ]
+        ,
+        dataZoom: [
+          {   // 这个dataZoom组件，默认控制x轴。
+            type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+            start: 0,      // 左边在 10% 的位置。
+            end: 60         // 右边在 60% 的位置。
+          }
+        ],
+        series : [
+          {
+            name:'值为',
+            type:'bar',
+            barWidth: '90%',
+            data:[]
+          }
+        ]
+      },
+      //系统
+      sysBarSystem:{
+        color: ['#3398DB'],
+        tooltip : {
+          trigger: 'axis',
+          axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+          }
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis : [
+          {
+            type : 'category',
+            data : [],
+            axisTick: {
+              alignWithLabel: true
+            }
+          }
+        ],
+        yAxis : [
+          {
+            type : 'value'
+          }
+        ],
+        dataZoom: [
+          {   // 这个dataZoom组件，默认控制x轴。
+            type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+            start: 0,      // 左边在 10% 的位置。
+            end: 60         // 右边在 60% 的位置。
+          }
+        ],
+        series : [
+          {
+            name:'值为',
+            type:'bar',
+            barWidth: '90%',
+            data:[]
+          }
+        ]
+      },
+      //系统 模块
+      lineModule: {
+        xAxis: {
+          type: 'category',
+          data: []
+        },
+        yAxis: {
+          type: 'value'
+        },
+        dataZoom: [
+          {   // 这个dataZoom组件，默认控制x轴。
+            type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+            start: 0,      // 左边在 10% 的位置。
+            end: 60         // 右边在 60% 的位置。
+          }
+        ],
+        series: [{
+          name:'值为',
+          data: [],
+          type: 'line',
+          smooth: true,
+
+          itemStyle:{
+            normal:{
+              color: "#6eaaee", //图标颜色
+              label:{
+                show:true
+              }
+            }
+          },
+          lineStyle:{
+            normal:{
+              width:6,  //连线粗细
+              color: "#6eaaee" , //连线颜色
+
+            }
+          },
+        }],
+        tooltip : {
+          enterable:true,
+          trigger: 'axis',
+          axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'line'        // 默认为直线，可选为：'line' | 'shadow'
+          }
+        },
+      },
+
+      system:[],
+      module:[],
+      ifsysBarSystemShow:false,
+      iflineModuleShow:false
     }
   },
+  mounted(){
+    this.getData();
+  },
+  methods: {
+
+
+    getData(){ //
+      var vueThis = this;
+      vueThis.apiAxios({
+        method: 'get',
+        url: 'statis/statisApiBySys'
+      })
+        .then(function (res) {
+          if(res.data.code == '10000'){
+            vueThis.sysBar.xAxis[0].data = res.data.data.data;
+            vueThis.sysBar.series[0].data = res.data.data.series
+          }else{
+              vueThis.$message.error('抱歉，服务器异常！');
+          }
+        }).catch(function (err) {
+        vueThis.$message.error('抱歉，服务器异常！' );
+      });
+    },
+
+
+
+    sysBarClick(params){
+      console.log(params)
+      var index = params.dataIndex;
+      this.system = this.sysBar.xAxis[0].data[index]
+      console.log(this.system)
+
+
+      var vueThis = this;
+      vueThis.apiAxios({
+        method: 'get',
+        url: 'statis/statisApiByModule?system='+ vueThis.system
+      })
+        .then(function (res) {
+          if(res.data.code == '10000'){
+            vueThis.ifsysBarSystemShow = true;
+            vueThis.iflineModuleShow = false;
+            vueThis.sysBarSystem.xAxis[0].data = res.data.data.data;
+            vueThis.sysBarSystem.series[0].data = res.data.data.series;
+          }else{
+            vueThis.$message.error('抱歉，服务器异常！');
+          }
+        }).catch(function (err) {
+        vueThis.$message.error('抱歉，服务器异常！' );
+      });
+
+    },
+
+
+
+    sysBarSystemClick(params){
+      console.log(params)
+      var index = params.dataIndex;
+      this.module = this.sysBarSystem.xAxis[0].data[index]
+      console.log(this.module)
+
+      var vueThis = this;
+      vueThis.apiAxios({
+        method: 'get',
+        url: 'statis/statisApiByModuleAndBranch?system='+ vueThis.system +'&module=' + vueThis.module
+      })
+        .then(function (res) {
+          if(res.data.code == '10000'){
+            vueThis.iflineModuleShow = true;
+            vueThis.lineModule.xAxis.data = res.data.data.data;
+            vueThis.lineModule.series[0].data = res.data.data.series;
+          }else{
+            vueThis.$message.error('抱歉，服务器异常！');
+          }
+        }).catch(function (err) {
+        vueThis.$message.error('抱歉，服务器异常！' );
+      });
+
+    },
+  }
 
 }
 </script>
@@ -65,6 +252,7 @@ export default {
 
 <style scoped>
   .echarts {
-    height: 300px;
+    height: 400px;
+    width:100%;
   }
 </style>

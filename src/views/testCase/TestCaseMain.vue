@@ -159,17 +159,17 @@
             method: 'get',
             url: "testCase/getCaseTreeByPId?pId=" + node.data.id
           })
-          .then(function (res) {
-            if (res.data.code === 10000 ) {
-              var tempApi = res.data.data;
-              return resolve(res.data.data);
-            }
-            return;
+            .then(function (res) {
+              if (res.data.code === 10000 ) {
+                var tempApi = res.data.data;
+                return resolve(res.data.data);
+              }
+              return;
 
-          })
-          .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
-          });
+            })
+            .catch(function (err) {
+              vueThis.$message.error('抱歉，服务器异常！' );
+            });
 
 
         }
@@ -243,17 +243,17 @@
             method: 'get',
             url: 'testCase/deleteTestCaseDir?id='+nodeId
           })
-          .then(function (res) {
-            if(res.data.code == '10000'){
-              vueThis.delItemNode(node);
-              vueThis.$message({
-                message: '恭喜你，删除用例目录成功！',
-                type: 'success'
-              });
-            }else{
-              vueThis.$message.error('抱歉，删除用例目录失败：' + res.data.msg);
-            }
-          }).catch(function (err) {
+            .then(function (res) {
+              if(res.data.code == '10000'){
+                vueThis.delItemNode(node);
+                vueThis.$message({
+                  message: '恭喜你，删除用例目录成功！',
+                  type: 'success'
+                });
+              }else{
+                vueThis.$message.error('抱歉，删除用例目录失败：' + res.data.msg);
+              }
+            }).catch(function (err) {
             vueThis.$message.error('抱歉，服务器异常！' );
           });
         }else{ //删除某个case
@@ -261,17 +261,17 @@
             method: 'get',
             url: "testCase/deleteCase?id=" + nodeId
           })
-          .then(function (res) {
-            if(res.data.code == '10000'){
-              vueThis.delItemNode(node);
-              vueThis.$message({
-                message: '恭喜你，删除用例成功！',
-                type: 'success'
-              });
-            }else{
-              vueThis.$message.error('抱歉，删除用例失败：' + res.data.msg);
-            }
-          }).catch(function (err) {
+            .then(function (res) {
+              if(res.data.code == '10000'){
+                vueThis.delItemNode(node);
+                vueThis.$message({
+                  message: '恭喜你，删除用例成功！',
+                  type: 'success'
+                });
+              }else{
+                vueThis.$message.error('抱歉，删除用例失败：' + res.data.msg);
+              }
+            }).catch(function (err) {
             vueThis.$message.error('抱歉，服务器异常！' );
           });;
         }

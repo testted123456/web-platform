@@ -14,9 +14,8 @@
             <span>接口统计</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="1-1">按系统分</el-menu-item>
+            <el-menu-item index="1-1">按系统统计</el-menu-item>
             <el-menu-item index="1-2">按引用统计</el-menu-item>
-            <el-menu-item index="1-3">接口数</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="2">
@@ -25,8 +24,8 @@
             <span>用例统计</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="2-1">是否被group引用</el-menu-item>
-            <el-menu-item index="2-2">按系统分</el-menu-item>
+            <el-menu-item index="2-1">按系统统计</el-menu-item>
+            <el-menu-item index="2-2">按引用统计</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="3">
@@ -81,7 +80,23 @@
           }
             break;
           case '1-2':{
-            this.$router.push({name: 'Quote'});
+            this.$router.push({name: 'ApiQuote'});
+          }
+            break;
+          case '2-1':{
+            this.$router.push({name: 'CaseSystem'});
+          }
+            break;
+          case '2-2':{
+            this.$router.push({name: 'CaseQuote'});
+          }
+            break;
+          case '3-1':{
+            this.$router.push({name: 'GroupSum'});
+          }
+            break;
+          case '3-2':{
+            this.$router.push({name: 'GroupRate'});
           }
             break;
 

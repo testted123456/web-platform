@@ -18,7 +18,7 @@
 <script>
   import ECharts from 'vue-echarts'
 export default {
-  name: 'welcome',
+  name: 'apiSystem',
   components:{'chart': ECharts},
   data () {
     return {
@@ -42,6 +42,12 @@ export default {
             data : [],
             axisTick: {
               alignWithLabel: true
+            },
+            axisLabel:{
+              interval:0,
+              rotate:45,
+              margin:2
+
             }
           }
         ],
@@ -63,7 +69,14 @@ export default {
             name:'值为',
             type:'bar',
             barWidth: '90%',
-            data:[]
+            data:[],
+            itemStyle:{
+              normal:{
+                label:{
+                  show:true
+                }
+              }
+            }
           }
         ]
       },
@@ -88,6 +101,12 @@ export default {
             data : [],
             axisTick: {
               alignWithLabel: true
+            },
+            axisLabel:{
+              interval:0,
+              rotate:45,
+              margin:2
+
             }
           }
         ],
@@ -108,7 +127,14 @@ export default {
             name:'值为',
             type:'bar',
             barWidth: '90%',
-            data:[]
+            data:[],
+            itemStyle:{
+              normal:{
+                label:{
+                  show:true
+                }
+              }
+            }
           }
         ]
       },
@@ -116,7 +142,13 @@ export default {
       lineModule: {
         xAxis: {
           type: 'category',
-          data: []
+          data: [],
+          axisLabel:{
+            interval:0,
+            rotate:45,
+            margin:2
+
+          }
         },
         yAxis: {
           type: 'value'

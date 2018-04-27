@@ -2,7 +2,7 @@
   <el-container>
     <el-main>
       <div>
-        <chart :options="polar.option"></chart>
+        <chart :options="polar.option" @click="quoteClick"></chart>
       </div>
     </el-main>
   </el-container>
@@ -13,18 +13,18 @@
   import ECharts from 'vue-echarts'
 
   export default {
-    name: 'welcome',
+    name: 'apiQuote',
     components: {'chart': ECharts},
     data() {
-      let data = []
-      for (let i = 0; i <= 360; i++) {
-        let t = i / 180 * Math.PI
-        let r = Math.sin(2 * t) * Math.cos(2 * t)
-        data.push([r, i])
-      }
+      // let data = []
+      // for (let i = 0; i <= 360; i++) {
+      //   let t = i / 180 * Math.PI
+      //   let r = Math.sin(2 * t) * Math.cos(2 * t)
+      //   data.push([r, i])
+      // }
 
       var option =  {
-        color: ['#539970', '#ce52b0'],
+        color: ['#539970', '#f00'],
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -52,12 +52,24 @@
           {
             type: 'category',
             axisTick: {show: false},
-            data: []
+            data: [],
+            axisLabel:{
+              interval:0,
+              rotate:45,
+              margin:2
+            }
           }
         ],
         yAxis: [
           {
             type: 'value'
+          }
+        ],
+        dataZoom: [
+          {   // 这个dataZoom组件，默认控制x轴。
+            type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+            start: 0,      // 左边在 10% 的位置。
+            end: 60         // 右边在 60% 的位置。
           }
         ],
         series: [
@@ -66,13 +78,15 @@
             type: 'bar',
             barGap: 0,
             // label: labelOption,
-            data: []
+            data: [],
+
           },
           {
             name: '未引用',
             type: 'bar',
             // label: labelOption,
-            data: []
+            data: [],
+
           }
 
         ]
@@ -108,9 +122,16 @@
           }).catch(function (err) {
           vueThis.$message.error('抱歉，服务器异常！' );
         });
+      },
+
+      quoteClick(params){
+        console.log(params)
+        var index = params.dataIndex;
+        var type = params.seriesIndex
+        console.log(index)
+        console.log(type)
+
       }
-
-
 
 
     }

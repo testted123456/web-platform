@@ -81,7 +81,11 @@ Vue.prototype.usrAxios.interceptors.response.use(data => {
 
 Vue.prototype.testCaseAxios.interceptors.response.use(data => {
   return data
-}, error => {
+}, (error, vueObj) => {
+
+  vueObj.$router.push({name: 'Login'});
+  console.log('请求失败请求失败请求失败请求失败请求失败请求失败请求失败请求失败请求失败请求失败请求失败')
+
   return Promise.reject(error)
 })
 

@@ -1,7 +1,8 @@
 <template>
   <el-container id="gVar">
     <el-main>
-      <div>
+
+      <el-row>
         <el-table
           :data="appearSysGit" style="width: 100%"
         >
@@ -53,7 +54,7 @@
           layout="prev, pager, next, jumper"
           :total="sysGit.length">
         </el-pagination>
-      </div>
+      </el-row>
       <el-dialog
         :visible.sync="delDialogVisible"
         width="25%"

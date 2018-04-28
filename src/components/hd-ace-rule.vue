@@ -22,7 +22,7 @@
                 var editor = hdAce.edit(eleID)
                 //设置风格和语言
                 var theme = "clouds"
-                var language = "text"
+                var language = "java"
                 editor.setTheme("ace/theme/" + theme);
                 editor.session.setMode("ace/mode/" + language);
 

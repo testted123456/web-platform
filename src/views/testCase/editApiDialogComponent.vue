@@ -681,6 +681,7 @@
         }
         this.aceManager.getCompletions(1).push(keyWord)
       },
+
         formatRequsetJSON(){
             this.tempApiDetailInfo.requestBody = formatJson(this.tempApiDetailInfo.requestBody)
             this.$refs.reqBody.resetAceContent(this.tempApiDetailInfo.requestBody)

@@ -17,8 +17,9 @@
 
       <el-menu-item index="6">报表</el-menu-item>
       <el-menu-item index="7">工具</el-menu-item>
-      <el-menu-item index="8">质量管理</el-menu-item>
-      <el-menu-item index="9" @click="loginOut">注销</el-menu-item>
+      <el-menu-item index="8">mock</el-menu-item>
+      <el-menu-item index="9">质量管理</el-menu-item>
+      <el-menu-item index="10" @click="loginOut">注销</el-menu-item>
 
 
     </el-menu>
@@ -40,7 +41,8 @@
             '/home/cfg',
             '/home/report',
             '/home/report',
-            '/home/report'
+            '/home/mock',
+            '/home/mock'
         ]
     };
   },
@@ -51,7 +53,7 @@
 
     handleSelect(key, keyPath) {
         var index = key;
-        if(index > 8){return}
+        if(index > 9){return}
         var routerName = this.routers[index - 1];
         this.$router.push(routerName);
     },

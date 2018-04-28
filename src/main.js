@@ -59,22 +59,22 @@ if(env === 'dev') {
     baseURL: 'http://192.168.32.138:8088'
   });
 }else{
-  Vue.prototype.wsServer = '192.168.1.46:9090';
+  Vue.prototype.wsServer = '192.168.1.46:8080';
 
   Vue.prototype.testCaseAxios = axios.create({
-    baseURL: 'http://192.168.1.46:9090/case/'
+    baseURL: 'http://192.168.1.46:8080/case/'
   });
 
   Vue.prototype.apiAxios = axios.create({
-    baseURL: 'http://192.168.1.46:9090/inter/'
+    baseURL: 'http://192.168.1.46:8080/inter/'
   });
 
   Vue.prototype.groupAxios = axios.create({
-    baseURL: 'http://192.168.1.46:9090/group/',
+    baseURL: 'http://192.168.1.46:8080/group/',
   });
 
   Vue.prototype.usrAxios = axios.create({
-    baseURL: 'http://192.168.1.46:9090'
+    baseURL: 'http://192.168.1.46:8080'
   });
 }
 

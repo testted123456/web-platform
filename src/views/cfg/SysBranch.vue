@@ -1,33 +1,40 @@
 <template>
   <el-container id="sysBranch">
     <el-main>
-      <div>
+      <el-row style="text-align: left;padding-left: 7px">
+        <el-button type="text" @click="search">按系统查询</el-button>
+        <el-button type="text" @click="refresh">刷新</el-button>
+        <el-button type="text" @click="refresh">同步</el-button>
+      </el-row>
+      <el-row>
         <el-table
-          :data="appearSysBranch" style="width: 100%"
+          :data="appearSysBranch" style="width: 100%" :filter-changer="change"
         >
           <el-table-column
             label="系统名称"
+            prop="system"
             >
-            <template slot-scope="scope">
-              <el-input v-model="appearSysBranch[scope.$index].system"></el-input>
-            </template>
+            <!--<template slot-scope="scope">-->
+              <!--<el-input v-model="appearSysBranch[scope.$index].system"></el-input>-->
+            <!--</template>-->
           </el-table-column>
 
           <el-table-column
           label="分支"
+          prop="branch"
           >
-          <template slot-scope="scope">
-            <el-input v-model="appearSysBranch[scope.$index].branch"></el-input>
-          </template>
+          <!--<template slot-scope="scope">-->
+            <!--<el-input v-model="appearSysBranch[scope.$index].branch"></el-input>-->
+          <!--</template>-->
          </el-table-column>
 
-          <el-table-column
-            label="版本"
-            >
-            <template slot-scope="scope">
-              <el-input v-model="appearSysBranch[scope.$index].version"></el-input>
-            </template>
-          </el-table-column>
+          <!--<el-table-column-->
+            <!--label="版本"-->
+            <!--&gt;-->
+            <!--<template slot-scope="scope">-->
+              <!--<el-input v-model="appearSysBranch[scope.$index].version"></el-input>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
 
           <el-table-column
             label="最新？" align="center"
@@ -38,14 +45,14 @@
           </el-table-column>
 
           <el-table-column
-            label="" >
+            label="操作" >
             <template slot-scope="scope">
-              <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">-->
-                <!--<el-button @click.native.prevent="deleteRow(scope.$index, appearSysBranch)" type="text" size="small"><i class="el-icon-delete"></i></el-button>-->
-              <!--</el-tooltip>-->
-              <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAdd(scope.$index, appearSysBranch)">-->
-                <!--<el-button @click.native.prevent="addRow(scope.$index, appearSysBranch)"  type="text" size="small"><i class="el-icon-plus"></i></el-button>-->
-              <!--</el-tooltip>-->
+              <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="导入" placement="top">
+                <el-button @click.native.prevent="deleteRow(scope.$index, appearSysBranch)" type="text" size="small"><i class="el-icon-download"></i></el-button>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="查看HTML" placement="top" >
+                <el-button @click.native.prevent="addRow(scope.$index, appearSysBranch)"  type="text" size="small"><i class="el-icon-view"></i></el-button>
+              </el-tooltip>
 
               <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="保存" placement="top">
                 <el-button @click.native.prevent="save(scope.$index, appearSysBranch)" type="text" size="small"><i class="el-icon-location-outline"></i></el-button>
@@ -63,7 +70,7 @@
           layout="prev, pager, next, jumper"
           :total="sysBranch.length">
         </el-pagination>
-      </div>
+      </el-row>
       <el-dialog
         :visible.sync="delDialogVisible"
         width="25%"
@@ -88,7 +95,8 @@
             pageSize: 10,
             delIndex: '',
             delSysBranch: {},
-            delDialogVisible: false
+            delDialogVisible: false,
+            systems:[]
           }
       },
 
@@ -107,6 +115,24 @@
       methods: {
         init(){
           var vueThis = this;
+
+          this.testCaseAxios({
+            method: 'get',
+            url: 'sysCfg/getAll'
+          }).then(function (res) {
+            if(res.data.code === 10000){
+                res.data.data.forEach(function (e, index) {
+                  vueThis.systems.push({value: e.system, text: e.system})
+                });
+            }else{
+              vueThis.$message({
+                message: '抱歉，获取系统失败' + res.data.msg,
+                type: 'error'
+              });
+            }
+          }).catch(function (err) {
+            vueThis.$message.error('服务器请求失败！');
+          });
 
           this.testCaseAxios({
             method: 'get',
@@ -246,6 +272,42 @@
 
         setDefaultPage(){
           this.currentPage = 1;
+        },
+
+        change(){
+            console.log('change')
+        },
+
+        search(){
+          this.$prompt(null, '请输入系统名：', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+          }).then(({ value }) => {
+
+            let vueThis = this;
+
+            this.usrAxios({
+              method: 'get',
+              url: 'user/searchByName?name=' + value
+            }).then(function (res) {
+              if(res.data.code === 10000){
+                vueThis.users = res.data.data;
+              }else{
+                vueThis.$message({
+                  message: '抱歉，获取用户信息失败' + res.data.msg,
+                  type: 'error'
+                });
+              }
+            }).catch(function (err) {
+              vueThis.$message.error('服务器请求失败！');
+            })
+
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '取消输入'
+            });
+          });
         }
       }
   }

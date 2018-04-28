@@ -11,12 +11,9 @@ import axios from 'axios'
 import drag from "@/assets/js/drag";
 
 axios.defaults.withCredentials=true;
-
 Vue.config.productionTip = false
-
 Vue.use(ElementUI)
 Vue.use(VueResource)
-
 Vue.prototype.drag = drag
 Vue.prototype.axios = axios
 Vue.prototype.cookieManager = Cookie
@@ -35,31 +32,51 @@ String.prototype.trim = function () {
 //   username:'',
 //   nickname:''
 // }
+let env = 'prod'
 
+if(env === 'dev') {
 
-Vue.prototype.wsServer = '192.168.32.138:8083';
+  Vue.prototype.wsServer = '192.168.32.138:8083';
 
+  Vue.prototype.testCaseAxios = axios.create({
+    baseURL: 'http://192.168.32.138:8083/case/'
+  });
 
-Vue.prototype.testCaseAxios = axios.create({
-  baseURL: 'http://192.168.32.138:8083/case/'
-});
+  Vue.prototype.apiAxios = axios.create({
+    baseURL: 'http://192.168.32.138:8082/inter/',
+    // headers: {'Access-Control-Allow-Origin': '*'}
+    withCredentials: true
 
-Vue.prototype.apiAxios = axios.create({
-  baseURL: 'http://192.168.32.138:8082/inter/',
-  // headers: {'Access-Control-Allow-Origin': '*'}
-  withCredentials: true
+  });
 
-});
+  Vue.prototype.groupAxios = axios.create({
+    baseURL: 'http://192.168.32.138:8084/group/',
+    withCredentials: true
 
-Vue.prototype.groupAxios = axios.create({
-  baseURL: 'http://192.168.32.138:8084/group/',
-  withCredentials: true
+  });
 
-});
+  Vue.prototype.usrAxios = axios.create({
+    baseURL: 'http://192.168.32.138:8088'
+  });
+}else{
+  Vue.prototype.wsServer = '192.168.1.46:8080';
 
-Vue.prototype.usrAxios = axios.create({
-  baseURL: 'http://192.168.32.138:8088'
-});
+  Vue.prototype.testCaseAxios = axios.create({
+    baseURL: 'http://192.168.1.46:8080/case/'
+  });
+
+  Vue.prototype.apiAxios = axios.create({
+    baseURL: 'http://192.168.1.46:8080/inter/'
+  });
+
+  Vue.prototype.groupAxios = axios.create({
+    baseURL: 'http://192.168.1.46:8080/group/',
+  });
+
+  Vue.prototype.usrAxios = axios.create({
+    baseURL: 'http://192.168.1.46:8080'
+  });
+}
 
 Vue.prototype.apiAxios.interceptors.response.use(data => {
     return data

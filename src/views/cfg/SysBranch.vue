@@ -51,7 +51,7 @@
                 <el-button @click.native.prevent="deleteRow(scope.$index, appearSysBranch)" type="text" size="small"><i class="el-icon-download"></i></el-button>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="查看HTML" placement="top" >
-                <el-button @click.native.prevent="addRow(scope.$index, appearSysBranch)"  type="text" size="small"><i class="el-icon-view"></i></el-button>
+                <el-button @click.native.prevent="viewHTML(scope.$index, appearSysBranch)"  type="text" size="small"><i class="el-icon-view"></i></el-button>
               </el-tooltip>
 
               <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="保存" placement="top">
@@ -169,14 +169,10 @@
         },
 
         //新增消息头一行
-        addRow(index, rows){
-          rows.push({
-            system:'',
-            branch:'',
-            version:'',
-            last:''
-          })
-          this.sysBranch.push(rows[index+1])
+        viewHTML(index, rows){
+            let system = rows[index].system;
+            let branch = rows[index].branch;
+          window.open(this.apiServer +'apidocs/' + system + '/' + branch + '/index.html')
         },
 
         //删除消息头中的一行

@@ -40,7 +40,7 @@
             '/home/group',
             '/home/cfg',
             '/home/report',
-            '/home/report',
+            '/home/tools',
             '/home/mock',
             '/home/mock'
         ]

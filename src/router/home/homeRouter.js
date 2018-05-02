@@ -6,8 +6,8 @@ import FlowCase from './flowCase/flowCaseRouter'
 import Group from './group/groupRouter'
 import Cfg from './cfg/cfgRouter'
 import Report from './report/reportRouter'
+import ToolsMain from './tools/toolsRouter'
 import Mock from './mock/mockRouter'
-
 
 export default {
   path: '/home',
@@ -20,6 +20,7 @@ export default {
     Group,
     Cfg,
     Report,
+    ToolsMain,
     Mock,
     {
       path: 'welcome',

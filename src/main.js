@@ -19,9 +19,7 @@ Vue.prototype.axios = axios
 Vue.prototype.cookieManager = Cookie
 Vue.prototype.ApiCopyId = 0;
 Vue.prototype.ApiCopyData = {};
-Vue.prototype.apiServer = 'http://192.168.32.88:8082/inter/';
-Vue.prototype.testCaseServer = 'http://192.168.32.138:8083/case/';
-Vue.prototype.groupServer = 'http://192.168.32.150:8082/group/';
+
 Vue.prototype.apisInfoCheckaddress = 'http://localhost:8080/#/';
 Vue.prototype.aceManager = aceManager
 String.prototype.trim = function () {
@@ -37,29 +35,35 @@ let env = 'prod'
 if(env === 'dev') {
 
   Vue.prototype.wsServer = '192.168.32.138:8083';
+  Vue.prototype.apiServer = 'http://192.168.32.138:8082/inter/';
+  Vue.prototype.testCaseServer = 'http://192.168.32.138:8083/case/';
+  Vue.prototype.groupServer = 'http://192.168.32.138:8082/group/';
 
   Vue.prototype.testCaseAxios = axios.create({
-    baseURL: 'http://192.168.32.138:8083/case/'
+    baseURL: 'http://192.168.32.106:8083/case/'
   });
 
   Vue.prototype.apiAxios = axios.create({
-    baseURL: 'http://192.168.32.138:8082/inter/',
+    baseURL: 'http://192.168.32.106:8082/inter/',
     // headers: {'Access-Control-Allow-Origin': '*'}
     withCredentials: true
 
   });
 
   Vue.prototype.groupAxios = axios.create({
-    baseURL: 'http://192.168.32.138:8084/group/',
+    baseURL: 'http://192.168.32.106:8084/group/',
     withCredentials: true
 
   });
 
   Vue.prototype.usrAxios = axios.create({
-    baseURL: 'http://192.168.32.138:8088'
+    baseURL: 'http://192.168.32.106:8088'
   });
 }else{
   Vue.prototype.wsServer = '192.168.1.46:8080';
+  Vue.prototype.apiServer = 'http://192.168.1.46:8080/inter/';
+  Vue.prototype.testCaseServer = 'http://192.168.1.46:8080/case/';
+  Vue.prototype.groupServer = 'http://192.168.1.46:8080/group/';
 
   Vue.prototype.testCaseAxios = axios.create({
     baseURL: 'http://192.168.1.46:8080/case/'

@@ -34,10 +34,10 @@ let env = 'prod'
 
 if(env === 'dev') {
 
-  Vue.prototype.wsServer = '192.168.32.138:8083';
-  Vue.prototype.apiServer = 'http://192.168.32.138:8082/inter/';
-  Vue.prototype.testCaseServer = 'http://192.168.32.138:8083/case/';
-  Vue.prototype.groupServer = 'http://192.168.32.138:8082/group/';
+  Vue.prototype.wsServer = '192.168.32.106:8083';
+  Vue.prototype.apiServer = 'http://192.168.32.106:8082/inter/';
+  Vue.prototype.testCaseServer = 'http://192.168.32.106:8083/case/';
+  Vue.prototype.groupServer = 'http://192.168.32.106:8082/group/';
 
   Vue.prototype.testCaseAxios = axios.create({
     baseURL: 'http://192.168.32.106:8083/case/'
@@ -63,7 +63,7 @@ if(env === 'dev') {
   Vue.prototype.wsServer = '192.168.1.46:8080';
   Vue.prototype.apiServer = 'http://192.168.1.46:8080/inter/';
   Vue.prototype.testCaseServer = 'http://192.168.1.46:8080/case/';
-  Vue.prototype.groupServer = 'http://192.168.1.46:8080/group/';
+  Vue.prototype.groupServer = 'http://192.168.1.46:8084/group/';
 
   Vue.prototype.testCaseAxios = axios.create({
     baseURL: 'http://192.168.1.46:8080/case/'

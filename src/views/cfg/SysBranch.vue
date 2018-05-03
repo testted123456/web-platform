@@ -3,8 +3,8 @@
     <el-main>
       <el-row style="text-align: left;padding-left: 7px">
         <el-button type="text" @click="search">按系统查询</el-button>
-        <el-button type="text" @click="refresh">刷新</el-button>
-        <el-button type="text" @click="refresh">同步</el-button>
+        <!--<el-button type="text" @click="refresh">刷新</el-button>-->
+        <el-button type="text" @click="sync">按系统同步</el-button>
       </el-row>
       <el-row>
         <el-table
@@ -12,7 +12,7 @@
         >
           <el-table-column
             label="系统名称"
-            prop="system"
+            prop="system" align="left"
             >
             <!--<template slot-scope="scope">-->
               <!--<el-input v-model="appearSysBranch[scope.$index].system"></el-input>-->
@@ -21,23 +21,24 @@
 
           <el-table-column
           label="分支"
-          prop="branch"
+          prop="branch" align="left"
           >
           <!--<template slot-scope="scope">-->
             <!--<el-input v-model="appearSysBranch[scope.$index].branch"></el-input>-->
           <!--</template>-->
          </el-table-column>
 
-          <!--<el-table-column-->
-            <!--label="版本"-->
-            <!--&gt;-->
-            <!--<template slot-scope="scope">-->
-              <!--<el-input v-model="appearSysBranch[scope.$index].version"></el-input>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
+          <el-table-column
+            label="状态" align="left"
+            >
+            <template slot-scope="scope">
+              <!--<el-input v-model="showStatus(appearSysBranch[scope.$index].optstatus)"></el-input>-->
+              <label >{{showStatus(appearSysBranch[scope.$index].optstatus)}}</label>
+            </template>
+          </el-table-column>
 
           <el-table-column
-            label="最新？" align="center"
+            label="最新？" align="left"
           >
             <template slot-scope="scope">
               <el-checkbox v-model="appearSysBranch[scope.$index].last"></el-checkbox>
@@ -45,7 +46,7 @@
           </el-table-column>
 
           <el-table-column
-            label="操作" >
+            label="操作" align="left">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="导入" placement="top">
                 <el-button @click.native.prevent="deleteRow(scope.$index, appearSysBranch)" type="text" size="small"><i class="el-icon-download"></i></el-button>
@@ -146,7 +147,8 @@
                   system:'',
                   branch:'',
                   version:'',
-                  last:''
+                  last:'',
+                  optstatus: 0
                 }]
               }
             }else{
@@ -165,6 +167,23 @@
             return true;
           }else{
             return false;
+          }
+        },
+
+        showStatus(status){
+          switch (status){
+            case '3':
+                return '同步中';
+                break;
+            case '4':
+              return '同步成功';
+              break;
+            case '5':
+              return '同步失败';
+              break;
+            default:
+              return '未同步'
+
           }
         },
 
@@ -239,7 +258,7 @@
           this.testCaseAxios({
             method: 'post',
             data: rows[index],
-            url: 'sysBranch/updateBranch'
+            url: 'sysBranch/updateLast'
           }).then(function (res) {
             if(res.data.code === 10000){
               vueThis.$message({
@@ -275,6 +294,40 @@
         },
 
         search(){
+          this.$prompt(null, '请输入系统名：', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+          }).then(({ value }) => {
+
+            let vueThis = this;
+
+            this.testCaseAxios({
+              method: 'get',
+              url: 'sysBranch/getBySystem?system=' + value
+            }).then(function (res) {
+              if(res.data.code === 10000){
+                vueThis.sysBranch = res.data.data;
+
+                if(vueThis.sysBranch === null || vueThis.sysBranch.length === 0){
+                  vueThis.sysBranch =[{
+                    system:'',
+                    branch:'',
+                    version:'',
+                    last:''
+                  }]
+                }
+              }else{
+                vueThis.$message({
+                  message: '抱歉，获取系统分支失败' + res.data.msg,
+                  type: 'error'
+                });
+              }
+            }).catch(function (err) {
+              vueThis.$message.error('服务器请求失败！');
+            })
+          })},
+
+        sync(){
           this.$prompt(null, '请输入系统名：', {
             confirmButtonText: '确定',
             cancelButtonText: '取消'

@@ -27,15 +27,17 @@
             var roles = res.data.data.roles;
             var roleName = roles[0].roleName;
 
+
+            var userInfo={
+              username:res.data.data.username,
+              nickname:res.data.data.nickname
+            }
+            vueThis.$store.commit( 'permission/' + 'changeUserInfo', userInfo)
+
+
             if(roles.length == 0){
               vueThis.$message.error('请去联系管理员添加角色' );
             }else if(roles.length == 1){
-
-              var userInfo={
-                username:res.data.data.username,
-                nickname:res.data.data.nickname
-              }
-              vueThis.$store.commit( 'permission/' + 'changeUserInfo', userInfo)
 
               var permissData={
                 del:true,

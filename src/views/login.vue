@@ -85,6 +85,11 @@
               }
               vueThis.$store.commit( 'permission/' + 'changeUserInfo', userInfo)
 
+              var permissData={
+                del:true,
+                edit:false
+              }
+              vueThis.$store.commit( 'permission/' + 'changeDBgroup', permissData)
 
             }else {
               vueThis.$message.error('登陆失败：' + res.data.msg);

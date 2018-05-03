@@ -564,9 +564,6 @@
 
       checkMsg() {
 
-        // if (this.msgLock === 0) {
-        //   return;
-        // }
 
         var vue_this = this;
 

@@ -30,19 +30,21 @@
             if(roles.length == 0){
               vueThis.$message.error('请去联系管理员添加角色' );
             }else if(roles.length == 1){
+
+              var userInfo={
+                username:res.data.data.username,
+                nickname:res.data.data.nickname
+              }
+              vueThis.$store.commit( 'permission/' + 'changeUserInfo', userInfo)
+
+              var permissData={
+                del:true,
+                edit:false
+              }
+              vueThis.$store.commit( 'permission/' + 'changeDBgroup', permissData)
+
               if(roleName == 'tester'){
 
-                var userInfo={
-                  username:res.data.data.username,
-                  nickname:res.data.data.nickname
-                }
-                vueThis.$store.commit( 'permission/' + 'changeUserInfo', userInfo)
-
-                var permissData={
-                  del:true,
-                  edit:false
-                }
-                vueThis.$store.commit( 'permission/' + 'changeDBgroup', permissData)
 
               }
             }

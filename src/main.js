@@ -30,7 +30,7 @@ String.prototype.trim = function () {
 //   username:'',
 //   nickname:''
 // }
-let env = 'prod'
+let env = 'dev'
 
 if(env === 'dev') {
 
@@ -85,27 +85,40 @@ if(env === 'dev') {
 Vue.prototype.apiAxios.interceptors.response.use(data => {
     return data
 }, error => {
+  router.replace({
+    path: '/',
+  })
   return Promise.reject(error)
 })
 
 Vue.prototype.groupAxios.interceptors.response.use(data => {
   return data
 }, error => {
+  router.replace({
+    path: '/',
+  })
+
   return error
 })
 
 Vue.prototype.usrAxios.interceptors.response.use(data => {
   return data
 }, error => {
+  router.replace({
+    path: '/',
+  })
   return Promise.reject(error)
 })
 
+
 Vue.prototype.testCaseAxios.interceptors.response.use(data => {
   return data
-}, (error, vueObj) => {
+}, (error) => {
 
-  vueObj.$router.push({name: 'Login'});
-  console.log('请求失败请求失败请求失败请求失败请求失败请求失败请求失败请求失败请求失败请求失败请求失败')
+  router.replace({
+    path: '/',
+    // query: {redirect: router.currentRoute.fullPath}
+  })
 
   return Promise.reject(error)
 })

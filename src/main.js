@@ -60,7 +60,7 @@ if(env === 'dev') {
     baseURL: 'http://192.168.32.106:8088'
   });
 }else{
-  Vue.prototype.wsServer = '192.168.1.46:8080';
+  Vue.prototype.wsServer = '192.168.1.49:9090';
   Vue.prototype.apiServer = 'http://192.168.1.46:8080/inter/';
   Vue.prototype.testCaseServer = 'http://192.168.1.46:8080/case/';
   Vue.prototype.groupServer = 'http://192.168.1.46:8084/group/';

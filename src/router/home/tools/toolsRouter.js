@@ -1,15 +1,16 @@
 import ToolsMain from '@/views/tools/ToolsMain'
+import CodeCheck from '@/views/tools/CodeCheck'
 
 export default {
   path: 'tools',
   name: 'ToolsMain',
   component: ToolsMain,
   children: [
-    // {
-    //   path: 'mockNew',
-    //   name: 'MockNew',
-    //   component: MockNew
-    // },
+    {
+      path: 'codeCheck',
+      name: 'CodeCheck',
+      component: CodeCheck
+    },
     // {
     //   path: 'mockEdit/:id',
     //   name: 'MockEdit',

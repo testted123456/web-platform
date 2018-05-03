@@ -46,7 +46,7 @@
       select(index, indexPath){
           switch (index){
             case '1':{
-              this.$router.push({name: 'GVar'});
+              this.$router.push({name: 'CodeCheck'});
             }
             break;
             case '2':{

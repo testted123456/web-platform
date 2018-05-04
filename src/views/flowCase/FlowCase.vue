@@ -479,7 +479,7 @@
         if(this.checkboxExecutable){
           if(this.selectedCaseArr.length > 0){
             this.dialog = {
-              title: '执行结果',
+              title: '',
               visible: true,
               footerVisible: false,
               contentType: 3,

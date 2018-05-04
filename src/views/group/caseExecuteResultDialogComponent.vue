@@ -312,13 +312,13 @@
             if (res.data.code === 10000) {
               vueThis.groupList = res.data.data;
 
-              vueThis.groupList.forEach(function(val,index,arr){
-                if(val.result){
-                  val.result = 'true'
-                }else{
-                  val.result = 'false'
-                }
-              })
+              // vueThis.groupList.forEach(function(val,index,arr){
+              //   if(val.result){
+              //     val.result = 'true'
+              //   }else{
+              //     val.result = 'false'
+              //   }
+              // })
 
             }
           })
@@ -337,31 +337,36 @@
           .then(function (res) {
             if (res.data.code === 10000) {
               vueThis.records = res.data.data;
+              if(vueThis.records.length > 0){
+                //获取最近一次执行的 group信息
+                var id = vueThis.records[0].id
+                vueThis.testCaseAxios({
+                  method: 'get',
+                  url: "report/getGroupReport?historyId=" + id
+                })
+                  .then(function (res) {
+                    if (res.data.code === 10000) {
+                      vueThis.groupList = res.data.data;
 
+                      vueThis.groupList.forEach(function(val,index,arr){
+                        if(val.result){
+                          val.result = 'true'
+                        }else{
+                          val.result = 'false'
+                        }
+                      })
 
-              //获取最近一次执行的 group信息
-              var id = vueThis.records[0].id
-              vueThis.testCaseAxios({
-                method: 'get',
-                url: "report/getGroupReport?historyId=" + id
-              })
-              .then(function (res) {
-                if (res.data.code === 10000) {
-                  vueThis.groupList = res.data.data;
-
-                  vueThis.groupList.forEach(function(val,index,arr){
-                    if(val.result){
-                      val.result = 'true'
-                    }else{
-                      val.result = 'false'
                     }
                   })
+                  .catch(function (err) {
+                    vueThis.$message.error('抱歉，服务器异常！');
+                  });
+              }else{
+                vueThis.$message.error('暂无执行信息！');
 
-                }
-              })
-              .catch(function (err) {
-                vueThis.$message.error('抱歉，服务器异常！');
-              });
+              }
+
+
 
             }
           })
@@ -498,7 +503,7 @@
   }
   .hTitle{
     padding: 15px 0;
-    font-size: 18px;
+    font-size: 16px;
   }
   .textAreaStyle{
     outline: none !important;

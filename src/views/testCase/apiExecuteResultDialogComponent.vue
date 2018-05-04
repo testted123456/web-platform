@@ -369,7 +369,7 @@
   }
   .hTitle{
     padding: 15px 0;
-    font-size: 18px;
+    font-size: 16px;
   }
   .textAreaStyle{
     outline: none !important;

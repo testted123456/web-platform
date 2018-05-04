@@ -7,16 +7,7 @@
                   style="width: 100%"
                   ref="multipleTable" border>
 
-          <el-table-column
-            prop="apiName"
-            label="接口名称"
-            align="left"
-          >
-            <template slot-scope="scope">
-              <span>{{ scope.row.tcName }}</span>
-            </template>
 
-          </el-table-column>
 
           <el-table-column
             prop="apiName"
@@ -24,12 +15,21 @@
             align="left"
           >
             <template slot-scope="scope">
-              <el-button type="text" @click="getDetail(scope.$index)">{{ scope.row.apiName }}</el-button>
+              <span type="text" >{{ scope.row.tcName  }}</span>
             </template>
 
           </el-table-column>
 
+          <el-table-column
+            prop="apiName"
+            label="接口名称"
+            align="left"
+          >
+            <template slot-scope="scope">
+              <el-button @click="getDetail(scope.$index)" type="text">{{ scope.row.apiName}}</el-button>
+            </template>
 
+          </el-table-column>
 
           <el-table-column
             prop="apiStepName"
@@ -274,13 +274,13 @@
             if (res.data.code === 10000) {
               vueThis.apiResult = res.data.data;
               console.log(vueThis.apiResult )
-              vueThis.apiResult.forEach(function(val,index,arr){
-                if(val.result){
-                  val.result = 'true'
-                }else{
-                  val.result = 'false'
-                }
-              })
+              // vueThis.apiResult.forEach(function(val,index,arr){
+              //   if(val.result){
+              //     val.result = 'true'
+              //   }else{
+              //     val.result = 'false'
+              //   }
+              // })
             }
           })
           .catch(function (err) {
@@ -391,7 +391,7 @@
   }
   .hTitle{
     padding: 15px 0;
-    font-size: 18px;
+    font-size: 16px;
   }
   .textAreaStyle{
     outline: none !important;

@@ -862,7 +862,7 @@
 
 
        checkMsg() {
-         
+
          var vue_this = this;
 
          if(this.msgQueue.length > this.socketArrLength){
@@ -876,8 +876,14 @@
                this.shortMessage += this.msgQueue[i] + '\n';
              }
              this.excResult = this.shortMessage;
-
              console.log(this.excResult);
+
+             this.$nextTick(function () {
+               var markdown = document.getElementsByClassName('markDown')[0]
+               markdown.scrollTop = markdown.scrollHeight -  markdown.offsetHeight + ((markdown.scrollHeight> markdown.offsetHeight)?24:0)
+               console.log( markdown.scrollHeight)
+             })
+
              this.shortMessage = '';
 
              setTimeout(function () {

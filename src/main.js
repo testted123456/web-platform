@@ -85,28 +85,42 @@ if(env === 'dev') {
 Vue.prototype.apiAxios.interceptors.response.use(data => {
     return data
 }, error => {
-  router.replace({
-    path: '/',
-  })
+  if (error.response) {
+    switch (error.response.status) {
+      case 401:
+        router.replace({
+          path: '/',
+        })
+    }
+  }
   return Promise.reject(error)
 })
 
 Vue.prototype.groupAxios.interceptors.response.use(data => {
   return data
 }, error => {
-  router.replace({
-    path: '/',
-  })
-
+  if (error.response) {
+    switch (error.response.status) {
+      case 401:
+        router.replace({
+          path: '/',
+        })
+    }
+  }
   return error
 })
 
 Vue.prototype.usrAxios.interceptors.response.use(data => {
   return data
 }, error => {
-  router.replace({
-    path: '/',
-  })
+  if (error.response) {
+    switch (error.response.status) {
+      case 401:
+        router.replace({
+          path: '/',
+        })
+    }
+  }
   return Promise.reject(error)
 })
 
@@ -115,24 +129,15 @@ Vue.prototype.testCaseAxios.interceptors.response.use(data => {
   return data
 }, (error) => {
 
-  router.replace({
-    path: '/',
-    // query: {redirect: router.currentRoute.fullPath}
-  })
-
-  // if (error.response) {
-  //   switch (error.response.status) {
-  //     case 401:
-  //       // 返回 401 清除token信息并跳转到登录页面
-  //       store.commit(types.LOGOUT);
-  //       router.replace({
-  //         path: 'login',
-  //         query: {redirect: router.currentRoute.fullPath}
-  //       })
-  //   }
-  // }
-
-
+  if (error.response) {
+    switch (error.response.status) {
+      case 401:
+        router.replace({
+          path: '/',
+          // query: {redirect: router.currentRoute.fullPath}
+        })
+    }
+  }
   return Promise.reject(error)
 })
 

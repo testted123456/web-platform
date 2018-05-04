@@ -2,12 +2,15 @@
   <el-container id="envSys">
     <el-main>
       <div style="width: 80%;padding-left: 5%;border: 1px">
+        <el-row style="text-align: left">
+          <el-button type="text" @click="search">按系统查询</el-button>
+        </el-row>
         <el-table
           :data="appearENVs"
           stripe
         >
           <el-table-column
-            label="环境" sortable
+            label="环境"
           >
             <template slot-scope="scope">
               <el-select v-model="appearENVs[scope.$index].env.id" placeholder="请选择">
@@ -22,7 +25,7 @@
           </el-table-column>
 
           <el-table-column
-            label="系统" sortable
+            label="系统"
           >
             <template slot-scope="scope">
               <el-select v-model="appearENVs[scope.$index].systemCfg.id" placeholder="请选择">
@@ -123,6 +126,44 @@
     },
 
     methods: {
+      search(){
+        this.$prompt(null, '请输入系统名：', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(({ value }) => {
+
+          console.log(value)
+
+          this.currentPage = 1;
+
+
+          let vueThis = this;
+
+          this.testCaseAxios({
+            method: 'get',
+            url: 'sysBranch/getBySystem?system=' + value
+          }).then(function (res) {
+            if(res.data.code === 10000){
+              vueThis.envSysems = res.data.data;
+
+              if(vueThis.envSysems === null || vueThis.envSysems.length === 0){
+                vueThis.envSysems =[{
+                  env:{id:''},
+                  systemCfg:{id:''},
+                  domain: '',
+                  dns:''
+                }]
+              }
+            }else{
+              vueThis.$message({
+                message: '抱歉，获取失败' + res.data.msg,
+                type: 'error'
+              });
+            }
+          }).catch(function (err) {
+            vueThis.$message.error('服务器请求失败！');
+          })
+        })},
       init(){
         var vueThis = this;
 
@@ -296,6 +337,8 @@
 </script>
 
 <style scoped>
-
+  .el-table th{
+    text-align: center !important;
+  }
 
 </style>

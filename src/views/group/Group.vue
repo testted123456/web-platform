@@ -478,7 +478,7 @@
       /*执行结果*/
       caseExecuteResult(){
         this.dialog = {
-          title: '执行结果',
+          title: '',
           visible: true,   //整个弹窗显示与否
           footerVisible: false,
           contentType: 4,  //弹窗内容显示什么
@@ -521,7 +521,7 @@
             if(res.data.code === 10000){
 
               perThis.dialog = {
-                title: '执行结果',
+                title: '',
                 visible: true,
                 footerVisible: false,
                 contentType: 3,

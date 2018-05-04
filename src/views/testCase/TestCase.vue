@@ -732,7 +732,7 @@
       /*执行结果*/
       apiExecuteResult() {
         this.dialog = {
-         title: '执行结果报告',
+         title: '',
          visible: true,
          footerVisible: false,
          contentType: 8,
@@ -773,7 +773,7 @@
         if(this.checkboxExecutable){
           if(this.selectedApiArr.length > 0){
             this.dialog = {
-              title: '执行结果',
+              title: '',
               visible: true,
               footerVisible: false,
               contentType: 7,

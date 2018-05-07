@@ -49,7 +49,7 @@
             label="操作" align="left">
             <template slot-scope="scope">
               <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="导入" placement="top">
-                <el-button @click.native.prevent="deleteRow(scope.$index, appearSysBranch)" type="text" size="small"><i class="el-icon-download"></i></el-button>
+                <el-button @click.native.prevent="syncGit(scope.$index, appearSysBranch)" type="text" size="small"><i class="el-icon-download"></i></el-button>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="查看HTML" placement="top" >
                 <el-button @click.native.prevent="viewHTML(scope.$index, appearSysBranch)"  type="text" size="small"><i class="el-icon-view"></i></el-button>
@@ -191,14 +191,60 @@
         viewHTML(index, rows){
             let system = rows[index].system;
             let branch = rows[index].branch;
-          window.open(this.apiServer +'apidocs/' + system + '/' + branch + '/index.html')
+            window.open(this.apiServer +'apidocs/' + system + '/' + branch + '/index.html')
         },
 
         //删除消息头中的一行
-        deleteRow(index, rows) {
-          this.delDialogVisible = true;
-          this.delIndex = index;
-          this.delSysBranch = rows;
+        syncGit(index, rows) {
+          let alias = '';
+          let gitAddress = '';
+          let vueThis = this;
+
+          this.testCaseAxios({
+            method: 'get',
+            url: 'sysCfg/getBySystem?system=' + rows[index].system
+          }).then(function (res) {
+            if(res.data.code === 10000){
+              alias = res.data.data.alias;
+              gitAddress = res.data.data.gitAddress;
+
+              vueThis.apiAxios({
+                method: 'post',
+                data: {
+                  'system': rows[index].system,
+                  'alias': alias,
+                  'gitAddress': gitAddress,
+                  'branch': rows[index].branch,
+                  'versionCode': rows[index].version
+                },
+                url: 'api/syncApidoc'
+              }).then(function (res) {
+                if(res.data.code === 10000){
+
+                  vueThis.$message({
+                    message: '开始同步',
+                    type: 'success'
+                  });
+                }else{
+                  vueThis.$message({
+                    message: '抱歉，同步失败' + res.data.msg,
+                    type: 'error'
+                  });
+                }
+              }).catch(function (err) {
+                vueThis.$message.error('服务器请求失败！'+ err.message);
+              })
+            }else{
+              vueThis.$message({
+                message: '抱歉，获取系统配置失败' + res.data.msg,
+                type: 'error'
+              });
+            }
+          }).catch(function (err) {
+            vueThis.$message.error('服务器请求失败！');
+          })
+
+
         },
 
         del(){

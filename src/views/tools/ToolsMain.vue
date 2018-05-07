@@ -50,7 +50,7 @@
             }
             break;
             case '2':{
-              this.$router.push({name: 'DBGroup'});
+              this.$router.push({name: 'CoverageStatistics'});
             }
             break;
           }

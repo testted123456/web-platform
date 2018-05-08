@@ -172,13 +172,13 @@
 
         showStatus(status){
           switch (status){
-            case '3':
+            case 3:
                 return '同步中';
                 break;
-            case '4':
+            case 4:
               return '同步成功';
               break;
-            case '5':
+            case 5:
               return '同步失败';
               break;
             default:

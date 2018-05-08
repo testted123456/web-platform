@@ -1,5 +1,7 @@
 import ToolsMain from '@/views/tools/ToolsMain'
 import CodeCheck from '@/views/tools/CodeCheck'
+import CoverageStatistics from '@/views/tools/coverageStatistics'
+
 
 export default {
   path: 'tools',
@@ -11,11 +13,12 @@ export default {
       name: 'CodeCheck',
       component: CodeCheck
     },
-    // {
-    //   path: 'mockEdit/:id',
-    //   name: 'MockEdit',
-    //   component: MockEdit
-    // },
+    {
+      path: 'coverageStatistics',
+      name: 'CoverageStatistics',
+      component: CoverageStatistics
+    }
+    // ,
     // {
     //   path: 'mockDirNew',
     //   name: 'MockDirNew',

@@ -10,7 +10,7 @@
           stripe
         >
           <el-table-column
-            label="环境"
+            label="环境" align="center"
           >
             <template slot-scope="scope">
               <el-select v-model="appearENVs[scope.$index].env.id" placeholder="请选择">

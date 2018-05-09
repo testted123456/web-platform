@@ -356,6 +356,7 @@
     refreshApi(){//刷新节点
       var node = this.$refs.tree.currentNode.node;
       var vueThis = this;
+      node.expand();
 
       this.apiAxios({
         method: 'get',

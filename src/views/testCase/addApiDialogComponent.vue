@@ -4,7 +4,57 @@
       <el-col :span="8" style="border:1px solid #ccc;border-radius:3px;">
         <div class="vue-transfer-tree">
           <label class="vue-transfer-label">接口</label>
-          <input class="vue-transfer-input" placeholder="输入接口名称搜索"/>
+          <!--<input class="vue-transfer-input" placeholder="输入接口名称搜索"/>-->
+          <div style="text-align: center;padding-top:10px;">
+            <el-button @click="show = !show" style="padding:12px 72px;">搜 索 <i class="el-icon-search"></i></el-button>
+
+            <div style="display: flex; margin-top: 20px; height: 1px;width:100%;background-color: #fff;">
+              <el-collapse-transition name="el-fade-in-linear">
+                <div v-show="show" class="transition-box">
+
+                  <el-row style="padding:4px 0">
+                    <el-col :span="4" style="padding-top:8px;color:#999;font-size: 12px; ">API名称</el-col>
+                    <el-col :span="20">
+                      <el-input v-model.trim="searchInfo.name" placeholder="请输入API名称"></el-input>
+                    </el-col>
+                  </el-row>
+                  <el-row style="padding:4px 0">
+                    <el-col :span="4" style="padding-top:8px; color:#999;font-size: 12px;">API URL</el-col>
+                    <el-col :span="20">
+                      <el-input v-model.trim="searchInfo.urlAddress" placeholder="请输入API URL"></el-input>
+                    </el-col>
+                  </el-row>
+                  <el-row style="padding:4px 0">
+                    <el-col :span="4" style="padding-top:8px; color:#999;font-size: 12px;">API分支</el-col>
+                    <el-col :span="20">
+                      <el-input v-model.trim="searchInfo.branch" placeholder="请输入API分支"></el-input>
+                    </el-col>
+                  </el-row>
+                  <el-row style="padding:4px 0">
+                    <el-col :span="4" style="padding-top:8px; color:#999;font-size: 12px;">API模块</el-col>
+                    <el-col :span="20">
+                      <el-input v-model.trim="searchInfo.module" placeholder="请输入API模块"></el-input>
+                    </el-col>
+                  </el-row>
+                  <el-row style="padding:4px 0">
+                    <el-col :span="4" style="padding-top:8px; color:#999;font-size: 12px;">API系统</el-col>
+                    <el-col :span="20">
+                      <el-input v-model.trim="searchInfo.system" placeholder="请输入API系统"></el-input>
+                    </el-col>
+                  </el-row>
+
+                  <el-row style="padding:4px 0">
+                    <el-col :span="24">
+                      <el-button @click="filterTreeData">确认</el-button>
+                    </el-col>
+                  </el-row>
+
+                </div>
+              </el-collapse-transition>
+
+            </div>
+          </div>
+
           <el-tree :load="loadNode"
                    lazy
                    ref="tree"
@@ -70,6 +120,14 @@
     name: 'addApiDialogComponent',
     data(){
       return {
+        show:false,
+        searchInfo:{
+          name:'',
+          urlAddress:'',
+          branch:'',
+          module:'',
+          system:''
+        },
         defaultProps:{
           label: 'name',
           isLeaf: 'type',
@@ -140,93 +198,85 @@
         }
       },
 
-      handleNodeClick(data, node, instance) {
-      },
-      loadNode(node, resolve) {
-        if(node.level === 0){
-          return resolve([{ name:  'Root', id: 0 , type: false}]);
-        }else if(node.isLeaf === true){
-          return;
+      //过滤搜索树的内容
+      filterTreeData(){
+
+
+        if(this.searchInfo.name == '' && this.searchInfo.urlAddress == '' && this.searchInfo.branch == '' && this.searchInfo.module == '' && this.searchInfo.system == ''){
+          this.$message.error('请输入要筛选的条件！' );
         }else{
 
-          var vueThis = this;
-          vueThis.apiAxios({
-            method: 'get',
-            url: "api/getApiTreeByPId?pId=" + node.data.id
-          })
-          .then(function (res) {
-            if(res.data.code === 10000){
-              var apiTreeInfo = res.data.data;
-              return resolve(res.data.data);
-            }
-            return;
-          })
-          .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
-          });
+          if(this.searchInfo.system == ''){
+            this.$message.error('api系统必填！' );
+          }else{
+            var vueThis = this;
+            vueThis.apiAxios({
+              method: 'get',
+              url: "api/searchApi?name="+ vueThis.searchInfo.name +"&urlAddress="+ vueThis.searchInfo.urlAddress +"&branch="+ vueThis.searchInfo.branch +"&module="+ vueThis.searchInfo.module +"&system="+ vueThis.searchInfo.system
+            })
+              .then(function (res) {
 
-         // var apiTreeData =  [
-//            {
-//              "id": 1,
-//              "name": "1",
-//              "description": "",
-//              "pId": 0,
-//              "module": "1",
-//              "branch": "1",
-//              "urlAddress": "1",
-//              "apiType": "0",
-//              "type": true,
-//              "postWay": "1",
-//              "requestHead":null,
-//              "requestBodyType": "2",
-//              "requestBodyRowType": "2",
-//              "requestBody": null,
-//              "responseHead": null,
-//              "responseBodyType": "0",
-//              "responseBody": null,
-//              "createdBy": "",
-//              "createdTime": null,
-//              "updatedBy": "",
-//              "updatedTime": null,
-//              "optstatus": 0,
-//              "system": "usr",
-//              "variables":[{"varName":'ddd',"varValue":'dsfdsf'}],
-//              "assertions":[{actualResult:"${term}",comparator:"=",expectResult:"19"}],
-//              "step":'1'
-//            }, {
-//              "id": 2,
-//              "interfaceName": "2",
-//              "description": "",
-//              "pId": 0,
-//              "module": "2",
-//              "branch": "2",
-//              "urlAddress": "2",
-//              "apiType": "0",
-//              "type": true,
-//              "postWay": "1",
-//              "requestHead": null,
-//              "requestBodyType": "2",
-//              "requestBodyRowType": "2",
-//              "requestBody": null,
-//              "responseHead": null,
-//              "responseBodyType": "0",
-//              "responseBody": null,
-//              "createdBy": "",
-//              "createdTime": null,
-//              "updatedBy": "",
-//              "updatedTime": null,
-//              "optstatus": 0,
-//              "system": "trd",
-//              "variables":[{"varName":'ddd',"varValue":'dsfdsf'}],
-//              "assertions":null,
-//              "step":'1'
-//            }]
-//          var apiTreeInfo = apiTreeData;
-//          return resolve(apiTreeInfo);
+                if (res.data.code === 10000 ) {
+                  if(res.data.data.length === 0){
+                    vueThis.$message.error('搜索出的信息为空！' );
+                  }
+                  vueThis.show = false;
+                  var  node = vueThis.$refs.tree.root.childNodes[0];
+                  node.loaded = true;
+                  node.data.children = res.data.data;
+                  node.updateChildren();
+                  node.expand();
+                }else{
+                  vueThis.$message.error('抱歉，服务器异常！' );
+                }
+
+              })
+              .catch(function (err) {
+                vueThis.$message.error('抱歉，服务器异常！' );
+              });
+          }
+
+        }
+      },
+      // 懒加载树内容
+      loadNode(node, resolve) { //渲染树节点
+
+        if (node.level === 0) {
+          return resolve([{name: '接口', id: 0, type: false}]);
+        } else if (node.isLeaf === true) {
+          return;
+        } else {
+          var vueThis = this;
+
+          if(node.data.children){
+            return resolve(node.data.children);
+          }else{
+            vueThis.apiAxios({
+              method: 'get',
+              url: "api/getApiTreeByPId?pId=" + node.data.id
+            })
+              .then(function (res) {
+                if (res.data.code === 10000 ) {
+                  var tempApi = res.data.data;
+                  return resolve(res.data.data);
+                }
+                return;
+
+              })
+              .catch(function (err) {
+                vueThis.$message.error('抱歉，服务器异常！' );
+              });
+          }
+
 
 
         }
       },
+
+
+      handleNodeClick(data, node, instance) {
+      },
+
       addApi(){
         var node = this.$refs.tree.currentNode.node;
         var data = node.data;
@@ -318,8 +368,8 @@
   .vue-transfer-tree {
     /*border: 0.5px solid;*/
     border-radius: 5px;
-    min-height: 300px;
-    height: 300px;
+    min-height: 500px;
+    height: 500px;
     margin-left: 2px;
     margin-right: 2px;
     padding-right: 1px;
@@ -346,6 +396,21 @@
     margin-top: 10px;
     min-height: 32px;
     border-width: 0.5px;
+  }
+
+  .transition-box {
+    margin-bottom: 10px;
+    width: 100%;
+    /*margin-left:10%;*/
+    height: 320px;
+    border-radius: 4px;
+    background-color: rgb(236, 243, 250);
+    text-align: center;
+    color: #fff;
+    padding: 2px;
+    box-sizing: border-box;
+    /*margin-right: 20px;*/
+    z-index: 2;
   }
 
 </style>

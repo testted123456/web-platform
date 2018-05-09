@@ -2,36 +2,31 @@
   <el-container>
     <el-aside width="240px" id="testCasedragAside" class="leftAside">
       <div class="leftNavTree">
-        <div class="menu" style="">
-          <!--position: absolute;top:0;left:0;background-color: #ff0;z-index: 9;-->
+        <div class="menu">
+
           <div style="text-align: left;">
             <el-button @click="show = !show" style="padding:12px 72px;">搜 索 <i class="el-icon-search"></i></el-button>
 
-            <div style="display: flex; margin-top: 20px; height: 10px;width:200px;background-color: #fff;">
+            <div style="display: flex; margin-top: 20px; height: 1px;width:100%;background-color: #fff;">
               <el-collapse-transition name="el-fade-in-linear">
                 <div v-show="show" class="transition-box">
 
                   <el-row style="padding:4px 0">
-                    <el-col :span="4" style="padding-top:8px;color:#999 ">姓名</el-col>
+                    <el-col :span="4" style="padding-top:8px;color:#999;font-size: 12px; ">名称</el-col>
                     <el-col :span="20">
-                      <el-input v-model="searchinfo.name" placeholder="请输入用户姓名"></el-input>
+                      <el-input v-model.trim="searchInfo.name" placeholder="请输入名称"></el-input>
                     </el-col>
                   </el-row>
                   <el-row style="padding:4px 0">
-                    <el-col :span="4" style="padding-top:8px; color:#999">姓名</el-col>
+                    <el-col :span="4" style="padding-top:8px; color:#999;font-size: 12px;">创建人</el-col>
                     <el-col :span="20">
-                      <el-input v-model="searchinfo.name" placeholder="请输入用户姓名"></el-input>
+                      <el-input v-model.trim="searchInfo.createdBy" placeholder="请输入创建人"></el-input>
                     </el-col>
                   </el-row>
+
                   <el-row style="padding:4px 0">
-                    <el-col :span="4" style="padding-top:8px;color:#999 ">姓名</el-col>
-                    <el-col :span="20">
-                      <el-input v-model="searchinfo.name" placeholder="请输入用户姓名"></el-input>
-                    </el-col>
-                  </el-row>
-                  <el-row style="padding:4px 0">
-                    <el-col :span="20">
-                      <el-button>确认</el-button>
+                    <el-col :span="24">
+                      <el-button @click="filterTreeData">确认</el-button>
                     </el-col>
                   </el-row>
 
@@ -96,8 +91,9 @@
     data () {
       return {
         show:false,
-        searchinfo:{
-          name:''
+        searchInfo:{
+          name:'',
+          createdBy:''
         },
         data: [
 
@@ -181,6 +177,105 @@
     mounted(){
     },
     methods: {
+      //过滤搜索树的内容
+      filterTreeData(){
+
+
+        if(this.searchInfo.createdBy == '' && this.searchInfo.name == ''){
+          this.$message.error('请输入要筛选的条件！' );
+        }else{
+
+
+          var vueThis = this;
+          vueThis.testCaseAxios({
+            method: 'get',
+            url: "testCase/searchCase?name="+ vueThis.searchInfo.name +"&createdBy="+ vueThis.searchInfo.createdBy
+          })
+          .then(function (res) {
+            if (res.data.code === 10000 ) {
+              if(res.data.data.length === 0){
+                vueThis.$message.error('搜索出的信息为空！' );
+              }
+              vueThis.show = false;
+              var  node = vueThis.$refs.tree.root.childNodes[0];
+              node.loaded = true;
+              node.data.children = res.data.data;
+              node.updateChildren();
+              node.expand();
+            }else{
+              vueThis.$message.error('抱歉，服务器异常！' );
+            }
+
+          })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
+          });
+        }
+      },
+      // 懒加载树内容
+      loadNode(node, resolve) { //渲染树节点
+
+        if (node.level === 0) {
+          return resolve([{name: '测试用例', id: 0, type: false}]);
+        } else if (node.isLeaf === true) {
+          return;
+        } else {
+          var vueThis = this;
+
+          if(node.data.children){
+            return resolve(node.data.children);
+          }else{
+            vueThis.testCaseAxios({
+              method: 'get',
+              url: "testCase/getCaseTreeByPId?pId=" + node.data.id
+            })
+              .then(function (res) {
+                if (res.data.code === 10000 ) {
+                  var tempApi = res.data.data;
+                  return resolve(res.data.data);
+                }
+                return;
+
+              })
+              .catch(function (err) {
+                vueThis.$message.error('抱歉，服务器异常！' );
+              });
+          }
+
+
+
+        }
+      },
+      //刷新
+      refreshApi(){
+
+        var node = this.$refs.tree.currentNode.node;
+        var vueThis = this;
+        node.expand();
+
+        this.testCaseAxios({
+          method: 'get',
+          url: "testCase/getCaseTreeByPId?pId=" + node.data.id
+        }).then(function (res) {
+          if(res.data.code === 10000){
+            node.data.children = res.data.data;
+          }else{
+            vueThis.$message({
+              message: '刷新失败' + res.data.msg,
+              type: 'error'
+            });
+          }
+        }).catch(function (err) {
+          vueThis.$message.error('服务器请求失败！');
+        })
+
+        node.data.type = false;
+
+        node.updateChildren();
+        node.expand();
+
+        this.closeMenu();
+      },
 
       handleNodeClick(data, node, instance){
         if (node.data.type) {
@@ -189,32 +284,7 @@
           this.$router.push({name: 'TestCaseDir', query: {id: node.data.id}});
         }
       },
-      loadNode(node, resolve) { //渲染树节点
-        if (node.level === 0) {
-          return resolve([{name: '测试用例', id: 0, type: false}]);
-        } else if (node.isLeaf === true) {
-          return;
-        } else {
-          var vueThis = this;
-          vueThis.testCaseAxios({
-            method: 'get',
-            url: "testCase/getCaseTreeByPId?pId=" + node.data.id
-          })
-            .then(function (res) {
-              if (res.data.code === 10000 ) {
-                var tempApi = res.data.data;
-                return resolve(res.data.data);
-              }
-              return;
 
-            })
-            .catch(function (err) {
-              vueThis.$message.error('抱歉，服务器异常！' );
-            });
-
-
-        }
-      },
       handleRightClick(data, node, instance, x, y){ //右键接口树
         if (node.data.type) {
           this.contextMenuData.showAddDir = false;
@@ -330,11 +400,7 @@
         children.splice(i, 1);
         this.$router.push({name: 'TestCaseMain'});
       },
-      refreshApi(){
-        var node = this.$refs.tree.currentNode.node;
-        node.expand();
-        this.closeMenu();
-      }
+
     }
   }
 </script>
@@ -370,10 +436,10 @@
 
 .transition-box {
   margin-bottom: 10px;
-  width: 200px;
-  height: 200px;
+  width: 100%;
+  height: 160px;
   border-radius: 4px;
-  background-color: #fff;
+  background-color: rgb(236, 243, 250);
   text-align: center;
   color: #fff;
   padding: 2px;

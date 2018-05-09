@@ -20,7 +20,7 @@ Vue.prototype.cookieManager = Cookie
 Vue.prototype.ApiCopyId = 0;
 Vue.prototype.ApiCopyData = {};
 
-Vue.prototype.apisInfoCheckaddress = 'http://localhost:8080/#/';
+Vue.prototype.apisInfoCheckaddress = 'http://192.168.33.72:8080/#/';
 Vue.prototype.aceManager = aceManager
 String.prototype.trim = function () {
   return this.replace(/(^\s*)|(\s*$)/g, "");
@@ -30,8 +30,7 @@ String.prototype.trim = function () {
 //   username:'',
 //   nickname:''
 // }
-let env = 'prod'
-
+let  env = 'prod'
 if(env === 'dev') {
 
   Vue.prototype.wsServer = '192.168.32.13:8083';

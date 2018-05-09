@@ -12,25 +12,18 @@
             label="系统名称"
             prop="system" align="left"
             >
-            <!--<template slot-scope="scope">-->
-              <!--<el-input v-model="appearSysBranch[scope.$index].system"></el-input>-->
-            <!--</template>-->
           </el-table-column>
 
           <el-table-column
           label="分支"
           prop="branch" align="left"
           >
-          <!--<template slot-scope="scope">-->
-            <!--<el-input v-model="appearSysBranch[scope.$index].branch"></el-input>-->
-          <!--</template>-->
          </el-table-column>
 
           <el-table-column
             label="状态" align="left"
             >
             <template slot-scope="scope">
-              <!--<el-input v-model="showStatus(appearSysBranch[scope.$index].optstatus)"></el-input>-->
               <label >{{showStatus(appearSysBranch[scope.$index].codeChecked)}}</label>
             </template>
           </el-table-column>
@@ -39,12 +32,12 @@
           <el-table-column
             label="操作" align="left">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="检测" placement="top">
-                <el-button @click.native.prevent="checkCode(scope.$index, appearSysBranch)" type="text" size="small"><i class="el-icon-check"></i></el-button>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="查看HTML" placement="top" >
-                <el-button @click.native.prevent="viewHTML(scope.$index, appearSysBranch)"  type="text" size="small"><i class="el-icon-view"></i></el-button>
-              </el-tooltip>
+              <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="检测" placement="top">-->
+              <el-button @click.native.prevent="checkCode(scope.$index, appearSysBranch)" type="text" size="small">检测</el-button>
+              <!--</el-tooltip>-->
+              <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="查看HTML" placement="top" >-->
+              <el-button @click.native.prevent="viewHTML(scope.$index, appearSysBranch)"  type="text" size="small">查看</el-button>
+              <!--</el-tooltip>-->
 
             </template>
           </el-table-column>
@@ -95,23 +88,23 @@
         init(){
           var vueThis = this;
 
-          this.testCaseAxios({
-            method: 'get',
-            url: 'sysCfg/getAll'
-          }).then(function (res) {
-            if(res.data.code === 10000){
-                res.data.data.forEach(function (e, index) {
-                  vueThis.systems.push({value: e.system, text: e.system})
-                });
-            }else{
-              vueThis.$message({
-                message: '抱歉，获取系统失败' + res.data.msg,
-                type: 'error'
-              });
-            }
-          }).catch(function (err) {
-            vueThis.$message.error('服务器请求失败！');
-          });
+//          this.testCaseAxios({
+//            method: 'get',
+//            url: 'sysCfg/getAll'
+//          }).then(function (res) {
+//            if(res.data.code === 10000){
+//                res.data.data.forEach(function (e, index) {
+//                  vueThis.systems.push({value: e.system, text: e.system})
+//                });
+//            }else{
+//              vueThis.$message({
+//                message: '抱歉，获取系统失败' + res.data.msg,
+//                type: 'error'
+//              });
+//            }
+//          }).catch(function (err) {
+//            vueThis.$message.error('服务器请求失败！');
+//          });
 
           this.testCaseAxios({
             method: 'get',
@@ -141,6 +134,7 @@
         },
 
         showStatus(codeChecked){
+            console.log(codeChecked)
           switch (codeChecked){
             case null:
                 return '未检测';
@@ -158,14 +152,42 @@
         },
 
         checkCode(index, rows){
+          let vueThis = this;
 
+          this.apiAxios({
+            method: 'get',
+            url: 'codeCheck/check?system=' + rows[index].system + '&branch=' + rows[index].branch
+          }).then(function (res) {
+            if(res.data.code === 10000){
+              vueThis.$message({
+                message: '开始代码检测',
+                type: 'success'
+              });
+            }else{
+              vueThis.$message({
+                message: '抱歉，代码检测失败' + res.data.msg,
+                type: 'error'
+              });
+            }
+          }).catch(function (err) {
+            vueThis.$message.error('服务器请求失败！');
+          })
         },
 
         //查看报告
         viewHTML(index, rows){
+          if(rows[index].codeChecked != true){
+            this.$message({
+              message: '代码还未检测!',
+              type: 'warn'
+            });
+
+          }else{
             let system = rows[index].system;
             let branch = rows[index].branch;
-          window.open(this.apiServer +'checkReport/' + system + '/' + branch + '/testReport.html')
+            window.open(this.apiServer +'checkReport/' + system + '/' + branch + '/testReport.html')
+          }
+
         },
 
         handleSizeChange(val) {

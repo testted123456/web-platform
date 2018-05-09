@@ -2,29 +2,72 @@
   <el-container>
     <el-aside width="240px" id="testCasedragAside" class="leftAside">
       <div class="leftNavTree">
-        <div class="menu">
-          <el-input
-            placeholder="输入用例名称进行过滤"
-            round
-          >
-          </el-input>
-          <vue-content-menu :contextMenuData="contextMenuData"
-                            @addDir="addDir"
-                            @addItem="addCase"
-                            @delItem="showDelDialog"
-                            @refreshApi="refreshApi"
-          ></vue-content-menu>
-          <el-tree
-            :props="props"
-            :load="loadNode"
-            ref="tree"
-            :expand-on-click-node=false
-            lazy
-            node-key="id"
-            @node-click = "handleNodeClick"
-            @node-right-click = "handleRightClick"
-          >
-          </el-tree>
+        <div class="menu" style="">
+          <!--position: absolute;top:0;left:0;background-color: #ff0;z-index: 9;-->
+          <div style="text-align: left;">
+            <el-button @click="show = !show" style="padding:12px 72px;">搜 索 <i class="el-icon-search"></i></el-button>
+
+            <div style="display: flex; margin-top: 20px; height: 10px;width:200px;background-color: #fff;">
+              <el-collapse-transition name="el-fade-in-linear">
+                <div v-show="show" class="transition-box">
+
+                  <el-row style="padding:4px 0">
+                    <el-col :span="4" style="padding-top:8px;color:#999 ">姓名</el-col>
+                    <el-col :span="20">
+                      <el-input v-model="searchinfo.name" placeholder="请输入用户姓名"></el-input>
+                    </el-col>
+                  </el-row>
+                  <el-row style="padding:4px 0">
+                    <el-col :span="4" style="padding-top:8px; color:#999">姓名</el-col>
+                    <el-col :span="20">
+                      <el-input v-model="searchinfo.name" placeholder="请输入用户姓名"></el-input>
+                    </el-col>
+                  </el-row>
+                  <el-row style="padding:4px 0">
+                    <el-col :span="4" style="padding-top:8px;color:#999 ">姓名</el-col>
+                    <el-col :span="20">
+                      <el-input v-model="searchinfo.name" placeholder="请输入用户姓名"></el-input>
+                    </el-col>
+                  </el-row>
+                  <el-row style="padding:4px 0">
+                    <el-col :span="20">
+                      <el-button>确认</el-button>
+                    </el-col>
+                  </el-row>
+
+                </div>
+              </el-collapse-transition>
+
+            </div>
+          </div>
+
+
+          <!--<el-input-->
+            <!--placeholder="输入用例名称进行过滤"-->
+            <!--round-->
+          <!--&gt;-->
+          <!--</el-input>-->
+
+          <div style="padding-top:0px;">
+            <vue-content-menu :contextMenuData="contextMenuData"
+                              @addDir="addDir"
+                              @addItem="addCase"
+                              @delItem="showDelDialog"
+                              @refreshApi="refreshApi"
+            ></vue-content-menu>
+            <el-tree
+              :props="props"
+              :load="loadNode"
+              ref="tree"
+              :expand-on-click-node=false
+              lazy
+              node-key="id"
+              @node-click = "handleNodeClick"
+              @node-right-click = "handleRightClick"
+            >
+            </el-tree>
+          </div>
+
         </div>
         <el-dialog
           :visible.sync="delDialogVisible"
@@ -37,7 +80,6 @@
                   </span>
         </el-dialog>
       </div>
-      <!--<div class="dragLine" id="testCasedrag"></div>-->
     </el-aside>
     <router-view></router-view>
   </el-container>
@@ -53,6 +95,10 @@
     name: 'TestCaseMain',
     data () {
       return {
+        show:false,
+        searchinfo:{
+          name:''
+        },
         data: [
 
         ],
@@ -133,14 +179,9 @@
       }
     },
     mounted(){
-//      this.dragF();
     },
     methods: {
-      dragF(){
-        var oBox = document.getElementById("testCasedragAside");
-        var oBar = document.getElementById("testCasedrag");
-        this.drag.getWidth(oBar, oBox);
-      },
+
       handleNodeClick(data, node, instance){
         if (node.data.type) {
           this.$router.push({name: 'TestCase', query: {id: node.data.id}});
@@ -232,7 +273,6 @@
         });
 
       },
-
       delCase(){ //右键删除case
         this.delDialogVisible = false;
         const node = this.$refs.tree.currentNode.node;
@@ -327,5 +367,20 @@
     padding-right: 20px;
     width: 100%;
   }
+
+.transition-box {
+  margin-bottom: 10px;
+  width: 200px;
+  height: 200px;
+  border-radius: 4px;
+  background-color: #fff;
+  text-align: center;
+  color: #fff;
+  padding: 2px;
+  box-sizing: border-box;
+  /*margin-right: 20px;*/
+  z-index: 2;
+}
+
 
 </style>

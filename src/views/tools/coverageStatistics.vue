@@ -11,19 +11,19 @@
         >
           <el-table-column
             label="服务器"
-            prop="system" align="left"
+            prop="ip" align="left"
             >
           </el-table-column>
 
           <el-table-column
           label="端口"
-          prop="branch" align="left"
+          prop="port" align="left"
           >
          </el-table-column>
 
           <el-table-column
             label="系统"
-            prop="branch" align="left"
+            prop="system" align="left"
           >
           </el-table-column>
 
@@ -36,15 +36,18 @@
           <el-table-column
             label="操作" align="left">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="导入" placement="top">
-                <el-button @click.native.prevent="syncGit(scope.$index, appearCoverStatis)" type="text" size="small">统计</el-button>
+              <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="统计" placement="top">
+                <el-button @click.native.prevent="count(scope.$index, scope.row)" type="text" size="small">统计</el-button>
               </el-tooltip>
-              <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="查看HTML" placement="top" >
-                <el-button @click.native.prevent="viewHTML(scope.$index, appearCoverStatis)"  type="text" size="small">重置</el-button>
+              <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="重置" placement="top" >
+                <el-button @click.native.prevent="reset(scope.$index, scope.row)"  type="text" size="small">重置</el-button>
               </el-tooltip>
 
-              <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="保存" placement="top">
-                <el-button @click.native.prevent="save(scope.$index, appearCoverStatis)" type="text" size="small">查看</el-button>
+              <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="查看" placement="top">
+                <el-button @click.native.prevent="view(scope.$index, scope.row)" type="text" size="small">查看</el-button>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">
+                <el-button @click.native.prevent="del(scope.$index, scope.row)" type="text" size="small">删除</el-button>
               </el-tooltip>
 
             </template>
@@ -74,28 +77,28 @@
         >
           <el-table-column
             label="服务器"
-            prop="system" align="left"
+            prop="ip" align="left"
           >
             <template slot-scope="scope">
-              <el-input v-model="scope.row.system"></el-input>
+              <el-input v-model.trim="scope.row.ip"></el-input>
             </template>
           </el-table-column>
 
           <el-table-column
             label="端口"
-            prop="branch" align="left"
+            prop="port" align="left"
           >
             <template slot-scope="scope">
-              <el-input v-model="scope.row.branch"></el-input>
+              <el-input v-model.trim="scope.row.port"></el-input>
             </template>
           </el-table-column>
 
           <el-table-column
             label="系统"
-            prop="branch" align="left"
+            prop="system" align="left"
           >
             <template slot-scope="scope">
-              <el-input v-model="scope.row.branch"></el-input>
+              <el-input v-model.trim="scope.row.system"></el-input>
             </template>
           </el-table-column>
 
@@ -104,7 +107,7 @@
             prop="branch" align="left"
           >
             <template slot-scope="scope">
-              <el-input v-model="scope.row.branch"></el-input>
+              <el-input v-model.trim="scope.row.branch"></el-input>
             </template>
           </el-table-column>
 
@@ -127,13 +130,14 @@
           return {
             coverageStatisData:[],
             currentPage: 1,
-            pageSize: 10,
+            pageSize: 2,
             DialogVisible: false,
             addData:[
               {
-                'system':'1',
-                'branch':'2'
-
+                'ip':'',
+                'port':'',
+                'system':'',
+                'branch':''
               }
             ]
           }
@@ -152,14 +156,16 @@
       },
 
       methods: {
+        // 初始化数据
         getData(){
           var vueThis = this;
 
           this.testCaseAxios({
             method: 'get',
-            url: 'sysCfg/getAll'
+            url: 'codeCover/getAll'
           }).then(function (res) {
             if(res.data.code === 10000){
+              vueThis.coverageStatisData = res.data.data;
 
             }else{
               vueThis.$message({
@@ -172,6 +178,95 @@
           });
 
 
+        },
+        // 新增
+        addCoverageData(){
+          var vueThis = this;
+          console.log(this.addData[0].ip)
+
+          if(this.addData[0].ip == "" || this.addData[0].system == "" || this.addData[0].port == "" || this.addData[0].branch == ""){
+            vueThis.$message({
+              message: '需要全部填写完整',
+              type: 'error'
+            });
+          }else{
+            this.testCaseAxios({
+              method: 'post',
+              data: vueThis.addData[0],
+              url: 'codeCover/add'
+            }).then(function (res) {
+              if(res.data.code === 10000){
+                vueThis.DialogVisible = false;
+                vueThis.$message.success('添加成功！');
+                vueThis.coverageStatisData.push(res.data.data);
+
+              }else{
+                vueThis.$message({
+                  message: '抱歉，获取失败' + res.data.msg,
+                  type: 'error'
+                });
+              }
+            }).catch(function (err) {
+              vueThis.$message.error('服务器请求失败！');
+            });
+          }
+
+        },
+        // 删除
+        del(index,data){
+          var vueThis = this;
+          this.testCaseAxios({
+            method: 'post',
+            data: data,
+            url: 'codeCover/delete'
+          }).then(function (res) {
+            if(res.data.code === 10000){
+              vueThis.$message.success('删除成功！');
+              // vueThis.appearCoverStatis.splice(index,1);
+
+              for(var i=0;i<vueThis.coverageStatisData.length;i++){
+                if(data.id === vueThis.coverageStatisData[i].id){
+                  vueThis.coverageStatisData.splice(i,1);
+                  console.log(vueThis.coverageStatisData)
+               }
+              }
+            }else{
+              vueThis.$message({
+                message: '抱歉，删除失败' + res.data.msg,
+                type: 'error'
+              });
+            }
+          }).catch(function (err) {
+            vueThis.$message.error('服务器请求失败！');
+          });
+        },
+        // 重置
+        reset(index,data){
+
+        },
+        // 查看
+        view(index,data){
+          window.open(this.apiServer+'jacocoReport/index.html')
+        },
+        //统计
+        count(index,data){
+          var vueThis = this;
+          this.apiAxios({
+            method: 'get',
+            url: 'codeCover/generateReport?system='+data.system+'&branch='+data.branch+'&ip='+data.ip+'&port='+data.port
+          }).then(function (res) {
+            if(res.data.code === 10000){
+              vueThis.$message.success('发送成功！');
+
+            }else{
+              vueThis.$message({
+                message: '抱歉，删除失败' + res.data.msg,
+                type: 'error'
+              });
+            }
+          }).catch(function (err) {
+            vueThis.$message.error('服务器请求失败！');
+          });
         },
 
         handleSizeChange(val) {
@@ -189,12 +284,17 @@
 
         add(){
           this.DialogVisible = true;
+          this.addData=[
+            {
+              'ip':'',
+              'port':'',
+              'system':'',
+              'branch':''
+            }
+          ]
         },
 
-        addCoverageData(){
-          this.DialogVisible = false;
-          console.log(this.addData)
-        }
+
 
       }
   }

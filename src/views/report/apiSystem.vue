@@ -23,6 +23,10 @@ export default {
   data () {
     return {
       sysBar:{
+        title : {
+          text: '系统-接口数',
+          subtext: ''
+        },
         color: ['#3398DB'],
         tooltip : {
           trigger: 'axis',
@@ -82,6 +86,10 @@ export default {
       },
       //系统
       sysBarSystem:{
+        title : {
+          text: '模块-接口数',
+          subtext: ''
+        },
         color: ['#3398DB'],
         tooltip : {
           trigger: 'axis',
@@ -140,6 +148,10 @@ export default {
       },
       //系统 模块
       lineModule: {
+        title : {
+          text: '分支-接口数',
+          subtext: ''
+        },
         xAxis: {
           type: 'category',
           data: [],

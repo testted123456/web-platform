@@ -24,6 +24,10 @@
       // }
 
       var option =  {
+        title : {
+          text: '系统-接口被引用统计',
+          subtext: ''
+        },
         color: ['#539970', '#f00'],
         tooltip: {
           trigger: 'axis',

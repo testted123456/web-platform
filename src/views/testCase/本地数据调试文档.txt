@@ -366,3 +366,62 @@ this.testCase = {
 ]
 
 
+
+
+
+//  case 校验 信息
+<el-row :gutter="20">
+    <el-col :span="3"><div class="grid-content font-center">接口响应</div></el-col>
+    <el-col :span="7">
+        <div class="grid-content">
+            <textarea class="json-box">{{jsonData.lastResponseBody}}</textarea>
+        </div>
+    </el-col>
+    <el-col :span="7">
+        <div class="grid-content">
+            <textarea class="json-box">{{jsonData.currentResponseBody}}</textarea>
+        </div>
+    </el-col>
+    <el-col :span="7">
+        <div class="grid-content">
+            <textarea class="json-box">{{jsonData.compareApiResponse}}</textarea>
+        </div>
+    </el-col>
+</el-row>
+<el-row :gutter="20">
+    <el-col :span="3"><div class="grid-content font-center">实际请求</div></el-col>
+    <el-col :span="7">
+        <div class="grid-content">
+            <textarea class="json-box">{{jsonData.requestBody}}</textarea>
+        </div>
+    </el-col>
+    <el-col :span="7">
+        <div class="grid-content">
+
+        </div>
+    </el-col>
+    <el-col :span="7">
+        <div class="grid-content">
+            <textarea class="json-box">{{jsonData.compareRequest}}</textarea>
+        </div>
+    </el-col>
+</el-row>
+<el-row :gutter="20">
+    <el-col :span="3"><div class="grid-content font-center">预期结果</div></el-col>
+    <el-col :span="7">
+        <div class="grid-content">
+            <textarea class="json-box">{{jsonData.responseBody}}</textarea>
+        </div>
+    </el-col>
+    <el-col :span="7">
+        <div class="grid-content">
+
+        </div>
+    </el-col>
+    <el-col :span="7">
+        <div class="grid-content">
+            <textarea class="json-box">{{jsonData.compareResponse}}</textarea>
+        </div>
+    </el-col>
+
+</el-row>

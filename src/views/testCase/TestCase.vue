@@ -180,6 +180,9 @@
         <!--粘贴case弹窗-->
         <copy-case-dialog-component v-if="dialog.contentType === 9" ref="copyCaseInfo" ></copy-case-dialog-component>
 
+        <!--校验弹窗-->
+        <apis-info-check-component v-if="dialog.contentType === 10" ></apis-info-check-component>
+
         <!--弹窗footer-->
         <span v-if="dialog.footerVisible" slot="footer" class="dialog-footer">
                       <el-button @click="dialogCancel">取 消</el-button>
@@ -204,13 +207,18 @@
   import searchApiDialogComponent from '@/views/testCase/searchApiDialogComponent.vue';
   import apiExecuteResultDialogComponent from '@/views/testCase/apiExecuteResultDialogComponent.vue';
   import copyCaseDialogComponent from '@/views/testCase/copyCaseDialogComponent.vue';
+  import apisInfoCheckComponent from '@/views/testCase/apisInfoCheckComponent.vue';
+
 
   import {moveup, movedown} from  "@/assets/js/tableRowMove.js";
   import marked from 'marked';
   import {lodash} from 'lodash';
+  import ApisInfoCheckComponent from "./apisInfoCheckComponent";
 
   export default {
-    components: {editApiDialogComponent, addApiDialogComponent, intellCheckDialogComponent,searchApiDialogComponent,apiExecuteResultDialogComponent,copyCaseDialogComponent},
+    components: {
+      ApisInfoCheckComponent,apisInfoCheckComponent,
+      editApiDialogComponent, addApiDialogComponent, intellCheckDialogComponent,searchApiDialogComponent,apiExecuteResultDialogComponent,copyCaseDialogComponent},
 
     name: 'TestCase',
 
@@ -645,6 +653,7 @@
 
           }
             break;
+
           default:
             break;
         }
@@ -726,8 +735,15 @@
       },
       /*校验*/
       apiInfoCheck() {
-        window.open(this.apisInfoCheckaddress+'apisInfoCheck?testCaseId='+this.$route.query.id)
-
+        // window.open(this.apisInfoCheckaddress+'apisInfoCheck?testCaseId='+this.$route.query.id)
+        this.dialog = {
+          title: '',
+          visible: true,
+          footerVisible: false,
+          contentType: 10,
+          width: '70%',
+          extend: {}
+        }
       },
       /*执行结果*/
       apiExecuteResult() {

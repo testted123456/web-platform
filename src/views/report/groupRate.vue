@@ -18,6 +18,10 @@ export default {
   data () {
     return {
       sysBar:{
+        title : {
+          text: 'Group-成功率',
+          subtext: ''
+        },
         color: ['#3398DB'],
         tooltip : {
           trigger: 'axis',

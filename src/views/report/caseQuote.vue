@@ -18,6 +18,10 @@
     data () {
       return {
         sysBar:{
+          title : {
+            text: '系统-用例被引用',
+            subtext: ''
+          },
           color: ['#3398DB'],
           tooltip : {
             trigger: 'axis',

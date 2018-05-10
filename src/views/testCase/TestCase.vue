@@ -60,7 +60,7 @@
                   <el-button  type="text" @click="pastApi">粘贴接口</el-button>
                 </div>
                 <div class="pd12">
-                  <el-button  type="text" @click="pastCase" v-if="copyCaseShow">粘贴测试用例</el-button>
+                  <el-button  type="text" @click="pastCase" v-show="copyCaseShow">复制用例</el-button>
                 </div>
               </el-col>
             </el-form-item>
@@ -409,6 +409,7 @@
                   }else{
                     // case编辑页面
                     // 获取测试用例详情信息内容
+                    vueThis.copyCaseShow = false;
                     vueThis.executeBtnShow = true;//执行按钮显示
                     vueThis.testCaseAxios({
                       method: 'get',

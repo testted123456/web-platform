@@ -7,7 +7,7 @@
             <label>步骤名称:</label>
           </el-col>
           <el-col :span="16">
-            <el-input v-model="tempApiDetailInfo.step" placeholder="请输入接口名称"></el-input>
+            <el-input v-model.trim="tempApiDetailInfo.step" placeholder="请输入接口名称"></el-input>
           </el-col>
         </el-row>
         <el-row>
@@ -15,7 +15,7 @@
             <label>API url:</label>
           </el-col>
           <el-col :span="16">
-            <el-input v-model="tempApiDetailInfo.urlAddress" placeholder="请输入接口url"></el-input>
+            <el-input v-model.trim="tempApiDetailInfo.urlAddress" placeholder="请输入接口url"></el-input>
           </el-col>
         </el-row>
         <el-row>
@@ -46,7 +46,7 @@
                   <el-table-column label="Value" class-name="cell-input">
                     <template slot-scope="scope">
                       <hd-input :editorID="'variables'+ scope.$index"
-                                v-model="tempApiDetailInfo.variables[scope.$index].varValue"></hd-input>
+                                v-model.trim="tempApiDetailInfo.variables[scope.$index].varValue"></hd-input>
 
                       <!--<el-input v-model.trim="tempApiDetailInfo.variables[scope.$index].varValue"></el-input>-->
                     </template>
@@ -76,13 +76,13 @@
                   <el-table-column label="Key" class-name="cell-input">
                     <template slot-scope="scope">
                       <el-input
-                        v-model="tempApiDetailInfo.requestHead[scope.$index].Key"></el-input>
+                        v-model.trim="tempApiDetailInfo.requestHead[scope.$index].Key"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column label="Value" class-name="cell-input">
                     <template slot-scope="scope">
                       <el-input
-                        v-model="tempApiDetailInfo.requestHead[scope.$index].Value"></el-input>
+                        v-model.trim="tempApiDetailInfo.requestHead[scope.$index].Value"></el-input>
                     </template>
                   </el-table-column>
 
@@ -140,13 +140,13 @@
                   <el-table-column label="Key" class-name="cell-input">
                     <template slot-scope="scope">
                       <el-input
-                        v-model="tempApiDetailInfo.responseHead[scope.$index].Key"></el-input>
+                        v-model.trim="tempApiDetailInfo.responseHead[scope.$index].Key"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column label="Value" class-name="cell-input">
                     <template slot-scope="scope">
                       <el-input
-                        v-model="tempApiDetailInfo.responseHead[scope.$index].Value"></el-input>
+                        v-model.trim="tempApiDetailInfo.responseHead[scope.$index].Value"></el-input>
                     </template>
                   </el-table-column>
 
@@ -206,14 +206,14 @@
                   <el-table-column label="预期结果" class-name="cell-input">
                     <template slot-scope="scope">
                       <hd-input editorID="actualResult"
-                                v-model="tempApiDetailInfo.assertions[scope.$index].actualResult"></hd-input>
+                                v-model.trim="tempApiDetailInfo.assertions[scope.$index].actualResult"></hd-input>
                       <!--<el-input v-model="tempApiDetailInfo.assertions[scope.$index].actualResult"></el-input>-->
                     </template>
                   </el-table-column>
                   <el-table-column label="比较符" class-name="cell-input">
                     <template slot-scope="scope">
                       <!--<el-input v-model="tempApiDetailInfo.assertions[scope.$index].comparator"></el-input>-->
-                      <el-select v-model="tempApiDetailInfo.assertions[scope.$index].comparator"
+                      <el-select v-model.trim="tempApiDetailInfo.assertions[scope.$index].comparator"
                                  placeholder="请选择">
                         <el-option
                           v-for="item in comparisonOperator"
@@ -227,7 +227,7 @@
                   <el-table-column label="实际结果" class-name="cell-input">
                     <template slot-scope="scope">
                       <hd-input editorID="expectResult"
-                                v-model="tempApiDetailInfo.assertions[scope.$index].expectResult"></hd-input>
+                                v-model.trim="tempApiDetailInfo.assertions[scope.$index].expectResult"></hd-input>
                       <!--<el-input v-model="tempApiDetailInfo.assertions[scope.$index].expectResult"></el-input>-->
                     </template>
                   </el-table-column>
@@ -462,13 +462,13 @@
         this.ifRequestBodyNull=false;
         var tip = '';
         //判断步骤名称是否为空
-        if (this.tempApiDetailInfo.step.trim() === '') {
+        if (this.tempApiDetailInfo.step === '') {
           this.ifFill = false;
           tip = '必填项 步骤名称为空';
           return tip;
         }
         //判断API URL是否为空
-        if (this.tempApiDetailInfo.urlAddress.trim() === '') {
+        if (this.tempApiDetailInfo.urlAddress === '') {
           this.ifFill = false;
           tip = '必填项 API URL为空';
           return tip;
@@ -476,7 +476,7 @@
         //判断消息体是否为空
         if (this.tempApiDetailInfo.requestBody === null) {
           this.ifRequestBodyNull = true;
-        } else if (this.tempApiDetailInfo.requestBody.trim() === '') {
+        } else if (this.tempApiDetailInfo.requestBody === '') {
           this.ifRequestBodyNull = true;
         }else if(!isJson(this.tempApiDetailInfo.requestBody)){
           this.ifFill = false;
@@ -486,7 +486,7 @@
         //判断预期结果是否为空
         if (this.tempApiDetailInfo.responseBody === null) {
           this.ifResponseBodyNull = true;
-        } else if (this.tempApiDetailInfo.responseBody.trim() === '') {
+        } else if (this.tempApiDetailInfo.responseBody === '') {
           this.ifResponseBodyNull = true;
         }else if (!isJson(this.tempApiDetailInfo.responseBody)) {
           this.ifFill = false;
@@ -497,17 +497,17 @@
         //判断 自定义变量 是否为空
         if (this.tempApiDetailInfo.variables.length > 1) {
           for (var i = 0; i < this.tempApiDetailInfo.variables.length; i++) {
-            if (this.tempApiDetailInfo.variables[i].varName.trim() === '' || this.tempApiDetailInfo.variables[i].varValue.trim() === '') {
+            if (this.tempApiDetailInfo.variables[i].varName === '' || this.tempApiDetailInfo.variables[i].varValue === '') {
               this.ifFill = false;
               tip = '自定义变量某个选项为空 需要填写';
               return tip;
             }
           }
 
-        } else if (this.tempApiDetailInfo.variables[0].varName.trim() === '' && this.tempApiDetailInfo.variables[0].varValue.trim() === '') {
+        } else if (this.tempApiDetailInfo.variables[0].varName === '' && this.tempApiDetailInfo.variables[0].varValue === '') {
           this.ifVariablesNull = true;
           console.log("自定义变量为空")
-        } else if (this.tempApiDetailInfo.variables[0].varName.trim() === '' || this.tempApiDetailInfo.variables[0].varValue.trim() === '') {
+        } else if (this.tempApiDetailInfo.variables[0].varName === '' || this.tempApiDetailInfo.variables[0].varValue === '') {
           this.ifFill = false;
           tip = '自定义变量某个选项为空 需要填写';
           return tip;
@@ -516,16 +516,16 @@
         //判断 消息头 是否为空
         if (this.tempApiDetailInfo.requestHead.length > 1) {
           for (var i = 0; i < this.tempApiDetailInfo.requestHead.length; i++) {
-            if (this.tempApiDetailInfo.requestHead[i].Key.trim() === '' || this.tempApiDetailInfo.requestHead[i].Value.trim() === '') {
+            if (this.tempApiDetailInfo.requestHead[i].Key === '' || this.tempApiDetailInfo.requestHead[i].Value === '') {
               this.ifFill = false;
               tip = '消息头某个选项为空 需要填写';
               return tip;
             }
           }
-        } else if (this.tempApiDetailInfo.requestHead[0].Key.trim() === '' && this.tempApiDetailInfo.requestHead[0].Value.trim() === '') {
+        } else if (this.tempApiDetailInfo.requestHead[0].Key === '' && this.tempApiDetailInfo.requestHead[0].Value === '') {
           this.ifRequestHeadNull = true;
           console.log("消息头为空")
-        } else if (this.tempApiDetailInfo.requestHead[0].Key.trim() === '' || this.tempApiDetailInfo.requestHead[0].Value.trim() === '') {
+        } else if (this.tempApiDetailInfo.requestHead[0].Key === '' || this.tempApiDetailInfo.requestHead[0].Value === '') {
           this.ifFill = false;
           tip = '消息头某个选项为空 需要填写';
           return tip;
@@ -534,16 +534,16 @@
         //判断 响应消息头 是否为空
         if (this.tempApiDetailInfo.responseHead.length > 1) {
           for (var i = 0; i < this.tempApiDetailInfo.responseHead.length; i++) {
-            if (this.tempApiDetailInfo.responseHead[i].Key.trim() === '' || this.tempApiDetailInfo.responseHead[i].Value.trim() === '') {
+            if (this.tempApiDetailInfo.responseHead[i].Key === '' || this.tempApiDetailInfo.responseHead[i].Value === '') {
               this.ifFill = false;
               tip = '响应消息头 某个选项为空 需要填写';
               return tip;
             }
           }
-        } else if (this.tempApiDetailInfo.responseHead[0].Key.trim() === '' && this.tempApiDetailInfo.responseHead[0].Value.trim() === '') {
+        } else if (this.tempApiDetailInfo.responseHead[0].Key === '' && this.tempApiDetailInfo.responseHead[0].Value === '') {
           this.ifResponseHeadNull = true;
           console.log("响应消息头为空")
-        } else if (this.tempApiDetailInfo.responseHead[0].Key.trim() === '' || this.tempApiDetailInfo.responseHead[0].Value.trim() === '') {
+        } else if (this.tempApiDetailInfo.responseHead[0].Key === '' || this.tempApiDetailInfo.responseHead[0].Value === '') {
           this.ifFill = false;
           tip = '响应消息头 某个选项为空 需要填写';
           return tip;
@@ -552,16 +552,16 @@
         //判断 断言 是否为空
         if (this.tempApiDetailInfo.assertions.length > 1) {
           for (var i = 0; i < this.tempApiDetailInfo.assertions.length; i++) {
-            if (this.tempApiDetailInfo.assertions[i].actualResult.trim() === '' || this.tempApiDetailInfo.assertions[i].comparator.trim() === '' || this.tempApiDetailInfo.assertions[0].expectResult.trim() === '') {
+            if (this.tempApiDetailInfo.assertions[i].actualResult === '' || this.tempApiDetailInfo.assertions[i].comparator === '' || this.tempApiDetailInfo.assertions[0].expectResult === '') {
               this.ifFill = false;
               tip = '断言 某个选项为空 需要填写';
               return tip;
             }
           }
-        } else if (this.tempApiDetailInfo.assertions[0].actualResult.trim() === '' && this.tempApiDetailInfo.assertions[0].comparator.trim() === '' && this.tempApiDetailInfo.assertions[0].expectResult.trim() === '') {
+        } else if (this.tempApiDetailInfo.assertions[0].actualResult === '' && this.tempApiDetailInfo.assertions[0].comparator === '' && this.tempApiDetailInfo.assertions[0].expectResult === '') {
           console.log("断言为空")
           this.ifAssertionsNull = true;
-        } else if (this.tempApiDetailInfo.assertions[0].actualResult.trim() === '' || this.tempApiDetailInfo.assertions[0].comparator.trim() === '' || this.tempApiDetailInfo.assertions[0].expectResult.trim() === '') {
+        } else if (this.tempApiDetailInfo.assertions[0].actualResult === '' || this.tempApiDetailInfo.assertions[0].comparator === '' || this.tempApiDetailInfo.assertions[0].expectResult === '') {
           this.ifFill = false;
           tip = '断言 某个选项为空 需要填写';
           return tip;

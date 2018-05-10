@@ -141,7 +141,7 @@
 
           this.testCaseAxios({
             method: 'get',
-            url: 'sysBranch/getBySystem?system=' + value
+            url: 'sysEnv/findBySystem?system=' + value
           }).then(function (res) {
             if(res.data.code === 10000){
               vueThis.envSysems = res.data.data;
@@ -164,6 +164,7 @@
             vueThis.$message.error('服务器请求失败！');
           })
         })},
+
       init(){
         var vueThis = this;
 

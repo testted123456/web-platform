@@ -6,7 +6,7 @@
           <label class="vue-transfer-label">接口</label>
           <!--<input class="vue-transfer-input" placeholder="输入接口名称搜索"/>-->
           <div style="text-align: center;padding-top:10px;">
-            <el-button @click="show = !show" style="padding:12px 72px;">搜 索 <i class="el-icon-search"></i></el-button>
+            <el-button @click="show = !show" style="width:90%;">搜 索 <i class="el-icon-search"></i></el-button>
 
             <div style="display: flex; margin-top: 20px; height: 1px;width:100%;background-color: #fff;">
               <el-collapse-transition name="el-fade-in-linear">

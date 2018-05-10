@@ -462,15 +462,29 @@
 
       // 删除接口
       removeApi(index) {
-        this.dialog = {
-          title: '删除用例',
-          visible: true,   //整个弹窗显示与否
-          footerVisible: true,
-          contentType: 2,  //弹窗内容显示什么
-          width: '30%',
-          extend: {}
-        }
-        this.removeApiIndex = index;
+        // this.dialog = {
+        //   title: '删除用例',
+        //   visible: true,   //整个弹窗显示与否
+        //   footerVisible: true,
+        //   contentType: 2,  //弹窗内容显示什么
+        //   width: '30%',
+        //   extend: {}
+        // }
+        // this.removeApiIndex = index;
+        this.$confirm('此操作将删除该用例, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          // this.delCase();
+          this.flowCase.testCases.splice(index, 1)
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
 
       //执行弹窗方法

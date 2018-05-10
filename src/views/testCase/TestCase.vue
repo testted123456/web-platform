@@ -775,15 +775,31 @@
       // 删除接口
       removeApi(index) {
         //this.testCase.testCaseInterfaces.splice(index,1)
-        this.dialog = {
-          title: '删除接口',
-          visible: true,   //整个弹窗显示与否
-          footerVisible: true,
-          contentType: 4,  //弹窗内容显示什么
-          width: '30%',
-          extend: {}
-        }
-        this.removeApiIndex = index;
+        // this.dialog = {
+        //   title: '删除接口',
+        //   visible: true,   //整个弹窗显示与否
+        //   footerVisible: true,
+        //   contentType: 4,  //弹窗内容显示什么
+        //   width: '30%',
+        //   extend: {}
+        // }
+        // this.removeApiIndex = index;
+
+        this.$confirm('此操作将删除该接口, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          // this.delCase();
+          this.testCase.testCaseInterfaces.splice(index, 1)
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+
       },
       //执行弹窗方法
       execCase: function () {

@@ -157,6 +157,7 @@
     name: 'searchApiDialogComponent',
     data(){
       return {
+        temp:{},
         treeData: [],
         defaultProps:{
           label: 'name',
@@ -225,78 +226,96 @@
         });
       },
       handleNodeClick(data, node, instance) {
+        console.log(data);
         if(node.childNodes.length === 0){
             console.log('leaf');
            // this.tempApiDetailInfo = data.api;
 
-          this.tempApiDetailInfo = JSON.stringify(data.api);
-          console.log(this.tempApiDetailInfo)
-          this.tempApiDetailInfo = JSON.parse(this.tempApiDetailInfo);
-          if (this.tempApiDetailInfo.apiType == 0) {
-            this.tempApiDetailInfo.apiType = 'Http'
-          } else if (this.tempApiDetailInfo.apiType == 1) {
-            this.tempApiDetailInfo.apiType = 'Https'
-          } else if (this.tempApiDetailInfo.apiType === 2) {
-            this.tempApiDetailInfo.apiType = 'MQ'
+          this.temp = JSON.stringify(data.api);
+          console.log(this.temp)
+          this.temp = JSON.parse(this.temp);
+          if (this.temp.apiType == 0) {
+            this.temp.apiType = 'Http'
+          } else if (this.temp.apiType == 1) {
+            this.temp.apiType = 'Https'
+          } else if (this.temp.apiType === 2) {
+            this.temp.apiType = 'MQ'
           }
 
-          if (this.tempApiDetailInfo.postWay == 0) {
-            this.tempApiDetailInfo.postWay = 'get'
-          } else if (this.tempApiDetailInfo.postWay == 1) {
-            this.tempApiDetailInfo.postWay = 'post'
+          if (this.temp.postWay == 0) {
+            this.temp.postWay = 'get'
+          } else if (this.temp.postWay == 1) {
+            this.temp.postWay = 'post'
           }
 
           //消息体
-          if (this.tempApiDetailInfo.requestBody) {
-            console.log('消息体不为空',this.tempApiDetailInfo.requestBody)
-            this.tempApiDetailInfo.requestBody = formatJson(this.tempApiDetailInfo.requestBody);
+          if (this.temp.requestBody) {
+            console.log('消息体不为空',this.temp.requestBody)
+            this.temp.requestBody = formatJson(this.temp.requestBody);
           }
           //预期结果
-          if (this.tempApiDetailInfo.responseBody) {
-            console.log('预期结果不为空',this.tempApiDetailInfo.requestBody)
-            this.tempApiDetailInfo.responseBody = formatJson(this.tempApiDetailInfo.responseBody);
+          if (this.temp.responseBody) {
+            console.log('预期结果不为空',this.temp.requestBody)
+            this.temp.responseBody = formatJson(this.temp.responseBody);
           }
           //自定义变量
-          if (this.tempApiDetailInfo.variables === undefined || this.tempApiDetailInfo.variables === null) {
+          if (this.temp.variables === undefined || this.temp.variables === null || this.temp.variables == 'null') {
             console.log('自定义变量为空')
-            this.tempApiDetailInfo.variables = [
+            this.temp.variables = [
               {
                 "varName": "",
                 "varValue": ""
               }
             ]
+          }else{
+
+            this.temp.variables = JSON.parse(this.temp.variables)
+            console.log(this.temp.variables)
           }
           //消息头
-          if (this.tempApiDetailInfo.requestHead === undefined || this.tempApiDetailInfo.requestHead === null) {
+          if (this.temp.requestHead === undefined || this.temp.requestHead == null || this.temp.requestHead == 'null') {
             console.log('消息头为空')
-            this.tempApiDetailInfo.requestHead = [
+            this.temp.requestHead = [
               {
                 "Key": "",
                 "Value": ""
               }
-            ]
+            ];
+          }else{
+
+            this.temp.requestHead = JSON.parse(this.temp.requestHead)
           }
           //响应消息头
-          if (this.tempApiDetailInfo.responseHead === undefined || this.tempApiDetailInfo.responseHead === null) {
+          if (this.temp.responseHead === undefined || this.temp.responseHead == null || this.temp.responseHead == 'null') {
             console.log('响应消息头为空')
-            this.tempApiDetailInfo.responseHead = [
+            this.temp.responseHead = [
               {
                 "Key": "",
                 "Value": ""
               }
             ]
+          }else{
+            this.temp.responseHead = JSON.parse(this.temp.responseHead)
           }
           //断言
-          if (this.tempApiDetailInfo.assertions === undefined || this.tempApiDetailInfo.assertions === null) {
+          if (this.temp.assertions === undefined || this.temp.assertions === null || this.temp.assertions == 'null') {
             console.log('断言为空')
-            this.tempApiDetailInfo.assertions = [
+            this.temp.assertions = [
               {
                 "actualResult": "",
                 "comparator": "",
                 "expectResult": ""
               }
             ]
+          }else{
+            this.temp.assertions = JSON.parse(this.temp.assertions)
           }
+
+          this.tempApiDetailInfo = JSON.stringify(this.temp)
+          this.tempApiDetailInfo = JSON.parse(this.tempApiDetailInfo)
+
+          console.log(this.temp)
+          console.log(this.tempApiDetailInfo)
 
         }else{
           console.log('parent');

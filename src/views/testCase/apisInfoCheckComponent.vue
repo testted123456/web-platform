@@ -75,7 +75,7 @@
                     readonly
                     resize="none"
                     placeholder=""
-                    v-model="jsonData.compareRequest" style="border:none;">
+                    v-model="jsonData.comprareApiRequest" style="border:none;">
                   </el-input>
                 </div>
 
@@ -160,7 +160,7 @@
 
               vueThis.jsonData.lastRequestBody = formatJson(vueThis.jsonData.lastRequestBody)
               vueThis.jsonData.currentRequestBody = formatJson(vueThis.jsonData.currentRequestBody)
-              vueThis.jsonData.compareRequest = formatJson(vueThis.jsonData.compareRequest)
+              vueThis.jsonData.comprareApiRequest = formatJson(vueThis.jsonData.comprareApiRequest)
 
 
             }else{

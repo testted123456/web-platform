@@ -59,7 +59,7 @@
                     ref="multipleTable">
 
             <el-table-column
-              prop="isCheck"
+              prop="checked"
               label="批量执行/全选"
               type="selection"
               align="left"

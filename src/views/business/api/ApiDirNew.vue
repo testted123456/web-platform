@@ -48,7 +48,7 @@
 
         this.apiAxios({
           method: 'post',
-          data: api,
+          data: vueThis.api,
           url: "api/addApiDir"
         })
 //        this.$http.post(this.apiServer+"api/addApiDir", this.api)

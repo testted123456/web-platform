@@ -380,30 +380,36 @@
           }).then(({ value }) => {
 
             let vueThis = this;
+            let system = value;
 
-            this.usrAxios({
+            this.testCaseAxios({
               method: 'get',
-              url: 'user/searchByName?name=' + value
+              url: 'sysBranch/syncBranches?system=' + system
             }).then(function (res) {
               if(res.data.code === 10000){
-                vueThis.users = res.data.data;
+
+                res.data.data.forEach(function (e, index) {
+                  vueThis.systems.push({value: e.system, text: e.system})
+                });
+
+                vueThis.$message({
+                  message: '恭喜，同步git分支成功' + res.data.msg,
+                  type: 'success'
+                });
               }else{
                 vueThis.$message({
-                  message: '抱歉，获取用户信息失败' + res.data.msg,
+                  message: '抱歉，同步git分支失败' + res.data.msg,
                   type: 'error'
                 });
               }
+
             }).catch(function (err) {
               vueThis.$message.error('服务器请求失败！');
-            })
-
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '取消输入'
             });
-          });
+
+          })
         }
+
       }
   }
 </script>

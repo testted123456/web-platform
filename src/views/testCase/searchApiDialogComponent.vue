@@ -4,7 +4,7 @@
       <el-col :span="6" style="border:1px solid #ccc">
         <div class="vue-transfer-tree">
           <label class="vue-transfer-label">接口</label>
-          <input class="vue-transfer-input" placeholder="输入接口名称搜索"/>
+          <!--<input class="vue-transfer-input" placeholder="输入接口名称搜索"/>-->
           <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
         </div>
       </el-col>
@@ -45,9 +45,9 @@
                 </el-row>
                 <el-row>
                   <template>
-                    <el-tabs v-model="apiInCaseTab">
+                    <el-tabs v-model="apiInCaseTab" @tab-click="handleClick">
                       <el-tab-pane label="自定义变量" name="variables">
-                        <el-table :data="tempApiDetailInfo.variables">
+                        <el-table :data="tempApiDetailInfo.variables" v-if="activeIndex == 0 ">
                           <el-table-column label="Key" class-name="cell-input">
                             <template slot-scope="scope">
                               <el-input  v-model="tempApiDetailInfo.variables[scope.$index].varName"></el-input>
@@ -62,7 +62,7 @@
                       </el-tab-pane>
 
                       <el-tab-pane label="消息头" name="reqHeaders">
-                        <el-table :data="tempApiDetailInfo.requestHead">
+                        <el-table :data="tempApiDetailInfo.requestHead" v-if="activeIndex == 1 ">
                           <el-table-column label="Key" class-name="cell-input" >
                             <template slot-scope="scope">
                               <el-input  v-model="tempApiDetailInfo.requestHead[scope.$index].Key"></el-input>
@@ -76,7 +76,7 @@
                         </el-table>
                       </el-tab-pane>
                       <el-tab-pane label="消息体" name="reqBody">
-                        <el-row>
+                        <el-row v-if="activeIndex == 2 ">
                           <el-col>
                             <el-input
                               type="textarea"
@@ -89,7 +89,7 @@
                         </el-row>
                       </el-tab-pane>
                       <el-tab-pane label="响应消息头" name="responseHeaders">
-                        <el-table :data="tempApiDetailInfo.responseHead">
+                        <el-table :data="tempApiDetailInfo.responseHead" v-if="activeIndex == 3 ">
                           <el-table-column label="Key" class-name="cell-input">
                             <template slot-scope="scope">
                               <el-input  v-model="tempApiDetailInfo.responseHead[scope.$index].Key"></el-input>
@@ -104,7 +104,7 @@
                         </el-table>
                       </el-tab-pane>
                       <el-tab-pane label="预期结果" name="expectResults">
-                        <el-row>
+                        <el-row v-if="activeIndex == 4 ">
                           <el-col>
                             <el-input
                               type="textarea"
@@ -118,7 +118,7 @@
                       </el-tab-pane>
 
                       <el-tab-pane label="断言" name="assertions">
-                        <el-table :data="tempApiDetailInfo.assertions">
+                        <el-table :data="tempApiDetailInfo.assertions" v-if="activeIndex == 5 ">
                           <el-table-column label="预期结果" class-name="cell-input">
                             <template slot-scope="scope">
                               <el-input  v-model="tempApiDetailInfo.assertions[scope.$index].actualResult"></el-input>
@@ -157,6 +157,8 @@
     name: 'searchApiDialogComponent',
     data(){
       return {
+        activeIndex:0,
+        temp:{},
         treeData: [],
         defaultProps:{
           label: 'name',
@@ -225,78 +227,96 @@
         });
       },
       handleNodeClick(data, node, instance) {
+        console.log(data);
         if(node.childNodes.length === 0){
             console.log('leaf');
            // this.tempApiDetailInfo = data.api;
 
-          this.tempApiDetailInfo = JSON.stringify(data.api);
-          console.log(this.tempApiDetailInfo)
-          this.tempApiDetailInfo = JSON.parse(this.tempApiDetailInfo);
-          if (this.tempApiDetailInfo.apiType == 0) {
-            this.tempApiDetailInfo.apiType = 'Http'
-          } else if (this.tempApiDetailInfo.apiType == 1) {
-            this.tempApiDetailInfo.apiType = 'Https'
-          } else if (this.tempApiDetailInfo.apiType === 2) {
-            this.tempApiDetailInfo.apiType = 'MQ'
+          this.temp = JSON.stringify(data.api);
+          console.log(this.temp)
+          this.temp = JSON.parse(this.temp);
+          if (this.temp.apiType == 0) {
+            this.temp.apiType = 'Http'
+          } else if (this.temp.apiType == 1) {
+            this.temp.apiType = 'Https'
+          } else if (this.temp.apiType === 2) {
+            this.temp.apiType = 'MQ'
           }
 
-          if (this.tempApiDetailInfo.postWay == 0) {
-            this.tempApiDetailInfo.postWay = 'get'
-          } else if (this.tempApiDetailInfo.postWay == 1) {
-            this.tempApiDetailInfo.postWay = 'post'
+          if (this.temp.postWay == 0) {
+            this.temp.postWay = 'get'
+          } else if (this.temp.postWay == 1) {
+            this.temp.postWay = 'post'
           }
 
           //消息体
-          if (this.tempApiDetailInfo.requestBody) {
-            console.log('消息体不为空',this.tempApiDetailInfo.requestBody)
-            this.tempApiDetailInfo.requestBody = formatJson(this.tempApiDetailInfo.requestBody);
+          if (this.temp.requestBody) {
+            console.log('消息体不为空',this.temp.requestBody)
+            this.temp.requestBody = formatJson(this.temp.requestBody);
           }
           //预期结果
-          if (this.tempApiDetailInfo.responseBody) {
-            console.log('预期结果不为空',this.tempApiDetailInfo.requestBody)
-            this.tempApiDetailInfo.responseBody = formatJson(this.tempApiDetailInfo.responseBody);
+          if (this.temp.responseBody) {
+            console.log('预期结果不为空',this.temp.requestBody)
+            this.temp.responseBody = formatJson(this.temp.responseBody);
           }
           //自定义变量
-          if (this.tempApiDetailInfo.variables === undefined || this.tempApiDetailInfo.variables === null) {
+          if (this.temp.variables === undefined || this.temp.variables === null || this.temp.variables == 'null') {
             console.log('自定义变量为空')
-            this.tempApiDetailInfo.variables = [
+            this.temp.variables = [
               {
                 "varName": "",
                 "varValue": ""
               }
             ]
+          }else{
+
+            this.temp.variables = JSON.parse(this.temp.variables)
+            console.log(this.temp.variables)
           }
           //消息头
-          if (this.tempApiDetailInfo.requestHead === undefined || this.tempApiDetailInfo.requestHead === null) {
+          if (this.temp.requestHead === undefined || this.temp.requestHead == null || this.temp.requestHead == 'null') {
             console.log('消息头为空')
-            this.tempApiDetailInfo.requestHead = [
+            this.temp.requestHead = [
               {
                 "Key": "",
                 "Value": ""
               }
-            ]
+            ];
+          }else{
+
+            this.temp.requestHead = JSON.parse(this.temp.requestHead)
           }
           //响应消息头
-          if (this.tempApiDetailInfo.responseHead === undefined || this.tempApiDetailInfo.responseHead === null) {
+          if (this.temp.responseHead === undefined || this.temp.responseHead == null || this.temp.responseHead == 'null') {
             console.log('响应消息头为空')
-            this.tempApiDetailInfo.responseHead = [
+            this.temp.responseHead = [
               {
                 "Key": "",
                 "Value": ""
               }
             ]
+          }else{
+            this.temp.responseHead = JSON.parse(this.temp.responseHead)
           }
           //断言
-          if (this.tempApiDetailInfo.assertions === undefined || this.tempApiDetailInfo.assertions === null) {
+          if (this.temp.assertions === undefined || this.temp.assertions === null || this.temp.assertions == 'null') {
             console.log('断言为空')
-            this.tempApiDetailInfo.assertions = [
+            this.temp.assertions = [
               {
                 "actualResult": "",
                 "comparator": "",
                 "expectResult": ""
               }
             ]
+          }else{
+            this.temp.assertions = JSON.parse(this.temp.assertions)
           }
+
+          this.tempApiDetailInfo = JSON.stringify(this.temp)
+          this.tempApiDetailInfo = JSON.parse(this.tempApiDetailInfo)
+
+          console.log(this.temp)
+          console.log(this.tempApiDetailInfo)
 
         }else{
           console.log('parent');
@@ -342,7 +362,11 @@
             }
           ]
         }
-      }
+      },
+      handleClick(tab, event){
+        console.log(tab.index)
+        this.activeIndex = tab.index;
+      },
 
 
     }

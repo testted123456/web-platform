@@ -36,7 +36,7 @@
           <template>
             <el-tabs v-model="apiInCaseTab" @tab-click="handleClick">
               <el-tab-pane label="自定义变量" name="variables">
-                <el-table :data="tempApiDetailInfo.variables">
+                <el-table :data="tempApiDetailInfo.variables" v-if="activeIndex == 0 ">
                   <el-table-column label="Key" class-name="cell-input">
                     <template slot-scope="scope">
                       <el-input
@@ -51,7 +51,6 @@
                       <!--<el-input v-model.trim="tempApiDetailInfo.variables[scope.$index].varValue"></el-input>-->
                     </template>
                   </el-table-column>
-
                   <el-table-column class-name="cell-input" label="" width="120px">
                     <template slot-scope="scope">
                       <el-button
@@ -70,9 +69,8 @@
                   </el-table-column>
                 </el-table>
               </el-tab-pane>
-
               <el-tab-pane label="消息头" name="reqHeaders">
-                <el-table :data="tempApiDetailInfo.requestHead">
+                <el-table :data="tempApiDetailInfo.requestHead" v-if="activeIndex == 1 ">
                   <el-table-column label="Key" class-name="cell-input">
                     <template slot-scope="scope">
                       <el-input
@@ -105,8 +103,8 @@
                 </el-table>
               </el-tab-pane>
               <el-tab-pane label="消息体" name="reqBody">
-                <el-row>
-                  <el-col :span="4" style="text-align: right">
+                <el-row v-if="activeIndex == 2 ">
+                  <el-col>
                     <el-button size="small" v-if="isJson(tempApiDetailInfo.requestBody)"
                                @click.native.prevent="formatRequsetJSON()"
                                round>格式化Json
@@ -117,8 +115,14 @@
                                round
                     >不是Json格式
                     </el-button>
+
+                    <el-button size="small" @click.native.prevent="resetReqBody()" round>清空value</el-button>
+                    <el-button size="small" @click.native.prevent="changeReqBody()" round>参数化</el-button>
+
+
                   </el-col>
                 </el-row>
+
                 <el-row>
                   <el-col>
                     <!--<el-input-->
@@ -136,7 +140,7 @@
                 </el-row>
               </el-tab-pane>
               <el-tab-pane label="响应消息头" name="responseHeaders">
-                <el-table :data="tempApiDetailInfo.responseHead">
+                <el-table :data="tempApiDetailInfo.responseHead" v-if="activeIndex == 3 ">
                   <el-table-column label="Key" class-name="cell-input">
                     <template slot-scope="scope">
                       <el-input
@@ -153,23 +157,23 @@
                   <el-table-column class-name="cell-input" label="" width="120px">
                     <template slot-scope="scope">
                       <el-button
-                        @click.native.prevent="addHeadersRow(scope.$index, tempApiDetailInfo.requestHead, 3)"
+                        @click.native.prevent="addHeadersRow(scope.$index, tempApiDetailInfo.responseHead, 3)"
                         type="text" size="small"><i class="el-icon-plus"></i></el-button>
                       <el-button
-                        @click.native.prevent="deleteHeadersRow(scope.$index, tempApiDetailInfo.requestHead)"
+                        @click.native.prevent="deleteHeadersRow(scope.$index, tempApiDetailInfo.responseHead)"
                         type="text" size="small"><i class="el-icon-delete"></i></el-button>
                       <el-button
-                        @click.native.prevent="moveup(scope.$index, scope.row, tempApiDetailInfo.requestHead)"
+                        @click.native.prevent="moveup(scope.$index, scope.row, tempApiDetailInfo.responseHead)"
                         type="text" size="small"><i class="el-icon-arrow-up"></i></el-button>
                       <el-button
-                        @click.native.prevent="movedown(scope.$index, scope.row, tempApiDetailInfo.requestHead)"
+                        @click.native.prevent="movedown(scope.$index, scope.row, tempApiDetailInfo.responseHead)"
                         type="text" size="small"><i class="el-icon-arrow-down"></i></el-button>
                     </template>
                   </el-table-column>
                 </el-table>
               </el-tab-pane>
               <el-tab-pane label="预期结果" name="expectResults">
-                <el-row>
+                <el-row v-if="activeIndex == 4 ">
                   <el-col :span="4" style="text-align: right">
                     <el-button size="small" v-if="isJson(tempApiDetailInfo.responseBody)"
                                @click.native.prevent="formatResponseJSON()"
@@ -202,7 +206,7 @@
                 </el-row>
               </el-tab-pane>
               <el-tab-pane label="断言" name="assertions">
-                <el-table :data="tempApiDetailInfo.assertions">
+                <el-table :data="tempApiDetailInfo.assertions" v-if="activeIndex == 5 ">
                   <el-table-column label="预期结果" class-name="cell-input">
                     <template slot-scope="scope">
                       <hd-input editorID="actualResult"
@@ -270,6 +274,7 @@
     components: {hdInput,hdAce},
     data(){
       return {
+        activeIndex:0,
         'stepName': '',
         'apiUrl': '',
         'reqBody': '',
@@ -375,8 +380,6 @@
     methods: {
       formatJson,
       isJson,
-      handleClick(tab, event){
-      },
       //动态库查询 点击跳转新页面
       intellCheck(){
         window.open(this.testCaseServer +'func/index.html')
@@ -681,16 +684,89 @@
         }
         this.aceManager.getCompletions(1).push(keyWord)
       },
+      // 重置Requset ace参数
+      formatRequsetJSON(){
+          this.tempApiDetailInfo.requestBody = formatJson(this.tempApiDetailInfo.requestBody)
+          this.$refs.reqBody.resetAceContent(this.tempApiDetailInfo.requestBody)
+      },
+      // 重置Response ace参数
+      formatResponseJSON(){
+          this.tempApiDetailInfo.responseBody = formatJson(this.tempApiDetailInfo.responseBody)
+          //expectResults
+          this.$refs.expectResults.resetAceContent(this.tempApiDetailInfo.responseBody)
+      },
+      // 清空requestBody value参数
+      resetReqBody(){
+        var vueThis = this;
+        var obj = JSON.parse(this.tempApiDetailInfo.requestBody);
 
-        formatRequsetJSON(){
-            this.tempApiDetailInfo.requestBody = formatJson(this.tempApiDetailInfo.requestBody)
-            this.$refs.reqBody.resetAceContent(this.tempApiDetailInfo.requestBody)
-        },
-        formatResponseJSON(){
-            this.tempApiDetailInfo.responseBody = formatJson(this.tempApiDetailInfo.responseBody)
-            //expectResults
-            this.$refs.expectResults.resetAceContent(this.tempApiDetailInfo.responseBody)
-        }
+        vueThis.testCaseAxios({
+          method: 'post',
+          data:obj,
+          url: "testCase/clearJsonValue"
+        })
+          .then(function (res) {
+            if(res.data.code === 10000){
+              vueThis.tempApiDetailInfo.requestBody = res.data.data;
+              vueThis.formatRequsetJSON();
+            }
+          })
+          .catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！' );
+          });
+
+      },
+      // 参数化requestBody value参数
+      changeReqBody(){
+
+        var vueThis = this;
+        var obj = JSON.parse(this.tempApiDetailInfo.requestBody);
+
+        vueThis.testCaseAxios({
+          method: 'post',
+          data:obj,
+          url: "testCase/setJsonValue"
+        })
+        .then(function (res) {
+          if(res.data.code === 10000){
+            vueThis.tempApiDetailInfo.requestBody = res.data.data.json;
+            vueThis.formatRequsetJSON();
+
+            // 接口传回的变量  如果之前自定义变量数组不存在  则push到自定义变量数组
+            var names = res.data.data.variables;
+            for(var i=0; i<names.length; i++){
+              var num = 0;
+              for(var j=0; j<vueThis.tempApiDetailInfo.variables.length;j++){
+                if(names[i] === vueThis.tempApiDetailInfo.variables[j].varName){
+                  num+=1;
+                }
+              }
+              if(num === 0){
+                vueThis.$nextTick(()=>{
+
+                })
+
+                vueThis.tempApiDetailInfo.variables.push({
+                  'varName':names[i],
+                  'varValue':''
+                })
+
+              }
+            }
+
+          }
+        })
+        .catch(function (err) {
+          vueThis.$message.error('抱歉，服务器异常！' );
+        });
+
+
+      },
+      //tab 切换
+      handleClick(tab, event){
+        console.log(tab.index)
+        this.activeIndex = tab.index;
+      },
     }
   }
 

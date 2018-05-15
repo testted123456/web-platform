@@ -23,6 +23,18 @@
                       <el-input v-model.trim="searchInfo.createdBy" placeholder="请输入创建人"></el-input>
                     </el-col>
                   </el-row>
+                  <el-row style="padding:4px 0">
+                    <el-col :span="4" style="padding-top:8px; color:#999;font-size: 12px;">Api名称</el-col>
+                    <el-col :span="20">
+                      <el-input v-model.trim="searchInfo.apiName" placeholder="请输入Api名称"></el-input>
+                    </el-col>
+                  </el-row>
+                  <el-row style="padding:4px 0">
+                    <el-col :span="4" style="padding-top:8px; color:#999;font-size: 12px;">Api地址</el-col>
+                    <el-col :span="20">
+                      <el-input v-model.trim="searchInfo.urlAddress" placeholder="请输入Api地址"></el-input>
+                    </el-col>
+                  </el-row>
 
                   <el-row style="padding:4px 0">
                     <el-col :span="24">
@@ -93,7 +105,9 @@
         show:false,
         searchInfo:{
           name:'',
-          createdBy:''
+          createdBy:'',
+          urlAddress:'',
+          apiName:''
         },
         data: [
 
@@ -181,7 +195,7 @@
       filterTreeData(){
 
 
-        if(this.searchInfo.createdBy == '' && this.searchInfo.name == ''){
+        if(this.searchInfo.createdBy == '' && this.searchInfo.name == '' && this.searchInfo.apiName == '' && this.searchInfo.urlAddress == ''){
           this.$message.error('请输入要筛选的条件！' );
         }else{
 
@@ -189,7 +203,7 @@
           var vueThis = this;
           vueThis.testCaseAxios({
             method: 'get',
-            url: "testCase/searchCase?name="+ vueThis.searchInfo.name +"&createdBy="+ vueThis.searchInfo.createdBy
+            url: "testCase/searchCase?name="+ vueThis.searchInfo.name +"&createdBy="+ vueThis.searchInfo.createdBy +"&apiName="+ vueThis.searchInfo.apiName +"&urlAddress="+ vueThis.searchInfo.urlAddress
           })
           .then(function (res) {
             if (res.data.code === 10000 ) {
@@ -437,7 +451,7 @@
 .transition-box {
   margin-bottom: 10px;
   width: 100%;
-  height: 160px;
+  height: 260px;
   border-radius: 4px;
   background-color: rgb(236, 243, 250);
   text-align: center;

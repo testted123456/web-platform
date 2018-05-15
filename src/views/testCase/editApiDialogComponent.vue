@@ -116,7 +116,7 @@
                     >不是Json格式
                     </el-button>
 
-                    <el-button size="small" @click.native.prevent="resetReqBody()" round>清空</el-button>
+                    <el-button size="small" @click.native.prevent="resetReqBody()" round>清空value</el-button>
                     <el-button size="small" @click.native.prevent="changeReqBody()" round>参数化</el-button>
 
 
@@ -157,16 +157,16 @@
                   <el-table-column class-name="cell-input" label="" width="120px">
                     <template slot-scope="scope">
                       <el-button
-                        @click.native.prevent="addHeadersRow(scope.$index, tempApiDetailInfo.requestHead, 3)"
+                        @click.native.prevent="addHeadersRow(scope.$index, tempApiDetailInfo.responseHead, 3)"
                         type="text" size="small"><i class="el-icon-plus"></i></el-button>
                       <el-button
-                        @click.native.prevent="deleteHeadersRow(scope.$index, tempApiDetailInfo.requestHead)"
+                        @click.native.prevent="deleteHeadersRow(scope.$index, tempApiDetailInfo.responseHead)"
                         type="text" size="small"><i class="el-icon-delete"></i></el-button>
                       <el-button
-                        @click.native.prevent="moveup(scope.$index, scope.row, tempApiDetailInfo.requestHead)"
+                        @click.native.prevent="moveup(scope.$index, scope.row, tempApiDetailInfo.responseHead)"
                         type="text" size="small"><i class="el-icon-arrow-up"></i></el-button>
                       <el-button
-                        @click.native.prevent="movedown(scope.$index, scope.row, tempApiDetailInfo.requestHead)"
+                        @click.native.prevent="movedown(scope.$index, scope.row, tempApiDetailInfo.responseHead)"
                         type="text" size="small"><i class="el-icon-arrow-down"></i></el-button>
                     </template>
                   </el-table-column>
@@ -684,12 +684,12 @@
         }
         this.aceManager.getCompletions(1).push(keyWord)
       },
-      // 重置ace参数
+      // 重置Requset ace参数
       formatRequsetJSON(){
           this.tempApiDetailInfo.requestBody = formatJson(this.tempApiDetailInfo.requestBody)
           this.$refs.reqBody.resetAceContent(this.tempApiDetailInfo.requestBody)
       },
-      // 重置ace参数
+      // 重置Response ace参数
       formatResponseJSON(){
           this.tempApiDetailInfo.responseBody = formatJson(this.tempApiDetailInfo.responseBody)
           //expectResults

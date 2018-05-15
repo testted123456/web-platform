@@ -705,7 +705,7 @@
           visible: true,   //整个弹窗显示与否
           footerVisible: true,
           contentType: 1,  //弹窗内容显示什么
-          width: '80%',
+          width: '90%',
           extend: {}
         }
       },
@@ -940,16 +940,18 @@
       },
       //弹窗 右上角关闭事件
       handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            // 确定
-            done();
             this.dialogCancel()
-          })
-          .catch(_ => {
-            // 取消
 
-          });
+        // this.$confirm('确认关闭？')
+        //   .then(_ => {
+        //     // 确定
+        //     done();
+        //     this.dialogCancel()
+        //   })
+        //   .catch(_ => {
+        //     // 取消
+        //
+        //   });
       }
 
     }

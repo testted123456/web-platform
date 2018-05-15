@@ -4,7 +4,7 @@
       <el-col :span="6" style="border:1px solid #ccc">
         <div class="vue-transfer-tree">
           <label class="vue-transfer-label">接口</label>
-          <input class="vue-transfer-input" placeholder="输入接口名称搜索"/>
+          <!--<input class="vue-transfer-input" placeholder="输入接口名称搜索"/>-->
           <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
         </div>
       </el-col>

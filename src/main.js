@@ -30,7 +30,7 @@ String.prototype.trim = function () {
 //   username:'',
 //   nickname:''
 // }
-let  env = 'dev'
+let  env = 'prod'
 if(env === 'dev') {
 
   Vue.prototype.wsServer = '192.168.33.139:8083';

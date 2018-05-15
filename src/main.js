@@ -33,30 +33,30 @@ String.prototype.trim = function () {
 let  env = 'prod'
 if(env === 'dev') {
 
-  Vue.prototype.wsServer = '192.168.33.246:8083';
-  Vue.prototype.apiServer = 'http://192.168.33.246:8082/inter/';
-  Vue.prototype.testCaseServer = 'http://192.168.33.246:8083/case/';
-  Vue.prototype.groupServer = 'http://192.168.33.246:8082/group/';
+  Vue.prototype.wsServer = '192.168.33.139:8083';
+  Vue.prototype.apiServer = 'http://192.168.33.139:8082/inter/';
+  Vue.prototype.testCaseServer = 'http://192.168.33.139:8083/case/';
+  Vue.prototype.groupServer = 'http://192.168.33.246:139/group/';
 
   Vue.prototype.testCaseAxios = axios.create({
-    baseURL: 'http://192.168.33.246:8083/case/'
+    baseURL: 'http://192.168.33.139:8083/case/'
   });
 
   Vue.prototype.apiAxios = axios.create({
-    baseURL: 'http://192.168.33.246:8082/inter/',
+    baseURL: 'http://192.168.33.139:8082/inter/',
     // headers: {'Access-Control-Allow-Origin': '*'}
     withCredentials: true
 
   });
 
   Vue.prototype.groupAxios = axios.create({
-    baseURL: 'http://192.168.33.246:8084/group/',
+    baseURL: 'http://192.168.33.139:8084/group/',
     withCredentials: true
 
   });
 
   Vue.prototype.usrAxios = axios.create({
-    baseURL: 'http://192.168.33.246:8088'
+    baseURL: 'http://192.168.33.139:8088'
   });
 }else{
   Vue.prototype.wsServer = '192.168.1.49:9090';

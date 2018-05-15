@@ -23,6 +23,18 @@
                       <el-input v-model.trim="searchInfo.createdBy" placeholder="请输入创建人"></el-input>
                     </el-col>
                   </el-row>
+                  <el-row style="padding:4px 0">
+                    <el-col :span="4" style="padding-top:8px; color:#999;font-size: 12px;">Api名称</el-col>
+                    <el-col :span="20">
+                      <el-input v-model.trim="searchInfo.createdBy" placeholder="请输入Api名称"></el-input>
+                    </el-col>
+                  </el-row>
+                  <el-row style="padding:4px 0">
+                    <el-col :span="4" style="padding-top:8px; color:#999;font-size: 12px;">Api地址</el-col>
+                    <el-col :span="20">
+                      <el-input v-model.trim="searchInfo.createdBy" placeholder="请输入Api地址"></el-input>
+                    </el-col>
+                  </el-row>
 
                   <el-row style="padding:4px 0">
                     <el-col :span="24">

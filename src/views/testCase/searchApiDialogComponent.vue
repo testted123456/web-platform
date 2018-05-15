@@ -45,9 +45,9 @@
                 </el-row>
                 <el-row>
                   <template>
-                    <el-tabs v-model="apiInCaseTab">
+                    <el-tabs v-model="apiInCaseTab" @tab-click="handleClick">
                       <el-tab-pane label="自定义变量" name="variables">
-                        <el-table :data="tempApiDetailInfo.variables">
+                        <el-table :data="tempApiDetailInfo.variables" v-if="activeIndex == 0 ">
                           <el-table-column label="Key" class-name="cell-input">
                             <template slot-scope="scope">
                               <el-input  v-model="tempApiDetailInfo.variables[scope.$index].varName"></el-input>
@@ -62,7 +62,7 @@
                       </el-tab-pane>
 
                       <el-tab-pane label="消息头" name="reqHeaders">
-                        <el-table :data="tempApiDetailInfo.requestHead">
+                        <el-table :data="tempApiDetailInfo.requestHead" v-if="activeIndex == 1 ">
                           <el-table-column label="Key" class-name="cell-input" >
                             <template slot-scope="scope">
                               <el-input  v-model="tempApiDetailInfo.requestHead[scope.$index].Key"></el-input>
@@ -76,7 +76,7 @@
                         </el-table>
                       </el-tab-pane>
                       <el-tab-pane label="消息体" name="reqBody">
-                        <el-row>
+                        <el-row v-if="activeIndex == 2 ">
                           <el-col>
                             <el-input
                               type="textarea"
@@ -89,7 +89,7 @@
                         </el-row>
                       </el-tab-pane>
                       <el-tab-pane label="响应消息头" name="responseHeaders">
-                        <el-table :data="tempApiDetailInfo.responseHead">
+                        <el-table :data="tempApiDetailInfo.responseHead" v-if="activeIndex == 3 ">
                           <el-table-column label="Key" class-name="cell-input">
                             <template slot-scope="scope">
                               <el-input  v-model="tempApiDetailInfo.responseHead[scope.$index].Key"></el-input>
@@ -104,7 +104,7 @@
                         </el-table>
                       </el-tab-pane>
                       <el-tab-pane label="预期结果" name="expectResults">
-                        <el-row>
+                        <el-row v-if="activeIndex == 4 ">
                           <el-col>
                             <el-input
                               type="textarea"
@@ -118,7 +118,7 @@
                       </el-tab-pane>
 
                       <el-tab-pane label="断言" name="assertions">
-                        <el-table :data="tempApiDetailInfo.assertions">
+                        <el-table :data="tempApiDetailInfo.assertions" v-if="activeIndex == 5 ">
                           <el-table-column label="预期结果" class-name="cell-input">
                             <template slot-scope="scope">
                               <el-input  v-model="tempApiDetailInfo.assertions[scope.$index].actualResult"></el-input>
@@ -157,6 +157,7 @@
     name: 'searchApiDialogComponent',
     data(){
       return {
+        activeIndex:0,
         temp:{},
         treeData: [],
         defaultProps:{
@@ -361,7 +362,11 @@
             }
           ]
         }
-      }
+      },
+      handleClick(tab, event){
+        console.log(tab.index)
+        this.activeIndex = tab.index;
+      },
 
 
     }

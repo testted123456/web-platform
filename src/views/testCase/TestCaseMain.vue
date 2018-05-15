@@ -1,37 +1,37 @@
 <template>
   <el-container>
-    <el-aside width="240px" id="testCasedragAside" class="leftAside">
+    <el-aside width="280px" id="testCasedragAside" class="leftAside">
       <div class="leftNavTree">
         <div class="menu">
 
           <div style="text-align: left;">
-            <el-button @click="show = !show" style="padding:12px 72px;">搜 索 <i class="el-icon-search"></i></el-button>
+            <el-button @click="show = !show" style="padding:12px 95px;">搜 索 <i class="el-icon-search"></i></el-button>
 
             <div style="display: flex; margin-top: 20px; height: 1px;width:100%;background-color: #fff;">
               <el-collapse-transition name="el-fade-in-linear">
                 <div v-show="show" class="transition-box">
 
                   <el-row style="padding:4px 0">
-                    <el-col :span="4" style="padding-top:8px;color:#999;font-size: 12px; ">名称</el-col>
-                    <el-col :span="20">
+                    <el-col :span="6" style="padding-top:8px;color:#999;font-size: 12px; ">名称</el-col>
+                    <el-col :span="18">
                       <el-input v-model.trim="searchInfo.name" placeholder="请输入名称"></el-input>
                     </el-col>
                   </el-row>
                   <el-row style="padding:4px 0">
-                    <el-col :span="4" style="padding-top:8px; color:#999;font-size: 12px;">创建人</el-col>
-                    <el-col :span="20">
+                    <el-col :span="6" style="padding-top:8px; color:#999;font-size: 12px;">创建人</el-col>
+                    <el-col :span="18">
                       <el-input v-model.trim="searchInfo.createdBy" placeholder="请输入创建人"></el-input>
                     </el-col>
                   </el-row>
                   <el-row style="padding:4px 0">
-                    <el-col :span="4" style="padding-top:8px; color:#999;font-size: 12px;">Api名称</el-col>
-                    <el-col :span="20">
+                    <el-col :span="6" style="padding-top:8px; color:#999;font-size: 12px;">Api名称</el-col>
+                    <el-col :span="18">
                       <el-input v-model.trim="searchInfo.apiName" placeholder="请输入Api名称"></el-input>
                     </el-col>
                   </el-row>
                   <el-row style="padding:4px 0">
-                    <el-col :span="4" style="padding-top:8px; color:#999;font-size: 12px;">Api地址</el-col>
-                    <el-col :span="20">
+                    <el-col :span="6" style="padding-top:8px; color:#999;font-size: 12px;">Api地址</el-col>
+                    <el-col :span="18">
                       <el-input v-model.trim="searchInfo.urlAddress" placeholder="请输入Api地址"></el-input>
                     </el-col>
                   </el-row>
@@ -442,9 +442,9 @@
     -webkit-box-sizing: border-box;
   }
   aside {
-    padding-left: 20px;
+    padding-left: 10px;
     padding-top: 20px;
-    padding-right: 20px;
+    padding-right: 10px;
     width: 100%;
   }
 

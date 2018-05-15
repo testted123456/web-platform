@@ -740,4 +740,8 @@
     width: 100%;
     padding-top: 10px;
   }
+  .el-button--mini, .el-button--small {
+    font-size: 16px;
+    border-radius: 3px;
+  }
 </style>

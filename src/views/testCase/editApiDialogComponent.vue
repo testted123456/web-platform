@@ -742,10 +742,11 @@
                 }
               }
               if(num === 0){
-                vueThis.$nextTick(()=>{
-
-                })
-
+                if(vueThis.tempApiDetailInfo.variables.length === 1){
+                  if(vueThis.tempApiDetailInfo.variables[0].varName == '' && vueThis.tempApiDetailInfo.variables[0].varValue == ''){
+                    vueThis.tempApiDetailInfo.variables = [];
+                  }
+                }
                 vueThis.tempApiDetailInfo.variables.push({
                   'varName':names[i],
                   'varValue':''

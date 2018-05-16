@@ -89,6 +89,9 @@
               align="left"
               min-width="170"
             >
+              <template slot-scope="scope">
+                <el-button type="text" @click="apiEdit(scope.row,scope.$index)">{{ scope.row.name}}</el-button>
+              </template>
             </el-table-column>
 
             <el-table-column
@@ -1025,5 +1028,10 @@
     z-index: 99;
     width: 100%;
     padding-top: 10px;
+  }
+
+  .el-button--mini, .el-button--small {
+    font-size: 16px;
+    border-radius: 3px;
   }
 </style>

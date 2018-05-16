@@ -469,8 +469,8 @@
 
   .transition-box {
     margin-bottom: 10px;
-    width: 60%;
-    margin-left:20%;
+    width: 96%;
+    margin-left:2%;
     height: 320px;
     border-radius: 4px;
     background-color: rgb(236, 243, 250);

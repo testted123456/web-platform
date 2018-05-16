@@ -630,18 +630,18 @@
           console.log(obj)
 
           if (obj.apiType == 'Http') {
-            obj.apiType = 0;
+            obj.apiType = '0';
           } else if (obj.apiType == 'Https') {
-            obj.apiType = 1;
+            obj.apiType = '1';
           } else if (obj.apiType == 'MQ') {
-            obj.apiType = 2;
+            obj.apiType = '2';
           }
 
 
           if (obj.postWay == 'get') {
-              obj.postWay = 0;
+              obj.postWay = '0';
           } else if (obj.postWay == 'post') {
-            obj.postWay = 1;
+            obj.postWay = '1';
           }
 
           return obj;

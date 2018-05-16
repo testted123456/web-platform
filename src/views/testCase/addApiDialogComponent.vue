@@ -9,7 +9,7 @@
 
             <div style="display: flex; margin-top: 20px; height: 1px;width:100%;background-color: #fff;">
               <el-collapse-transition name="el-fade-in-linear">
-                <div v-show="show" class="transition-box">
+                <div v-show="show" class="transition-box" style="z-index: 99">
 
                   <el-row style="padding:4px 0">
                     <el-col :span="4" style="padding-top:8px;color:#999;font-size: 12px; ">API名称</el-col>
@@ -70,23 +70,30 @@
             style="width: 100%; margin-top: 2px">
             <el-table-column
               prop="name"
-              label="API名称">
+              fixed="left"
+              label="API名称" width="180">
             </el-table-column>
             <el-table-column
               prop="urlAddress"
-              label="API URL">
+              label="API URL" width="350">
+              <template slot-scope="scope">
+                <el-input type="text" v-model="scope.row.urlAddress" ></el-input>
+              </template>
             </el-table-column>
             <el-table-column
               prop="branch"
-              label="API分支">
+              label="API分支" width="200">
+              <template slot-scope="scope">
+                <el-input type="text" v-model="scope.row.branch"></el-input>
+              </template>
             </el-table-column>
             <el-table-column
               prop="module"
-              label="API模块">
+              label="API模块" width="100">
             </el-table-column>
             <el-table-column
               prop="system"
-              label="API系统">
+              label="API系统" width="100">
             </el-table-column>
 
           </el-table>
@@ -240,6 +247,8 @@
 
           if(this.searchInfo.system == ''){
             this.$message.error('api系统必填！' );
+          }else if(this.searchInfo.name == '' && this.searchInfo.urlAddress == ''){
+            this.$message.error('api名称或则api url需要选填一项！' );
           }else{
             var vueThis = this;
             vueThis.apiAxios({
@@ -481,5 +490,6 @@
     /*margin-right: 20px;*/
     z-index: 2;
   }
+
 
 </style>

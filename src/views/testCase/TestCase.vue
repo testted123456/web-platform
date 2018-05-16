@@ -708,7 +708,7 @@
           visible: true,   //整个弹窗显示与否
           footerVisible: true,
           contentType: 1,  //弹窗内容显示什么
-          width: '90%',
+          width: '96%',
           extend: {}
         }
       },

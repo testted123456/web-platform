@@ -19,13 +19,12 @@
 
         vueThis.usrAxios({
           method: 'get',
-
           url: '/user/getUserBySession'
         })
         .then(function (res) {
           if(res.data.code === 10000){
             var roles = res.data.data.roles;
-            var roleName = roles[0].roleName;
+            // var roleName = roles[0].roleName;
 
 
             var userInfo={
@@ -34,6 +33,7 @@
             }
             vueThis.$store.commit( 'permission/' + 'changeUserInfo', userInfo)
 
+            console.log(vueThis.$store.state.permission.userInfo.nickname)
 
             if(roles.length == 0){
               vueThis.$message.error('请去联系管理员添加角色' );
@@ -45,10 +45,10 @@
               }
               vueThis.$store.commit( 'permission/' + 'changeDBgroup', permissData)
 
-              if(roleName == 'tester'){
-
-
-              }
+              // if(roleName == 'tester'){
+              //
+              //
+              // }
             }
           }
         })

@@ -25,7 +25,7 @@
           <el-col :span="3">
             <label>{{tempApiDetailInfo.apiType}}</label>
           </el-col>
-          <el-col :span="3">
+          <el-col :span="3" v-if="!ifMQ">
             <label>{{tempApiDetailInfo.postWay}}</label>
           </el-col>
           <el-col :span="3">
@@ -34,9 +34,9 @@
         </el-row>
         <el-row>
           <template>
-            <el-tabs v-model="apiInCaseTab" @tab-click="handleClick">
-              <el-tab-pane label="自定义变量" name="variables">
-                <el-table :data="tempApiDetailInfo.variables" v-if="activeIndex == 0 ">
+            <el-tabs v-model="apiInCaseTab" @tab-click="handleClick" v-if="!ifMQ">
+              <el-tab-pane label="自定义变量" name="variables" >
+                <el-table :data="tempApiDetailInfo.variables" v-if="activeIndex == 0">
                   <el-table-column label="Key" class-name="cell-input">
                     <template slot-scope="scope">
                       <el-input
@@ -69,7 +69,7 @@
                   </el-table-column>
                 </el-table>
               </el-tab-pane>
-              <el-tab-pane label="消息头" name="reqHeaders">
+              <el-tab-pane label="消息头" name="reqHeaders" >
                 <el-table :data="tempApiDetailInfo.requestHead" v-if="activeIndex == 1 ">
                   <el-table-column label="Key" class-name="cell-input">
                     <template slot-scope="scope">
@@ -139,7 +139,7 @@
                   </el-col>
                 </el-row>
               </el-tab-pane>
-              <el-tab-pane label="响应消息头" name="responseHeaders">
+              <el-tab-pane label="响应消息头" name="responseHeaders" >
                 <el-table :data="tempApiDetailInfo.responseHead" v-if="activeIndex == 3 ">
                   <el-table-column label="Key" class-name="cell-input">
                     <template slot-scope="scope">
@@ -172,7 +172,7 @@
                   </el-table-column>
                 </el-table>
               </el-tab-pane>
-              <el-tab-pane label="预期结果" name="expectResults">
+              <el-tab-pane label="预期结果" name="expectResults"  >
                 <el-row v-if="activeIndex == 4 ">
                   <el-col :span="4" style="text-align: right">
                     <el-button size="small" v-if="isJson(tempApiDetailInfo.responseBody)"
@@ -254,6 +254,29 @@
                 </el-table>
               </el-tab-pane>
             </el-tabs>
+
+            <div v-if="ifMQ">
+              <el-row>
+                <el-col>
+                  <el-button size="small" v-if="isJson(tempApiDetailInfo.requestBody)"
+                             @click.native.prevent="formatRequsetJSON()"
+                             round>格式化Json
+                  </el-button>
+                  <el-button style="color: red"
+                             size="small" v-else
+                             disabled
+                             round
+                  >不是Json格式
+                  </el-button>
+                </el-col>
+              </el-row>
+              <el-row>
+                <div style="border: 1px solid #cccccc; padding-top: 10px">
+                  <hd-ace ref="reqBody" style="width: 100%;height: 200px" editorID="reqBody" @aceTextChange="reqBodyTextChange" :value="tempApiDetailInfo.requestBody"></hd-ace>
+                </div>
+              </el-row>
+            </div>
+
           </template>
         </el-row>
       </el-main>
@@ -274,6 +297,7 @@
     components: {hdInput,hdAce},
     data(){
       return {
+        ifMQ:false,
         activeIndex:0,
         'stepName': '',
         'apiUrl': '',
@@ -389,12 +413,16 @@
         this.tempApiDetailInfo = JSON.stringify(obj);
         this.tempApiDetailInfo = JSON.parse(this.tempApiDetailInfo);
         if (this.tempApiDetailInfo.apiType == 0) {
-          this.tempApiDetailInfo.apiType = 'Http'
+          this.tempApiDetailInfo.apiType = 'Http';
+          this.ifMQ = false;
         } else if (this.tempApiDetailInfo.apiType == 1) {
-          this.tempApiDetailInfo.apiType = 'Https'
-        } else if (this.tempApiDetailInfo.apiType === 2) {
-          this.tempApiDetailInfo.apiType = 'MQ'
+          this.tempApiDetailInfo.apiType = 'Https';
+          this.ifMQ = false;
+        } else if (this.tempApiDetailInfo.apiType == 2) {
+          this.tempApiDetailInfo.apiType = 'MQ';
+          this.ifMQ = true;
         }
+
 
         if (this.tempApiDetailInfo.postWay == 0) {
           this.tempApiDetailInfo.postWay = 'get'
@@ -600,6 +628,22 @@
             obj.responseBody = null
           }
           console.log(obj)
+
+          if (obj.apiType == 'Http') {
+            obj.apiType = 0;
+          } else if (obj.apiType == 'Https') {
+            obj.apiType = 1;
+          } else if (obj.apiType == 'MQ') {
+            obj.apiType = 2;
+          }
+
+
+          if (obj.postWay == 'get') {
+              obj.postWay = 0;
+          } else if (obj.postWay == 'post') {
+            obj.postWay = 1;
+          }
+
           return obj;
         }
       },

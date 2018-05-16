@@ -70,30 +70,27 @@
             style="width: 100%; margin-top: 2px">
             <el-table-column
               prop="name"
-              fixed="left"
-              label="API名称" width="180">
+              label="API名称" >
             </el-table-column>
             <el-table-column
               prop="urlAddress"
-              label="API URL" width="350">
-              <template slot-scope="scope">
-                <el-input type="text" v-model="scope.row.urlAddress" ></el-input>
-              </template>
+              label="API URL" >
+
             </el-table-column>
             <el-table-column
               prop="branch"
-              label="API分支" width="200">
-              <template slot-scope="scope">
-                <el-input type="text" v-model="scope.row.branch"></el-input>
-              </template>
+              label="API分支" >
+              <!--<template slot-scope="scope">-->
+                <!--<el-input type="text" v-model="scope.row.branch"></el-input>-->
+              <!--</template>-->
             </el-table-column>
             <el-table-column
               prop="module"
-              label="API模块" width="100">
+              label="API模块" >
             </el-table-column>
             <el-table-column
               prop="system"
-              label="API系统" width="100">
+              label="API系统" >
             </el-table-column>
 
           </el-table>

@@ -32,52 +32,56 @@ String.prototype.trim = function () {
 // }
 let  env = 'prod'
 if(env === 'dev') {
+  var customIp = '192.168.33.139';
 
-  Vue.prototype.wsServer = '192.168.33.139:8083';
-  Vue.prototype.apiServer = 'http://192.168.33.139:8082/inter/';
-  Vue.prototype.testCaseServer = 'http://192.168.33.139:8083/case/';
-  Vue.prototype.groupServer = 'http://192.168.33.246:139/group/';
+  Vue.prototype.wsServer = customIp+':8083';
+  Vue.prototype.apiServer = 'http://'+ customIp +':8082/inter/';
+  Vue.prototype.testCaseServer = 'http://'+customIp+':8083/case/';
+  Vue.prototype.groupServer = 'http://'+ customIp +':139/group/';
 
   Vue.prototype.testCaseAxios = axios.create({
-    baseURL: 'http://192.168.33.139:8083/case/'
+    baseURL: 'http://'+ customIp +':8083/case/'
   });
 
   Vue.prototype.apiAxios = axios.create({
-    baseURL: 'http://192.168.33.139:8082/inter/',
+    baseURL: 'http://'+ customIp +':8082/inter/',
     // headers: {'Access-Control-Allow-Origin': '*'}
     withCredentials: true
 
   });
 
   Vue.prototype.groupAxios = axios.create({
-    baseURL: 'http://192.168.33.139:8084/group/',
+    baseURL: 'http://' + customIp + ':8084/group/',
     withCredentials: true
 
   });
 
   Vue.prototype.usrAxios = axios.create({
-    baseURL: 'http://192.168.33.139:8088'
+    baseURL: 'http://'+ customIp +':8088'
   });
 }else{
+
+  var customIp2 = '192.168.1.46';
+
   Vue.prototype.wsServer = '192.168.1.49:9090';
-  Vue.prototype.apiServer = 'http://192.168.1.46:8080/inter/';
-  Vue.prototype.testCaseServer = 'http://192.168.1.46:8080/case/';
-  Vue.prototype.groupServer = 'http://192.168.1.46:8084/group/';
+  Vue.prototype.apiServer = 'http://'+ customIp2 +':8080/inter/';
+  Vue.prototype.testCaseServer = 'http://'+ customIp2 +':8080/case/';
+  Vue.prototype.groupServer = 'http://'+ customIp2 +':8084/group/';
 
   Vue.prototype.testCaseAxios = axios.create({
-    baseURL: 'http://192.168.1.46:8080/case/'
+    baseURL: 'http://'+ customIp2 +':8080/case/'
   });
 
   Vue.prototype.apiAxios = axios.create({
-    baseURL: 'http://192.168.1.46:8080/inter/'
+    baseURL: 'http://'+ customIp2 +':8080/inter/'
   });
 
   Vue.prototype.groupAxios = axios.create({
-    baseURL: 'http://192.168.1.46:8080/group/',
+    baseURL: 'http://'+ customIp2 +':8080/group/',
   });
 
   Vue.prototype.usrAxios = axios.create({
-    baseURL: 'http://192.168.1.46:8080'
+    baseURL: 'http://'+ customIp2 +':8080'
   });
 }
 
@@ -137,7 +141,9 @@ Vue.prototype.testCaseAxios.interceptors.response.use(data => {
         })
     }
   }
-  return Promise.reject(error)
+  // return Promise.reject(error)
+
+  Promise.fulfilled
 })
 
 new Vue({

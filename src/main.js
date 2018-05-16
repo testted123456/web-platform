@@ -96,8 +96,10 @@ Vue.prototype.apiAxios.interceptors.response.use(data => {
         })
     }
   }
-  return Promise.reject(error)
+  // return Promise.reject(error)
+  return;
 })
+
 
 Vue.prototype.groupAxios.interceptors.response.use(data => {
   return data

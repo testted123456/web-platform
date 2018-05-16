@@ -98,7 +98,7 @@
               return;
             }
           }).catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
+            vueThis.$message.error('请重新登录' );
             vueThis.loginState = '登录';
             vueThis.loading = false;
             return;

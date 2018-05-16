@@ -55,7 +55,7 @@
           }
         })
         .catch(function (err) {
-          console.log(err);
+          console.log('getUserBySession:' +err);
           vueThis.$router.push({name: 'Login'});
         });
       }

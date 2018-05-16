@@ -96,6 +96,7 @@ Vue.prototype.apiAxios.interceptors.response.use(data => {
         })
     }
   }
+  console.log('main.js')
   // return Promise.reject(error)
   return;
 })

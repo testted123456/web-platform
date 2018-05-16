@@ -97,7 +97,7 @@ Vue.prototype.apiAxios.interceptors.response.use(data => {
     }
   }
   console.log('main.js')
-  // return Promise.reject(error)
+  return Promise.reject("请重新登陆！");
   return;
 })
 

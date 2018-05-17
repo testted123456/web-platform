@@ -22,36 +22,35 @@
           url: '/user/getUserBySession'
         }).then(function (res) {
           if(res.data.code === 10000){
-            var roles = res.data.data.roles;
-            // var roleName = roles[0].roleName;
-
+            //修改登录用户信息
             var userInfo={
               username:res.data.data.username,
               nickname:res.data.data.nickname
             }
             vueThis.$store.commit( 'permission/' + 'changeUserInfo', userInfo)
 
-
-            console.log(vueThis.$store.state.permission.userInfo.nickname)
-
-
-            if(roles.length == 0){
-              vueThis.$message.error('请去联系管理员添加角色' );
-            }else if(roles.length == 1){
-
+            //修改用户权限
+            if(res.data.data.roles === undefined || res.data.data.roles === 'undefined'){
               var permissData={
-                del:true,
-                edit:false
+                del:false,
+                save:false,
+                add:false
               }
-              vueThis.$store.commit( 'permission/' + 'changeDBgroup', permissData)
-
-
-              // if(roleName == 'tester'){
-              //
-              //
-              // }
+            }else if(res.data.data.roles.length == 0){
+              vueThis.$message.error('请去联系管理员添加角色' );
+            }else if(res.data.data.roles.length == 1){
+              var roleName = res.data.data.roles[0].roleName;
+              if(roleName == 'testLeader' || roleName =='testManger' || roleName == 'admin'){
+                var permissData={
+                  del:true,
+                  save:true,
+                  add:true
+                }
+              }
 
             }
+
+            vueThis.$store.commit( 'permission/' + 'changeDBgroup', permissData)
           }
         })
         .catch(function (err) {

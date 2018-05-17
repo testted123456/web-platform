@@ -56,7 +56,7 @@
               </el-tooltip>
 
               <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="保存" placement="top">
-                <el-button @click.native.prevent="save(scope.$index, appearSysBranch)" type="text" size="small"><i class="el-icon-location-outline"></i></el-button>
+                <el-button @click.native.prevent="save(scope.$index, appearSysBranch)" type="text" size="small" :disabled='!$store.state.permission.dbgroup.save'><i class="el-icon-location-outline"></i></el-button>
               </el-tooltip>
 
             </template>

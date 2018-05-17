@@ -74,21 +74,34 @@
             if(res.data.code === 10000){
               vueThis.$router.push('/home/welcome');
 
-              // vueThis.userInfo.username = res.data.data.username;
-              // vueThis.userInfo.nickname = res.data.data.nickname;
-
-              // console.log(vueThis.userInfo.username)
-
+              //修改登录用户信息
               var userInfo={
                 username:res.data.data.username,
                 nickname:res.data.data.nickname
               }
               vueThis.$store.commit( 'permission/' + 'changeUserInfo', userInfo)
 
-              var permissData={
-                del:true,
-                edit:false
+              //修改用户权限
+              if(res.data.data.roles === undefined || res.data.data.roles === 'undefined'){
+                var permissData={
+                  del:false,
+                  save:false,
+                  add:false
+                }
+              }else if(res.data.data.roles.length == 0){
+                vueThis.$message.error('请去联系管理员添加角色' );
+              }else if(res.data.data.roles.length == 1){
+                var roleName = res.data.data.roles[0].roleName;
+                if(roleName == 'testLeader' || roleName =='testManger' || roleName == 'admin'){
+                  var permissData={
+                    del:true,
+                    save:true,
+                    add:true
+                  }
+                }
+
               }
+
               vueThis.$store.commit( 'permission/' + 'changeDBgroup', permissData)
 
             }else {

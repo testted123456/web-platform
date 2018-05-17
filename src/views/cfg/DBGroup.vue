@@ -28,13 +28,15 @@
 
                             <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加"
                                         placement="top" v-if="showAdd(scope.$index, appearDBGroups)">
-                                <el-button @click.native.prevent="addRow(scope.$index, appearDBGroups)" type="text"
+                                <el-button :disabled='!$store.state.permission.dbgroup.add'
+                                           @click.native.prevent="addRow(scope.$index, appearDBGroups)" type="text"
                                            size="small"><i class="el-icon-plus"></i></el-button>
                             </el-tooltip>
 
                             <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="保存"
                                         placement="top">
-                                <el-button @click.native.prevent="save(scope.$index, appearDBGroups)" type="text"
+                                <el-button :disabled='!$store.state.permission.dbgroup.save'
+                                           @click.native.prevent="save(scope.$index, appearDBGroups)" type="text"
                                            size="small"><i class="el-icon-location-outline"></i></el-button>
                             </el-tooltip>
                         </template>

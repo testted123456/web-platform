@@ -53,7 +53,7 @@
 
             </el-submenu>
 
-            <el-submenu index="5">
+            <el-submenu index="5" v-if="$store.state.permission.dbgroup.del">
               <template slot="title">
                 <i class="el-icon-setting"></i>
                 <span>权限配置</span>

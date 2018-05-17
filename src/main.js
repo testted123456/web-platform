@@ -26,10 +26,7 @@ String.prototype.trim = function () {
   return this.replace(/(^\s*)|(\s*$)/g, "");
 }
 
-// Vue.prototype.userInfo = {
-//   username:'',
-//   nickname:''
-// }
+
 let  env = 'prod'
 if(env === 'dev') {
   var customIp = '192.168.33.139';

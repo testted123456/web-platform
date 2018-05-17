@@ -10,7 +10,8 @@ const state = {
   },
   dbgroup:{
     del:false,
-    edit:false
+    save:false,
+    add:false
   }
 }
 

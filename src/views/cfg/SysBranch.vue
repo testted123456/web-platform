@@ -48,16 +48,16 @@
           <el-table-column
             label="操作" align="left">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="导入" placement="top">
-                <el-button @click.native.prevent="syncGit(scope.$index, appearSysBranch)" type="text" size="small"><i class="el-icon-download"></i></el-button>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="查看HTML" placement="top" >
-                <el-button @click.native.prevent="viewHTML(scope.$index, appearSysBranch)"  type="text" size="small"><i class="el-icon-view"></i></el-button>
-              </el-tooltip>
+              <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="导入" placement="top">-->
+                <el-button @click.native.prevent="syncGit(scope.$index, appearSysBranch)" type="text" size="small">导入</el-button>
+              <!--</el-tooltip>-->
+              <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="查看HTML" placement="top" >-->
+                <el-button @click.native.prevent="viewHTML(scope.$index, appearSysBranch)"  type="text" size="small">查看HTML</el-button>
+              <!--</el-tooltip>-->
 
-              <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="保存" placement="top">
-                <el-button @click.native.prevent="save(scope.$index, appearSysBranch)" type="text" size="small" :disabled='!$store.state.permission.dbgroup.save'><i class="el-icon-location-outline"></i></el-button>
-              </el-tooltip>
+              <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="保存" placement="top">-->
+                <el-button @click.native.prevent="save(scope.$index, appearSysBranch)" type="text" size="small" :disabled='!$store.state.permission.dbgroup.save'>保存</el-button>
+              <!--</el-tooltip>-->
 
             </template>
           </el-table-column>

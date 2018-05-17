@@ -17,17 +17,17 @@
         <el-table-column
           label="" >
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">
-              <el-button @click.native.prevent="del(scope.$index, appearRoles)" type="text" size="small"><i class="el-icon-delete"></i></el-button>
-            </el-tooltip>
+            <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">-->
+              <el-button @click.native.prevent="del(scope.$index, appearRoles)" type="text" size="small">删除</el-button>
+            <!--</el-tooltip>-->
 
-            <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAdd(scope.$index, appearRoles)">
-              <el-button @click.native.prevent="addRow(scope.$index, appearRoles)"  type="text" size="small"><i class="el-icon-plus"></i></el-button>
-            </el-tooltip>
+            <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAdd(scope.$index, appearRoles)">-->
+              <el-button @click.native.prevent="addRow(scope.$index, appearRoles)" v-if="showAdd(scope.$index, appearRoles)" type="text" size="small">增加</el-button>
+            <!--</el-tooltip>-->
 
-            <el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="保存" placement="top">
-              <el-button @click.native.prevent="save(scope.$index, appearRoles)" type="text" size="small"><i class="el-icon-location-outline"></i></el-button>
-            </el-tooltip>
+            <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="保存" placement="top">-->
+              <el-button @click.native.prevent="save(scope.$index, appearRoles)" type="text" size="small">保存</el-button>
+            <!--</el-tooltip>-->
           </template>
         </el-table-column>
       </el-table>

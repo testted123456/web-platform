@@ -220,10 +220,15 @@
           if(res.data.code === 10000){
             This.treeData = res.data.data;
             console.log(This.treeData)
+          }else{
+            This.$message({
+              message: res.data.msg,
+              type: 'error'
+            });
           }
         })
         .catch(function (err) {
-          This.$message.error('抱歉，服务器异常！' );
+          This.$message.error(err);
         });
       },
       handleNodeClick(data, node, instance) {

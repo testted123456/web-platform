@@ -312,18 +312,15 @@
             if (res.data.code === 10000) {
               vueThis.groupList = res.data.data;
 
-              // vueThis.groupList.forEach(function(val,index,arr){
-              //   if(val.result){
-              //     val.result = 'true'
-              //   }else{
-              //     val.result = 'false'
-              //   }
-              // })
-
+            }else{
+              vueThis.$message({
+                message: res.data.msg,
+                type: 'error'
+              });
             }
           })
           .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！');
+            vueThis.$message.error(err);
           });
       },
       getData() {
@@ -356,10 +353,15 @@
                         }
                       })
 
+                    }else{
+                      vueThis.$message({
+                        message: res.data.msg,
+                        type: 'error'
+                      });
                     }
                   })
                   .catch(function (err) {
-                    vueThis.$message.error('抱歉，服务器异常！');
+                    vueThis.$message.error(err);
                   });
               }else{
                 vueThis.$message.error('暂无执行信息！');
@@ -368,10 +370,15 @@
 
 
 
+            }else{
+              vueThis.$message({
+                message: res.data.msg,
+                type: 'error'
+              });
             }
           })
           .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！');
+            vueThis.$message.error(err);
           });
       },
       getGroup(id){
@@ -392,10 +399,15 @@
                 }
               })
 
+            }else{
+              vueThis.$message({
+                message: res.data.msg,
+                type: 'error'
+              });
             }
           })
           .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！');
+            vueThis.$message.error(err);
           });
       },
       getCase(index){

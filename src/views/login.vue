@@ -98,7 +98,7 @@
               return;
             }
           }).catch(function (err) {
-            vueThis.$message.error('请重新登录' );
+            vueThis.$message.error(err);
             vueThis.loginState = '登录';
             vueThis.loading = false;
             return;

@@ -164,7 +164,7 @@
               }
             })
             .catch(function (err) {
-              vueThis.$message.error('抱歉，服务器异常！' );
+              vueThis.$message.error(err);
             });
 
 
@@ -249,7 +249,7 @@
             }
           })
           .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
+            vueThis.$message.error(err);
           });
 
         }else{ //删除某个case
@@ -269,7 +269,7 @@
             }
           })
           .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
+            vueThis.$message.error(err);
           });
 
         }

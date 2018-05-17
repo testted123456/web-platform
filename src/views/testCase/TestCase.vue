@@ -435,10 +435,12 @@
                             });
                             vueThis.filterExecteId();
                           })
+                        }else{
+                          vueThis.$message.error(res.data.msg);
                         }
                       })
                       .catch(function (err) {
-                        vueThis.$message.error('抱歉，服务器异常！' );
+                        vueThis.$message.error(err);
                       });
                   }
                 }else{
@@ -446,13 +448,15 @@
                 }
               })
               .catch(function (err) {
-                vueThis.$message.error('抱歉，服务器异常！' );
+                vueThis.$message.error(err);
               });
 
+          }else{
+            vueThis.$message.error(res.data.msg);
           }
         })
         .catch(function (err) {
-          vueThis.$message.error('抱歉，服务器异常！' );
+          vueThis.$message.error(err);
         });
 
 
@@ -512,7 +516,7 @@
                   }
                 })
                 .catch(function (err) {
-                  vueThis.$message.error('抱歉，服务器异常！' );
+                  vueThis.$message.error(err);
                 });
 
               }else{     /////////////////////////编辑界面 确认按钮事件
@@ -553,7 +557,7 @@
                   }
                 })
                 .catch(function (err) {
-                  vueThis.$message.error('抱歉，服务器异常！' );
+                  vueThis.$message.error(err);
                 });
               }
             }else{
@@ -647,10 +651,15 @@
                       });
                       vueThis.filterExecteId();
                     })
+                  }else{
+                    vueThis.$message({
+                      message: res.data.msg,
+                      type: 'error'
+                    });
                   }
                 })
                 .catch(function (err) {
-                  vueThis.$message.error('抱歉，服务器异常！' );
+                  vueThis.$message.error(err);
                 });
 
             }
@@ -846,7 +855,7 @@
                   }
                 })
                 .catch(function (err) {
-                  vueThis.$message.error('抱歉，服务器异常！' );
+                  vueThis.$message.error(err);
                 });
 
                 textArea_this.ws.send("");

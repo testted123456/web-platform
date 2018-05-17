@@ -335,16 +335,16 @@
                     }
                   })
                   .catch(function (err) {
-                    vueThis.$message.error('抱歉，服务器异常！' );
+                    vueThis.$message.error(err);
                   });
               }
             }else{
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
           })
-//          .catch(function (err) {
-//            vueThis.$message.error('抱歉，服务器异常！' );
-//          });
+         .catch(function (err) {
+           vueThis.$message.error(err);
+         });
       },
 
 
@@ -397,7 +397,7 @@
                   }
                 })
                 .catch(function (err) {
-                  vueThis.$message.error('抱歉，服务器异常！' );
+                  vueThis.$message.error(err);
                 });
 
             }
@@ -526,6 +526,11 @@
                   .then(function (res) {
                     if(res.data.code === 10000){
                       console.log("传送caseId成功")
+                    }else{
+                      textArea_this.$message({
+                        message: res.data.msg,
+                        type: 'error'
+                      });
                     }
                   })
                   .catch(function (err) {

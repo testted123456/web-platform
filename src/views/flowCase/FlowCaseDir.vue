@@ -75,7 +75,7 @@
             }
           })
           .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
+            vueThis.$message.error(err);
           });
         }
       },
@@ -125,7 +125,7 @@
             }
           })
           .catch(function (err) {
-            flowCaseDirThis.$message.error('抱歉，服务器异常！' );
+            flowCaseDirThis.$message.error(err);
           });
       }
     }

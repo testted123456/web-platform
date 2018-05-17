@@ -753,10 +753,15 @@
             if(res.data.code === 10000){
               vueThis.tempApiDetailInfo.requestBody = res.data.data;
               vueThis.formatRequsetJSON();
+            }else{
+              vueThis.$message({
+                message: res.data.msg,
+                type: 'error'
+              });
             }
           })
           .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
+            vueThis.$message.error(err);
           });
 
       },
@@ -799,10 +804,15 @@
               }
             }
 
+          }else{
+            vueThis.$message({
+              message: res.data.msg,
+              type: 'error'
+            });
           }
         })
         .catch(function (err) {
-          vueThis.$message.error('抱歉，服务器异常！' );
+          vueThis.$message.error(err);
         });
 
 

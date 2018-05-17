@@ -138,10 +138,15 @@
           .then(function (res) {
             if(res.data.code === 10000){
               vueThis.apisInfoCheck = res.data.data;
+            }else{
+              vueThis.$message({
+                message: res.data.msg,
+                type: 'error'
+              });
             }
           })
           .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
+            vueThis.$message.error(err);
           });
         },
 
@@ -164,11 +169,14 @@
 
 
             }else{
-
+              vueThis.$message({
+                message: res.data.msg,
+                type: 'error'
+              });
             }
           })
           .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
+            vueThis.$message.error(err);
           });
         }
       }

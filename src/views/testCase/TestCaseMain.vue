@@ -222,7 +222,7 @@
 
           })
           .catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
+            vueThis.$message.error(err);
           });
         }
       },
@@ -247,12 +247,17 @@
                 if (res.data.code === 10000 ) {
                   var tempApi = res.data.data;
                   return resolve(res.data.data);
+                }else{
+                  vueThis.$message({
+                    message: res.data.msg,
+                    type: 'error'
+                  });
                 }
                 return;
 
               })
               .catch(function (err) {
-                vueThis.$message.error('抱歉，服务器异常！' );
+                vueThis.$message.error(err);
               });
           }
 
@@ -280,7 +285,7 @@
             });
           }
         }).catch(function (err) {
-          vueThis.$message.error('服务器请求失败！');
+          vueThis.$message.error(err);
         })
 
         node.data.type = false;
@@ -378,7 +383,7 @@
                 vueThis.$message.error('抱歉，删除用例目录失败：' + res.data.msg);
               }
             }).catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
+            vueThis.$message.error(err);
           });
         }else{ //删除某个case
           vueThis.testCaseAxios({
@@ -396,7 +401,7 @@
                 vueThis.$message.error('抱歉，删除用例失败：' + res.data.msg);
               }
             }).catch(function (err) {
-            vueThis.$message.error('抱歉，服务器异常！' );
+            vueThis.$message.error(err);
           });;
         }
       },

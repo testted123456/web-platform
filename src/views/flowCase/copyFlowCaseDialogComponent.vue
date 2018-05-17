@@ -137,11 +137,16 @@
               if(res.data.code === 10000){
                 var apiTreeInfo = res.data.data;
                 return resolve(res.data.data);
+              }else{
+                vueThis.$message({
+                  message: res.data.msg,
+                  type: 'error'
+                });
               }
               return;
             })
             .catch(function (err) {
-              vueThis.$message.error('抱歉，服务器异常！' );
+              vueThis.$message.error(err);
             });
 
         }

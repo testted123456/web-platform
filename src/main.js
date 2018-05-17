@@ -94,6 +94,12 @@ Vue.prototype.apiAxios.interceptors.response.use(data => {
         router.replace({
           path: '/',
         })
+        break;
+      case 403:
+        router.replace({
+          path: '/'
+        })
+        break;
     }
   }
   return Promise.reject(error)
@@ -108,6 +114,12 @@ Vue.prototype.groupAxios.interceptors.response.use(data => {
         router.replace({
           path: '/',
         })
+        break;
+      case 403:
+        router.replace({
+          path: '/'
+        })
+        break;
     }
   }
   return error
@@ -122,6 +134,12 @@ Vue.prototype.usrAxios.interceptors.response.use(data => {
         router.replace({
           path: '/',
         })
+        break;
+      case 403:
+        router.replace({
+          path: '/'
+        })
+        break;
     }
   }
   return Promise.reject(error)
@@ -139,11 +157,16 @@ Vue.prototype.testCaseAxios.interceptors.response.use(data => {
           path: '/',
           // query: {redirect: router.currentRoute.fullPath}
         })
+            break;
+      case 403:
+        router.replace({
+          path: '/'
+        })
+            break;
     }
   }
-  // return Promise.reject(error)
+  return Promise.reject(error)
 
-  Promise.fulfilled
 })
 
 new Vue({

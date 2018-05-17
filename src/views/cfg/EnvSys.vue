@@ -280,7 +280,7 @@
           let vueThis = this;
 
           this.testCaseAxios({
-            method: 'post',
+            method: 'get',
             url: 'sysEnv/del?id=' + rows[index].id
           }).then(function (res) {
             if(res.data.code === 10000){

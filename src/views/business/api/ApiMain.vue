@@ -170,7 +170,9 @@
             vueThis.$message.error('抱歉，获取接口信息失败：' + res.data.msg);
           }
         }).catch(function (err) {
+            console.log('api:' + err)
           vueThis.$message.error('抱歉，服务器异常！' );
+          vueThis.$message.error(err );
         });
 
       }

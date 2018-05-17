@@ -21,7 +21,14 @@
               <el-radio v-model="testCase.caseType" label="true">是</el-radio>
               <el-radio v-model="testCase.caseType" label="false">否</el-radio>
             </el-form-item>
-            <el-form-item label="API系统:" prop="system" :rules="[{ required: true, trigger: 'blur',message: '接口系统不能为空'} ]">
+            <!--创建人-->
+            <el-form-item label="创建人" prop="createdBy" :rules="[{ required: true, trigger: 'blur',message: '创建人不能为空'} ]" v-if="executeBtnShow">
+              <el-col :span="9">
+                <!--<el-input v-model="testCase.createdBy" placeholder="请输入创建人"></el-input>-->
+                <p>{{testCase.createdBy}}</p>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="系统:" prop="system" :rules="[{ required: true, trigger: 'blur',message: '接口系统不能为空'} ]">
               <el-select v-model="testCase.system" placeholder="请选择">
                 <el-option
                   v-for="item in apiSystems"

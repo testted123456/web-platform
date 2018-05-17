@@ -12,7 +12,13 @@
             <el-form-item label="用例流描述" prop="description" :rules="[{ required: false, trigger: 'blur',message: '测试集描述不能为空'} ]">
               <el-input v-model="flowCase.description" placeholder="请输入用例流描述"></el-input>
             </el-form-item>
-
+            <!--创建人-->
+            <el-form-item label="创建人" prop="createdBy" :rules="[{ required: true, trigger: 'blur',message: '创建人不能为空'} ]" v-if="executeBtnShow">
+              <el-col :span="9">
+                <!--<el-input v-model="flowCase.createdBy" placeholder="请输入创建人"></el-input>-->
+                <p>{{flowCase.createdBy}}</p>
+              </el-col>
+            </el-form-item>
             <!--环境-->
             <el-form-item label="环境" prop="env" :rules="[{ required: true, message: '环境不能为空'} ]">
               <el-col :span="8">
@@ -58,7 +64,7 @@
 
             <el-table-column
               prop="name"
-              label="用例流名称"
+              label="用例名称"
               align="left"
               min-width="170"
             >
@@ -69,7 +75,7 @@
 
             <el-table-column
               prop="description"
-              label="用例流描述"
+              label="用例描述"
               align="left"
             >
             </el-table-column>

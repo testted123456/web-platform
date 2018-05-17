@@ -98,6 +98,12 @@
                     save:true,
                     add:true
                   }
+                }else{
+                  var permissData={
+                    del:false,
+                    save:false,
+                    add:false
+                  }
                 }
 
               }

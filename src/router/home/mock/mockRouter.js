@@ -1,8 +1,6 @@
 import MockMain from  '@/views/mock/MockMain'
-import MockNew from '@/views/mock/MockNew'
-import MockEdit from '@/views/mock/MockEdit'
-import MockDirNew from '@/views/mock/MockDirNew'
-import MockDirEdit from '@/views/mock/MockDirEdit'
+import Mock from '@/views/mock/Mock'
+import MockDir from '@/views/mock/MockDir'
 
 export default {
   path: 'mock',
@@ -10,24 +8,14 @@ export default {
   component: MockMain,
   children: [
     {
-      path: 'mockNew',
-      name: 'MockNew',
-      component: MockNew
+      path: 'mock',
+      name: 'Mock',
+      component: Mock
     },
     {
-      path: 'mockEdit/:id',
-      name: 'MockEdit',
-      component: MockEdit
-    },
-    {
-      path: 'mockDirNew',
-      name: 'MockDirNew',
-      component: MockDirNew
-    },
-    {
-      path: 'mockDirEdit/:id',
-      name: 'MockDirEdit',
-      component: MockDirEdit
+      path: 'mockDir',
+      name: 'MockDir',
+      component: MockDir
     }
   ]
 }

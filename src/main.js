@@ -27,7 +27,7 @@ String.prototype.trim = function () {
 }
 
 
-let  env = 'dev'
+let  env = 'prod'
 if(env === 'dev') {
   var customIp = '192.168.32.198';
 

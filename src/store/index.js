@@ -5,12 +5,14 @@ import testCase from './modules/testCase.js'
 import group from './modules/group.js'
 import flowCase from './modules/flowCase.js'
 import permission from './modules/permissionStore.js'
+import mock from './modules/mock.js'
+
 
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-    api, testCase, group ,flowCase ,permission
+    api, testCase, group ,flowCase ,permission ,mock
   }
 })

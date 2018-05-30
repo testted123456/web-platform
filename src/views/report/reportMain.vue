@@ -36,6 +36,7 @@
           <el-menu-item-group>
             <el-menu-item index="3-1">数量</el-menu-item>
             <el-menu-item index="3-2">成功率</el-menu-item>
+            <el-menu-item index="3-3">甘特图</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
       </el-menu>
@@ -99,6 +100,10 @@
             this.$router.push({name: 'GroupRate'});
           }
             break;
+          case '3-3':{
+            this.$router.push({name: 'gantetu'});
+          }
+            break;
 
         }
       }
@@ -122,9 +127,5 @@
   .el-icon-setting{
     text-align: left;
   }
-
-
-
-
 
 </style>

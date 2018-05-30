@@ -1,6 +1,9 @@
 import ToolsMain from '@/views/tools/ToolsMain'
 import CodeCheck from '@/views/tools/CodeCheck'
 import CoverageStatistics from '@/views/tools/coverageStatistics'
+import MobileCodeBuild from '@/views/tools/mobileCodeBuild'
+import IdCardCodeBuild from '@/views/tools/idCardCodeBuild'
+
 
 
 export default {
@@ -17,17 +20,17 @@ export default {
       path: 'coverageStatistics',
       name: 'CoverageStatistics',
       component: CoverageStatistics
+    },
+    {
+      path: 'mobileCodeBuild',
+      name: 'MobileCodeBuild',
+      component: MobileCodeBuild
+    },
+    {
+      path: 'idCardCodeBuild',
+      name: 'IdCardCodeBuild',
+      component: IdCardCodeBuild
     }
-    // ,
-    // {
-    //   path: 'mockDirNew',
-    //   name: 'MockDirNew',
-    //   component: MockDirNew
-    // },
-    // {
-    //   path: 'mockDirEdit/:id',
-    //   name: 'MockDirEdit',
-    //   component: MockDirEdit
-    // }
+
   ]
 }

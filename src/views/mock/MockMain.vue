@@ -1,10 +1,10 @@
 <template>
   <el-container>
-    <el-aside width="240px" id="groupdragAside" class="leftAside">
+    <el-aside width="240px"  class="leftAside">
       <div class="leftNavTree">
         <div class="menu">
           <el-input
-            placeholder="输入测试集名称进行过滤"
+            placeholder="输入名称进行过滤"
             round
           >
           </el-input>
@@ -36,7 +36,6 @@
                   </span>
         </el-dialog>
       </div>
-      <!--<div class="dragLine" id="groupdrag"></div>-->
     </el-aside>
     <router-view></router-view>
   </el-container>
@@ -49,7 +48,7 @@
 
   export default {
     components: { VueContentMenu,ElTree},
-    name: 'TestCaseMain',
+    name: 'MockMain',
     data () {
       return {
         props: {
@@ -71,14 +70,14 @@
       }
     },
     computed: {
-      isNewGroupSaved() {
-        return this.$store.state.group.isNewGroupSaved;
+      isNewMockSaved() {
+        return this.$store.state.mock.isNewMockSaved;
       }
     },
     mounted(){
     },
     watch: {
-      'isNewGroupSaved': function (val, oldVal) { //新增group
+      'isNewMockSaved': function (val, oldVal) { //新增mock
         var node = this.$refs.tree.currentNode.node;
 
         if (val == 1) {
@@ -90,7 +89,7 @@
             })
           }
 
-          var newChild = this.$store.state.group.newGroup;
+          var newChild = this.$store.state.mock.newMock;
 
           if(newChild.type === "undefined"){
             return;
@@ -99,7 +98,7 @@
           }
 
           node.data.children.push(newChild);
-          this.$store.commit('changeGroupStatus', 0);
+          this.$store.commit('changeMockStatus', 0);
 
           node.updateChildren()
 
@@ -107,22 +106,22 @@
             node.expand();
           }
         }else if(val == 2){
-          var updatedGroup = this.$store.state.group.newGroup;
+          var updatedMock = this.$store.state.mock.newMock;
 
-          if(updatedGroup.id === node.data.id){
-            node.data.name = updatedGroup.name;
+          if(updatedMock.id === node.data.id){
+            node.data.name = updatedMock.name;
           }else{
             let children = node.childNodes;
 
             children.forEach(function (e, index) {
-              if(e.data.id === updatedGroup.id){
-                e.data.name = updatedGroup.name;
+              if(e.data.id === updatedMock.id){
+                e.data.name = updatedMock.name;
                 return;
               }
             });
           }
 
-          this.$store.commit( 'changeGroupStatus', 0);
+          this.$store.commit( 'changeMockStatus', 0);
         }
       }
     },
@@ -130,15 +129,15 @@
 
       handleNodeClick(data, node, instance){
         if (node.data.type) {
-          this.$router.push({name: 'Group', query: {id: node.data.id}});
+          this.$router.push({name: 'Mock', query: {id: node.data.id}});
         } else {
-          this.$router.push({name: 'GroupDir', query: {id: node.data.id}});
+          this.$router.push({name: 'MockDir', query: {id: node.data.id}});
         }
       },
       loadNode(node, resolve) { //渲染树节点
         if (node.level === 0) {
           return resolve([{
-            name: '测试集',
+            name: 'Mock',
             id: 0,
             type: false
           }]);
@@ -146,9 +145,9 @@
           return;
         } else {
           var vueThis = this;
-          vueThis.groupAxios({
+          vueThis.mockAxios({
             method: 'get',
-            url: 'getByPid?pid='+node.data.id
+            url: 'web-mock/mock/getNodeList?id='+node.data.id
           })
             .then(function(res){
               if (res.data.code === 10000 ) {
@@ -228,7 +227,7 @@
         const nodeId = node.data.id;
         var vueThis = this;
         if(node.isLeaf === false){//删除case目录
-          vueThis.groupAxios({
+          vueThis.mockAxios({
             method: 'get',
             url: "deleteGroup?id=" + nodeId
           })
@@ -248,7 +247,7 @@
             });
 
         }else{ //删除某个case
-          vueThis.groupAxios({
+          vueThis.mockAxios({
             method: 'get',
             url: "deleteGroup?id=" + nodeId
           })

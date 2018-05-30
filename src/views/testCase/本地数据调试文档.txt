@@ -1,5 +1,78 @@
 
 
+<el-row>
+            <el-tabs v-model="mockTab" @tab-click="handleClick" >
+              <el-tab-pane label="request" name="request">
+                <div v-if="activeIndex == 0 ">
+                  <el-row>
+                    <el-col>
+                      <el-button size="small" v-if="isJson(mockInfo.request)"
+                                 @click.native.prevent="formatJSON(1)"
+                                 round>格式化Json
+                      </el-button>
+                      <el-button style="color: red"
+                                 size="small" v-else
+                                 disabled
+                                 round
+                      >不是Json格式
+                      </el-button>
+                    </el-col>
+                  </el-row>
+
+                  <el-row>
+                    <el-col>
+                      <el-input type="textarea"  :autosize="{ minRows: 9}" resize="none" placeholder="请输入内容" v-model="mockInfo.request"></el-input>
+                    </el-col>
+                  </el-row>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="response" name="response">
+                <div v-if="activeIndex == 1 ">
+                  <el-row>
+                    <el-col>
+                      <el-button size="small" v-if="isJson(mockInfo.response)"
+                                 @click.native.prevent="formatJSON(2)"
+                                 round>格式化Json
+                      </el-button>
+                      <el-button style="color: red"
+                                 size="small" v-else
+                                 disabled
+                                 round
+                      >不是Json格式
+                      </el-button>
+                    </el-col>
+                  </el-row>
+
+                  <el-row>
+                    <el-col>
+                      <el-input type="textarea"  :autosize="{ minRows: 9}" resize="none" placeholder="请输入内容" v-model="mockInfo.response"></el-input>
+                    </el-col>
+                  </el-row>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="规则" name="rule">
+                <div v-if="activeIndex == 2 ">
+                  <el-row>
+                    <el-col>
+                      <div style="border: 1px solid #cccccc; padding-top: 10px">
+                        <hd-ace-rule ref="rule" style="width: 100%;height: 200px" editorID="rule" @aceTextChange="ruleTextChange" :value="mockInfo.rule"></hd-ace-rule>
+                      </div>
+                    </el-col>
+                  </el-row>
+                </div>
+              </el-tab-pane>
+            </el-tabs>
+          </el-row>
+
+
+
+
+
+
+
+https://www.cnblogs.com/xtreme/p/5593082.html
+
+
 //case 详情页面 两个接口的数据
 this.testCase = {
     "id": 1,

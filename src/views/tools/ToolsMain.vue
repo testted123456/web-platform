@@ -19,6 +19,17 @@
               <span slot="title">代码覆盖率统计</span>
             </el-menu-item>
 
+            <el-submenu index="3">
+              <template slot="title">
+                <i class="el-icon-menu"></i>
+                <span>数据生成器</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="3-1">手机号码生成器</el-menu-item>
+                <el-menu-item index="3-2">身份证生成器</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
+
           </el-menu>
     </el-aside>
     <router-view></router-view>
@@ -53,6 +64,14 @@
               this.$router.push({name: 'CoverageStatistics'});
             }
             break;
+            case '3-1':{
+              this.$router.push({name: 'MobileCodeBuild'});
+            }
+              break;
+            case '3-2':{
+              this.$router.push({name: 'IdCardCodeBuild'});
+            }
+              break;
           }
       }
     }

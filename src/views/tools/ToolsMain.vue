@@ -27,6 +27,7 @@
               <el-menu-item-group>
                 <el-menu-item index="3-1">手机号码生成器</el-menu-item>
                 <el-menu-item index="3-2">身份证生成器</el-menu-item>
+                <el-menu-item index="3-3">银行卡生成器</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
 
@@ -70,6 +71,10 @@
               break;
             case '3-2':{
               this.$router.push({name: 'IdCardCodeBuild'});
+            }
+              break;
+            case '3-3':{
+              this.$router.push({name: 'BankCardCodeBuild'});
             }
               break;
           }

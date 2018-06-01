@@ -5,13 +5,51 @@
         <!--表单-->
         <el-form   ref="identityInfo"  :label-position="labelPosition"  label-width="100px" :model="identityInfo">
           <!--省市区-->
-          <el-form-item label="省市区" prop="name" :rules="[{ required: true, trigger: 'blur',message: '省市区不能为空'} ]" style="text-align: left">
-            <el-cascader
-              placeholder="试试搜索：指南"
-              :options="options"
-              v-model="identityInfo.selectedOptions"
-              filterable
-            ></el-cascader>
+          <el-form-item label="省市区" prop="province" :rules="[{ required: true, trigger: 'blur',message: '省市区不能为空'} ]" style="text-align: left">
+            <!--<el-cascader-->
+              <!--placeholder="试试搜索：指南"-->
+              <!--:options="options"-->
+              <!--v-model="identityInfo.selectedOptions"-->
+              <!--filterable-->
+            <!--&gt;</el-cascader>-->
+            <!--:gutter="20"-->
+            <el-row  style="margin-bottom: 10px;">
+              <!--省-->
+              <el-col :span="4" style="padding-right: 10px;">
+                <el-select v-model="identityInfo.province" placeholder="请选择" @change="judgeMunicipal">
+                  <el-option
+                    v-for="item in provinces"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-col>
+
+              <!--市-->
+              <el-col :span="4" v-show="ifSelectShow" style="padding-right: 10px;">
+                <el-select v-model="identityInfo.city" placeholder="请选择" @focus="getCitys">
+                  <el-option
+                    v-for="item in citys"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-col>
+
+              <!--区-->
+              <el-col :span="4" v-show="ifSelectShow" style="padding-right: 10px;">
+                <el-select v-model="identityInfo.district" placeholder="请选择" @focus="getDistricts">
+                  <el-option
+                    v-for="item in districts"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-col>
+            </el-row>
           </el-form-item>
           <!--环境-->
           <el-form-item label="环境" prop="env" :rules="[{ required: true, message: '环境不能为空'} ]" style="text-align: left">
@@ -27,22 +65,26 @@
             </el-col>
           </el-form-item>
           <!--流程用例-->
-          <el-form-item label="是否注册" prop="caseType" :rules="[{ required: true, message: '不能为空'} ]" style="text-align: left">
-            <el-radio v-model="identityInfo.caseType" label="true">已注册</el-radio>
-            <el-radio v-model="identityInfo.caseType" label="false">未注册</el-radio>
+          <el-form-item label="是否注册" prop="isRegistered" :rules="[{ required: true, message: '不能为空'} ]" style="text-align: left">
+            <el-radio v-model="identityInfo.isRegistered" label="true">已注册</el-radio>
+            <el-radio v-model="identityInfo.isRegistered" label="false">未注册</el-radio>
           </el-form-item>
         </el-form>
 
-        <el-row>
-          <el-col :span="8" style="text-align: center">
+        <el-row style="padding-top: 20px">
+          <el-col :span="4" style="text-align: center">
             <el-button type="primary" @click="makeID">点击生成</el-button>
           </el-col>
-        </el-row>
-        <el-row v-show="ifShow">
-          <el-col :span="8" style="text-align: left">
+
+          <el-col :span="2" style="text-align: left" v-show="ifIdShow">
+            <p style="font-size: 14px;line-height: 12px;">身份证信息:</p>
+          </el-col>
+          <el-col :span="8" style="text-align: left" v-show="ifIdShow">
             <el-input v-model="idCardInfo" placeholder="生成的id信息"></el-input>
           </el-col>
+
         </el-row>
+
       </div>
     </el-main>
   </el-container>
@@ -53,212 +95,22 @@
       name: 'idCardCodeBuild',
       data() {
           return {
-            ifShow:false,
+            ifIdShow:false,
+            ifSelectShow:true,
             labelPosition:'left',
             idCardInfo:'',
             identityInfo:{
-              selectedOptions: ['指南', '设计原则', '一致'],
               env:'',
-              caseType:'false'
-
+              isRegistered:'false',
+              province:'',
+              city:'',
+              district:''
             },
             enviornment:[],
-            options: [
-              {
-              value: '指南',
-              label: '指南',
-              children: [{
-                value: '设计原则',
-                label: '设计原则',
-                children: [{
-                  value: '一致',
-                  label: '一致'
-                }, {
-                  value: 'fankui',
-                  label: '反馈'
-                }, {
-                  value: 'xiaolv',
-                  label: '效率'
-                }, {
-                  value: 'kekong',
-                  label: '可控'
-                }]
-              }, {
-                value: 'daohang',
-                label: '导航',
-                children: [{
-                  value: 'cexiangdaohang',
-                  label: '侧向导航'
-                }, {
-                  value: 'dingbudaohang',
-                  label: '顶部导航'
-                }]
-              }]
-            }, {
-              value: 'zujian',
-              label: '组件',
-              children: [{
-                value: 'basic',
-                label: 'Basic',
-                children: [{
-                  value: 'layout',
-                  label: 'Layout 布局'
-                }, {
-                  value: 'color',
-                  label: 'Color 色彩'
-                }, {
-                  value: 'typography',
-                  label: 'Typography 字体'
-                }, {
-                  value: 'icon',
-                  label: 'Icon 图标'
-                }, {
-                  value: 'button',
-                  label: 'Button 按钮'
-                }]
-              }, {
-                value: 'form',
-                label: 'Form',
-                children: [{
-                  value: 'radio',
-                  label: 'Radio 单选框'
-                }, {
-                  value: 'checkbox',
-                  label: 'Checkbox 多选框'
-                }, {
-                  value: 'input',
-                  label: 'Input 输入框'
-                }, {
-                  value: 'input-number',
-                  label: 'InputNumber 计数器'
-                }, {
-                  value: 'select',
-                  label: 'Select 选择器'
-                }, {
-                  value: 'cascader',
-                  label: 'Cascader 级联选择器'
-                }, {
-                  value: 'switch',
-                  label: 'Switch 开关'
-                }, {
-                  value: 'slider',
-                  label: 'Slider 滑块'
-                }, {
-                  value: 'time-picker',
-                  label: 'TimePicker 时间选择器'
-                }, {
-                  value: 'date-picker',
-                  label: 'DatePicker 日期选择器'
-                }, {
-                  value: 'datetime-picker',
-                  label: 'DateTimePicker 日期时间选择器'
-                }, {
-                  value: 'upload',
-                  label: 'Upload 上传'
-                }, {
-                  value: 'rate',
-                  label: 'Rate 评分'
-                }, {
-                  value: 'form',
-                  label: 'Form 表单'
-                }]
-              }, {
-                value: 'data',
-                label: 'Data',
-                children: [{
-                  value: 'table',
-                  label: 'Table 表格'
-                }, {
-                  value: 'tag',
-                  label: 'Tag 标签'
-                }, {
-                  value: 'progress',
-                  label: 'Progress 进度条'
-                }, {
-                  value: 'tree',
-                  label: 'Tree 树形控件'
-                }, {
-                  value: 'pagination',
-                  label: 'Pagination 分页'
-                }, {
-                  value: 'badge',
-                  label: 'Badge 标记'
-                }]
-              }, {
-                value: 'notice',
-                label: 'Notice',
-                children: [{
-                  value: 'alert',
-                  label: 'Alert 警告'
-                }, {
-                  value: 'loading',
-                  label: 'Loading 加载'
-                }, {
-                  value: 'message',
-                  label: 'Message 消息提示'
-                }, {
-                  value: 'message-box',
-                  label: 'MessageBox 弹框'
-                }, {
-                  value: 'notification',
-                  label: 'Notification 通知'
-                }]
-              }, {
-                value: 'navigation',
-                label: 'Navigation',
-                children: [{
-                  value: 'menu',
-                  label: 'NavMenu 导航菜单'
-                }, {
-                  value: 'tabs',
-                  label: 'Tabs 标签页'
-                }, {
-                  value: 'breadcrumb',
-                  label: 'Breadcrumb 面包屑'
-                }, {
-                  value: 'dropdown',
-                  label: 'Dropdown 下拉菜单'
-                }, {
-                  value: 'steps',
-                  label: 'Steps 步骤条'
-                }]
-              }, {
-                value: 'others',
-                label: 'Others',
-                children: [{
-                  value: 'dialog',
-                  label: 'Dialog 对话框'
-                }, {
-                  value: 'tooltip',
-                  label: 'Tooltip 文字提示'
-                }, {
-                  value: 'popover',
-                  label: 'Popover 弹出框'
-                }, {
-                  value: 'card',
-                  label: 'Card 卡片'
-                }, {
-                  value: 'carousel',
-                  label: 'Carousel 走马灯'
-                }, {
-                  value: 'collapse',
-                  label: 'Collapse 折叠面板'
-                }]
-              }]
-            }, {
-              value: 'ziyuan',
-              label: '资源',
-              children: [{
-                value: 'axure',
-                label: 'Axure Components'
-              }, {
-                value: 'sketch',
-                label: 'Sketch Templates'
-              }, {
-                value: 'jiaohu',
-                label: '组件交互文档'
-              }]
-            }]
+            provinces:[],
+            citys:[],
+            districts:[]
+
           }
       },
 
@@ -267,12 +119,26 @@
       },
 
       created(){
+        this.getData();
       },
 
       methods: {
         getData(){
+          this.getEnv();
+          this.getProvinces();
+        },
+        // 判断是否是直辖市
+        judgeMunicipal(){
+          console.log(this.identityInfo.province)
+          if(this.identityInfo.province == '北京市' || this.identityInfo.province == '上海市' || this.identityInfo.province == '天津市' || this.identityInfo.province == '重庆市'){
+            this.ifSelectShow = false;
+          }else{
+            this.ifSelectShow = true;
+          }
+        },
+        // 获取环境信息
+        getEnv(){
           var vueThis = this;
-          //获取环境列表select
           this.testCaseAxios({
             method: 'get',
             url: "env/getAllEnvs"
@@ -284,43 +150,6 @@
                   tempEnviornment.push({value: e.name, label: e.name})
                 });
                 vueThis.enviornment = tempEnviornment;
-                ///////////////////////获取环境信息成功之后 再去获取页面其他信息
-
-                if (caseID == 0){   //新增case页面
-                  vueThis.testCase = {
-                    caseType:'false',
-                    env:vueThis.enviornment[0].value,
-                    type:true,
-                    system:vueThis.apiSystems[0].value
-                  }
-                  vueThis.testCase.testCaseInterfaces = [];
-                  vueThis.copyCaseShow = true;
-                }else{
-                  // case编辑页面
-                  // 获取测试用例详情信息内容
-                  vueThis.copyCaseShow = false;
-                  vueThis.executeBtnShow = true;//执行按钮显示
-                  vueThis.testCaseAxios({
-                    method: 'get',
-                    url: "testCase/getCaseById?id=" + caseID
-                  })
-                    .then(function (res) {
-                      if(res.data.code === 10000){
-                        vueThis.testCase = res.data.data;
-                        if(vueThis.testCase.caseType){
-                          vueThis.testCase.caseType = "true"
-                        }else{
-                          vueThis.testCase.caseType = "false"
-                        }
-
-                      }else{
-                        vueThis.$message.error(res.data.msg);
-                      }
-                    })
-                    .catch(function (err) {
-                      vueThis.$message.error(err);
-                    });
-                }
               }else{
                 vueThis.$message.error('抱歉，获取环境信息失败：' + res.data.msg);
               }
@@ -329,10 +158,121 @@
               vueThis.$message.error(err);
             });
         },
+        // 获取省份信息
+        getProvinces(){
+          var vueThis = this;
+          this.toolAxios({
+            method: 'get',
+            url: "testData/getAllProvince"
+          })
+            .then(function (res) {
+              if(res.data.code === 10000){
+                var data = [];
+                res.data.data.forEach(function (e, index) {
+                  data.push({value: e, label: e})
+                });
+                vueThis.provinces = data;
+              }else{
+                vueThis.$message.error('抱歉，获取环境信息失败：' + res.data.msg);
+              }
+            })
+            .catch(function (err) {
+              vueThis.$message.error(err);
+            });
+        },
+        // 获取市级信息
+        getCitys(){
+          var vueThis = this;
+          if(vueThis.identityInfo.province == ''){
+            vueThis.$message.error('请选择省份');
+          }else{
+            this.toolAxios({
+              method: 'post',
+              data:{
+                "province":vueThis.identityInfo.province
+              },
+              url: "testData/getCityList"
+            })
+              .then(function (res) {
+                if(res.data.code === 10000){
+                  var data = [];
+                  res.data.data.forEach(function (e, index) {
+                    data.push({value: e, label: e})
+                  });
+                  vueThis.citys = data;
+                }else{
+                  vueThis.$message.error('抱歉，获取环境信息失败：' + res.data.msg);
+                }
+              })
+              .catch(function (err) {
+                vueThis.$message.error(err);
+              });
+          }
 
+        },
+        // 获取区信息
+        getDistricts(){
+          var vueThis = this;
+          if(vueThis.identityInfo.province == '' || vueThis.identityInfo.city == ''){
+            vueThis.$message.error('请选择省份 市区');
+          }else{
+            this.toolAxios({
+              method: 'post',
+              data:{
+                "province":vueThis.identityInfo.province,
+                "city":vueThis.identityInfo.city
+              },
+              url: "testData/getDistrictList"
+            })
+              .then(function (res) {
+                if(res.data.code === 10000){
+                  var data = [];
+                  res.data.data.forEach(function (e, index) {
+                    data.push({value: e, label: e})
+                  });
+                  vueThis.districts = data;
+                }else{
+                  vueThis.$message.error('抱歉，获取环境信息失败：' + res.data.msg);
+                }
+              })
+              .catch(function (err) {
+                vueThis.$message.error(err);
+              });
+          }
+
+        },
         //生成身份证id
         makeID(){
-          console.log(this.identityInfo.selectedOptions)
+          this.$refs['identityInfo'].validate((valid) => {
+            if (valid) {
+              var vueThis = this;
+              this.toolAxios({
+                method: 'post',
+                data:{
+                  "env":vueThis.identityInfo.env,
+                  "isRegistered":vueThis.identityInfo.isRegistered,
+                  "province":vueThis.identityInfo.province,
+                  "city":vueThis.identityInfo.city,
+                  "district":vueThis.identityInfo.district
+                },
+                url: "testData/getIdCard"
+              })
+                .then(function (res) {
+                  if(res.data.code === 10000){
+                    vueThis.ifIdShow = true;
+                    vueThis.idCardInfo = res.data.data;
+                  }else{
+                    vueThis.$message.error('抱歉，获取环境信息失败：' + res.data.msg);
+                  }
+                })
+                .catch(function (err) {
+                  vueThis.$message.error(err);
+                });
+            } else {
+              return false;
+            }
+          });
+
         }
       }
   }

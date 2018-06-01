@@ -3,6 +3,7 @@ import CodeCheck from '@/views/tools/CodeCheck'
 import CoverageStatistics from '@/views/tools/coverageStatistics'
 import MobileCodeBuild from '@/views/tools/mobileCodeBuild'
 import IdCardCodeBuild from '@/views/tools/idCardCodeBuild'
+import BankCardCodeBuild from '@/views/tools/bankCardCodeBuild'
 
 
 
@@ -30,7 +31,14 @@ export default {
       path: 'idCardCodeBuild',
       name: 'IdCardCodeBuild',
       component: IdCardCodeBuild
+    },
+    {
+      path: 'bankCardCodeBuild',
+      name: 'BankCardCodeBuild',
+      component: BankCardCodeBuild
     }
+
+
 
   ]
 }

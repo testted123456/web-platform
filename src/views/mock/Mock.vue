@@ -13,7 +13,7 @@
               <el-input v-model="mockInfo.url" placeholder="请输入url"></el-input>
             </el-form-item>
             <!--环境-->
-            <el-form-item label="postWay" prop="postWay" :rules="[{ required: true, message: 'http方式不能为空'} ]">
+            <el-form-item label="http" prop="postWay" :rules="[{ required: true, message: 'http方式不能为空'} ]">
               <el-col :span="8">
                 <el-radio v-model="mockInfo.postWay" label="get">get</el-radio>
                 <el-radio v-model="mockInfo.postWay" label="post">post</el-radio>
@@ -97,7 +97,7 @@
             </el-form-item>
 
             <!--request-->
-            <el-form-item label="request" prop="request" :rules="[{ required: true, message: ''} ]">
+            <el-form-item label="请求" prop="request" :rules="[{ required: true, message: ''} ]">
               <el-row>
                 <el-col>
                   <el-button size="small" v-if="isJson(mockInfo.request)"
@@ -120,7 +120,7 @@
             </el-form-item>
 
             <!--response-->
-            <el-form-item label="response" prop="response" :rules="[{ required: true, message: ''} ]">
+            <el-form-item label="响应" prop="response" :rules="[{ required: true, message: ''} ]">
               <el-row>
                 <el-col>
                   <el-button size="small" v-if="isJson(mockInfo.response)"

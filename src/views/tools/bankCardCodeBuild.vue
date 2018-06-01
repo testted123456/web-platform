@@ -3,12 +3,28 @@
     <el-main>
       <div style="padding-left: 160px;padding-top: 40px;">
         <!--表单-->
-        <el-form   ref="mobileentity"  :label-position="labelPosition"  label-width="100px" :model="entityInfo">
+        <el-form   ref="bankentityInfo"  :label-position="labelPosition"  label-width="100px" :model="bankentityInfo">
+          <!--省市区-->
+          <el-form-item label="银行名" prop="bankname" :rules="[{ required: true, trigger: 'blur',message: '银行名不能为空'} ]" style="text-align: left">
 
+            <el-row  style="margin-bottom: 10px;">
+              <!--银行名-->
+              <el-col :span="4" style="padding-right: 10px;">
+                <el-select v-model="bankentityInfo.bankname" placeholder="请选择">
+                  <el-option
+                    v-for="item in banknamelists"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-col>
+            </el-row>
+          </el-form-item>
           <!--环境-->
           <el-form-item label="环境" prop="env" :rules="[{ required: true, message: '环境不能为空'} ]" style="text-align: left">
             <el-col :span="8">
-              <el-select v-model="entityInfo.env" placeholder="请选择">
+              <el-select v-model="bankentityInfo.env" placeholder="请选择">
                 <el-option
                   v-for="item in enviornment"
                   :key="item.value"
@@ -20,8 +36,8 @@
           </el-form-item>
           <!--流程用例-->
           <el-form-item label="是否注册" prop="isRegistered" :rules="[{ required: true, message: '不能为空'} ]" style="text-align: left">
-            <el-radio v-model="entityInfo.isRegistered" label="true">已注册</el-radio>
-            <el-radio v-model="entityInfo.isRegistered" label="false">未注册</el-radio>
+            <el-radio v-model="bankentityInfo.isRegistered" label="true">已注册</el-radio>
+            <el-radio v-model="bankentityInfo.isRegistered" label="false">未注册</el-radio>
           </el-form-item>
         </el-form>
 
@@ -31,10 +47,10 @@
           </el-col>
 
           <el-col :span="2" style="text-align: left" v-show="ifIdShow">
-            <p style="font-size: 14px;line-height: 12px;">手机号信息:</p>
+            <p style="font-size: 14px;line-height: 12px;">银行卡信息:</p>
           </el-col>
           <el-col :span="8" style="text-align: left" v-show="ifIdShow">
-            <el-input v-model="idCardInfo" placeholder="生成的手机号信息"></el-input>
+            <el-input v-model="idCardInfo" placeholder="生成的银行卡信息"></el-input>
           </el-col>
 
         </el-row>
@@ -53,11 +69,13 @@
         ifSelectShow:true,
         labelPosition:'left',
         idCardInfo:'',
-        entityInfo:{
+        bankentityInfo:{
           env:'',
           isRegistered:'false',
+          bankname:''
         },
         enviornment:[],
+        banknamelists:[]
       }
     },
 
@@ -72,6 +90,7 @@
     methods: {
       getData(){
         this.getEnv();
+        this.getBanklists();
       },
       // 获取环境信息
       getEnv(){
@@ -95,18 +114,41 @@
             vueThis.$message.error(err);
           });
       },
+      // 获取银行卡信息
+      getBanklists(){
+        var vueThis = this;
+        this.toolAxios({
+          method: 'get',
+          url: "testData/getAllCNBankName"
+        })
+          .then(function (res) {
+            if(res.data.code === 10000){
+              var data = [];
+              res.data.data.forEach(function (e, index) {
+                data.push({value: e, label: e})
+              });
+              vueThis.banknamelists = data;
+            }else{
+              vueThis.$message.error('抱歉，获取环境信息失败：' + res.data.msg);
+            }
+          })
+          .catch(function (err) {
+            vueThis.$message.error(err);
+          });
+      },
       //生成身份证id
       makeID(){
-        this.$refs['mobileentity'].validate((valid) => {
+        this.$refs['bankentityInfo'].validate((valid) => {
           if (valid) {
             var vueThis = this;
             this.toolAxios({
               method: 'post',
               data:{
-                "env":vueThis.entityInfo.env,
-                "isRegistered":vueThis.entityInfo.isRegistered,
+                "env":vueThis.bankentityInfo.env,
+                "isRegistered":vueThis.bankentityInfo.isRegistered,
+                "bankname":vueThis.bankentityInfo.bankname,
               },
-              url: "testData/getMobileNO"
+              url: "testData/getIdCard"
             })
               .then(function (res) {
                 if(res.data.code === 10000){

@@ -8,6 +8,8 @@ import Cfg from './cfg/cfgRouter'
 import Report from './report/reportRouter'
 import ToolsMain from './tools/toolsRouter'
 import Mock from './mock/mockRouter'
+import Require from './require/requireRouter'
+
 
 export default {
   path: '/home',
@@ -22,6 +24,7 @@ export default {
     Report,
     ToolsMain,
     Mock,
+    Require,
     {
       path: 'welcome',
       name: 'Welcome',

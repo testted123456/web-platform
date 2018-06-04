@@ -8,7 +8,9 @@ import store from './store'
 import Cookie from '@/assets/js/qc-cookie'
 import aceManager from '@/assets/js/hd-ace'
 import axios from 'axios'
-import drag from "@/assets/js/drag";
+import drag from "@/assets/js/drag"
+import emailManager from '@/assets/js/emailName'
+
 
 axios.defaults.withCredentials=true;
 Vue.config.productionTip = false
@@ -22,6 +24,8 @@ Vue.prototype.ApiCopyData = {};
 
 Vue.prototype.apisInfoCheckaddress = 'http://192.168.33.72:8080/#/';
 Vue.prototype.aceManager = aceManager
+Vue.prototype.emailManager = emailManager
+
 String.prototype.trim = function () {
   return this.replace(/(^\s*)|(\s*$)/g, "");
 }
@@ -29,7 +33,7 @@ String.prototype.trim = function () {
 
 let  env = 'prod'
 if(env === 'dev') {
-  var customIp = '192.168.32.47';
+  var customIp = '192.168.32.114';
 
   Vue.prototype.wsServer = customIp+':8083';
   Vue.prototype.apiServer = 'http://'+ customIp +':8082/inter/';
@@ -63,6 +67,10 @@ if(env === 'dev') {
 
   Vue.prototype.toolAxios = axios.create({
     baseURL: 'http://'+ customIp +':8083/case/'
+  });
+
+  Vue.prototype.requireAxios = axios.create({
+    baseURL: 'http://'+ customIp +':8089/'
   });
 
 

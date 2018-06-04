@@ -42,7 +42,7 @@
             '/home/report',
             '/home/tools',
             '/home/mock',
-            '/home/mock'
+            '/home/require'
         ]
     };
   },

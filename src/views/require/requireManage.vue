@@ -23,11 +23,15 @@
       </el-row>
       <el-row>
         <el-col :span="2" style="line-height: 40px;">需求状态:</el-col>
-        <el-col :span="5">
-          <el-input
-            placeholder="请输入需求状态"
-            v-model="searchInfo.requirementStatus">
-          </el-input>
+        <el-col :span="5" style="text-align: left">
+          <el-select v-model="searchInfo.requirementStatus" multiple placeholder="请选择" style="width: 100%">
+            <el-option
+              v-for="item in requirementStatusLists"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-col>
         <el-col :span="2" style="line-height: 40px;">项目经理:</el-col>
         <el-col :span="6">
@@ -40,7 +44,7 @@
       </el-row>
       <el-row>
         <el-col :span="2" style="line-height: 40px;">上线时间:</el-col>
-        <el-col :span="10">
+        <el-col :span="10" style="text-align: left">
           <el-date-picker
             v-model="searchInfo.queryStartdate"
             type="daterange"
@@ -52,15 +56,12 @@
             :picker-options="pickerOptions">
           </el-date-picker>
         </el-col>
-        <el-col :span="2" style="line-height: 40px;">
+        <el-col :span="9" style="line-height: 40px;text-align: left">
           <el-button type="primary" @click="search"  >确认</el-button>
-        </el-col>
-        <el-col :span="2" style="line-height: 40px;">
           <el-button type="primary" @click="clear"  >清空</el-button>
+          <el-button type="primary">同步jira需求</el-button>
         </el-col>
-        <el-col :span="4" style="line-height: 40px;">
-          <el-button type="primary" @click="clear"  >同步jira需求</el-button>
-        </el-col>
+
 
       </el-row>
       <el-row style="padding-top: 40px">
@@ -166,6 +167,53 @@
             selectProductManager: {nickname:'',email:''},
             selectProjectManager: {nickname:'',email:''},
             selectDeveloper: {nickname:'',email:''},
+            //需求状态列表数据
+            requirementStatusLists:[
+              {
+                value: '待排期',
+                label: '待排期'
+              },
+              {
+                value: '排期完成',
+                label: '排期完成'
+              },
+              {
+                value: '开发中',
+                label: '开发中'
+              },
+              {
+                value: '测试中',
+                label: '测试中'
+              },
+              {
+                value: '已上线',
+                label: '已上线'
+              },
+              {
+                value: '取消',
+                label: '取消'
+              },
+              {
+                value: '暂停',
+                label: '暂停'
+              },
+              {
+                value: '需求处理中',
+                label: '需求处理中'
+              },
+              {
+                value: '需求待评审',
+                label: '需求待评审'
+              },
+              {
+                value: '需求已评审',
+                label: '需求已评审'
+              },
+              {
+                value: '需求明确',
+                label: '需求明确'
+              }
+            ],
             // 开发人员邮件列表
             developerOptions: [],
             // 项目人员邮件列表

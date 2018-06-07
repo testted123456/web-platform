@@ -64,7 +64,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="项目经理" prop="projectManager" :rules="[{ required: true, trigger: 'blur',message: '项目经理不能为空'} ]" style="text-align: left">
-              <el-select filterable v-model="demandInfo.projectManager" placeholder="请选择">
+              <el-select filterable v-model="demandInfo.projectManager" placeholder="请选择" style="width: 100%">
                 <el-option
                   v-for="item in projectManagerlist"
                   :key="item.value"
@@ -83,7 +83,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="产品线" prop="productLine" :rules="[{ required: true, trigger: 'blur',message: '产品线不能为空'} ]" style="text-align: left">
-              <el-select filterable v-model="demandInfo.productLine" placeholder="请选择">
+              <el-select filterable v-model="demandInfo.productLine" placeholder="请选择" style="width: 100%">
                 <el-option
                   v-for="item in productLines"
                   :key="item.value"
@@ -95,7 +95,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="产品经理" prop="productManager" :rules="[{ required: true, trigger: 'blur',message: '产品经理不能为空'} ]" style="text-align: left">
-              <el-select filterable v-model="demandInfo.productManager" placeholder="请选择">
+              <el-select filterable v-model="demandInfo.productManager" placeholder="请选择" style="width: 100%">
                 <el-option
                   v-for="item in productManagerlist"
                   :key="item.value"
@@ -109,7 +109,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="需求类型" prop="type" :rules="[{ required: true, trigger: 'blur',message: '需求类型不能为空'} ]" style="text-align: left">
-              <el-select filterable v-model="demandInfo.type" placeholder="请选择">
+              <el-select filterable v-model="demandInfo.type" placeholder="请选择" style="width: 100%">
                 <el-option
                   v-for="item in requireTypes"
                   :key="item.value"
@@ -128,7 +128,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="产品验收人员" prop="name" :rules="[{ required: true, trigger: 'blur',message: '用例名称不能为空'} ]" style="text-align: left">
-              <el-select filterable v-model="demandInfo.productReceiver" placeholder="请选择">
+              <el-select filterable v-model="demandInfo.productReceiver" placeholder="请选择" style="width: 100%">
                 <el-option
                   v-for="item in productManagerlist"
                   :key="item.value"
@@ -140,7 +140,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="业务验收人员" prop="name" :rules="[{ required: true, trigger: 'blur',message: '用例名称不能为空'} ]" style="text-align: left">
-              <el-select filterable v-model="demandInfo.projectReceiver" placeholder="请选择">
+              <el-select filterable v-model="demandInfo.projectReceiver" placeholder="请选择" style="width: 100%">
                 <el-option
                   v-for="item in productManagerlist"
                   :key="item.value"
@@ -151,20 +151,20 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="18">
-            <el-form-item label="需求状态" prop="status" :rules="[{ required: true, trigger: 'blur',message: ''} ]" style="text-align: left">
-              <el-select filterable v-model="demandInfo.status" placeholder="请选择">
-                <el-option
-                  v-for="item in responseState"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <!--<el-row>-->
+          <!--<el-col :span="18">-->
+            <!--<el-form-item label="需求状态" prop="status" :rules="[{ required: true, trigger: 'blur',message: ''} ]" style="text-align: left">-->
+              <!--<el-select filterable v-model="demandInfo.status" placeholder="请选择">-->
+                <!--<el-option-->
+                  <!--v-for="item in responseState"-->
+                  <!--:key="item.value"-->
+                  <!--:label="item.label"-->
+                  <!--:value="item.value">-->
+                <!--</el-option>-->
+              <!--</el-select>-->
+            <!--</el-form-item>-->
+          <!--</el-col>-->
+        <!--</el-row>-->
         <el-row>
           <el-col :span="18">
             <el-form-item label="需求描述" prop="context" :rules="[{ required: false, trigger: 'blur',message: ''} ]">
@@ -191,20 +191,22 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="18">
-            <el-form-item label="备注" prop="comment" :rules="[{ required: false, trigger: 'blur',message: ''} ]">
-              <el-input type="textarea"  :autosize="{ minRows: 4}" resize="none" placeholder="请输入内容" v-model="demandInfo.comment"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <!--<el-row>-->
+          <!--<el-col :span="18">-->
+            <!--<el-form-item label="备注" prop="comment" :rules="[{ required: false, trigger: 'blur',message: ''} ]">-->
+              <!--<el-input type="textarea"  :autosize="{ minRows: 4}" resize="none" placeholder="请输入内容" v-model="demandInfo.comment"></el-input>-->
+            <!--</el-form-item>-->
+          <!--</el-col>-->
+        <!--</el-row>-->
 
       </el-form>
       <el-row style="width: 88%;">
         <span style="float: left;width: 138px;text-align: right;padding-right:12px;font-size: 14px;">活动</span>
         <el-col :span="18">
-          <el-collapse v-model="activeNames" @change="handleChange">
-            <el-collapse-item title="" name="1">
+          <el-tabs v-model="activeTab" type="card" @tab-click="handleClick">
+            <el-tab-pane label="用户管理" name="first">用户管理</el-tab-pane>
+            <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
+            <el-tab-pane label="活动" name="third">
               <el-table
                 :data="tableData"
                 style="width: 100%">
@@ -234,8 +236,8 @@
                 >
                 </el-table-column>
               </el-table>
-            </el-collapse-item>
-          </el-collapse>
+            </el-tab-pane>
+          </el-tabs>
         </el-col>
       </el-row>
     </el-main>
@@ -250,6 +252,7 @@
       components: {Multiselect},
       data() {
           return {
+            activeTab:'first',
             active: 0,
             activeNames: ['1'],
             labelPosition:'right',

@@ -10,6 +10,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "alphanum-sort": "^1.0.2",
+    "array-includes": "^3.0.3",
     "axios": "^0.18.0",
     "element-ui": "^2.0.11",
     "lodash": "^4.16.0",

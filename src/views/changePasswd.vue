@@ -1,44 +1,41 @@
 <template>
-  <div class="loginShow" v-if="ifLoginShow">
+    <div class="loginShow" v-if="ifLoginShow">
     <div class="login-center">
-      <!--<div class="logo"><img src="../assets/logo88.png" alt="element-logo" ></div>-->
-      <div class="logo" style="height: 50px"><img src="../assets/logo_2.png" alt="element-logo" ></div>
-      <!--<div style="color:#444;font-size:24px;padding-bottom: 6px;">测试平台</div>-->
-
-      <el-form ref="form"  label-width="1px" :model="formData">
-        <el-form-item label="" prop="username" :rules="[{ required: true, message: '用户名不能为空'} ]">
-          <el-input v-model="formData.username" placeholder="输入用户名"></el-input>
+      <div class="logo"><img src="../assets/logo88.png" alt="element-logo" ></div>
+      <el-form ref="form"  :model="formData">
+        <el-form-item label="初始密码：" prop="password0" :rules="[{ required: true, message: '用户名不能为空'} ]">
+          <el-input v-model="formData.password0" placeholder="输入初始密码"></el-input>
         </el-form-item>
-        <el-form-item label=""  prop="password" :rules="[{ required: true, message: '密码不能为空'} ]">
-          <el-input type="password"  v-model="formData.password" placeholder="输入密码"  @keyup.native="checkSubmit"></el-input>
+        <el-form-item label="新密码："  prop="password1" :rules="[{ required: true, message: '新密码不能为空'} ]">
+          <el-input type="password"  v-model="formData.password1" placeholder="输入新密码"></el-input>
+        </el-form-item>
+        <el-form-item label="再次输入新密码："  prop="password2" :rules="[{ required: true, message: '新密码不能为空'} ]">
+          <el-input type="password"  v-model="formData.password2" placeholder="再次输入新密码"  @keyup.native="checkSubmit"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="login" style="width:330px;" :loading="loading">{{loginState}}</el-button>
         </el-form-item>
       </el-form>
-
     </div>
-
   </div>
 </template>
 
-
 <script>
-  import md5 from 'js-md5'
  export default {
     data() {
-    return {
-      ifLoginShow:false,
-      loginState:'登录',
-      loading: false,
-      formData: {
-        username:'',
-        password:''
-      }
-    };
+      return {
+        ifLoginShow:true,
+        loginState:'登录',
+        loading: false,
+        formData: {
+          password0:'',
+          password1:'',
+          password2:''
+        }
+      };
   },
    mounted() {
-     this.checkLogin();
+     // this.checkLogin();
    },
   methods: {
     checkLogin(){
@@ -69,22 +66,11 @@
 
           vueThis.usrAxios({
             method: 'post',
-            // data: this.formData,
-            data: {
-                username: this.formData.username,
-                password: md5(this.formData.password)
-            },
+            data: this.formData,
             url: 'user/login'
           }).then(function (res) {
-            if (res.data.code === 10000 || res.data.code === 10007) {
+            if (res.data.code === 10000) {
               vueThis.$router.push('/home/welcome');
-              // if (res.data.code === 10000){
-              //   vueThis.$router.push('/home/welcome');
-              // }else {
-              //   // vueThis.$router.push('/home/welcome');
-              //   vueThis.$router.push({name: 'Welcome', params: {passwodChanged: true}});
-              //   // this.$router.push({name: 'Welcome', params: {passwodChanged: false}});
-              // }
 
               //修改登录用户信息
               var userInfo = {
@@ -100,7 +86,7 @@
                   save: false,
                   add: false
                 }
-              } else if (res.data.data.roles.length == 0 && res.data.code === 10000) {
+              } else if (res.data.data.roles.length == 0) {
                 vueThis.$message.error('请去联系管理员添加角色');
               } else if (res.data.data.roles.length == 1) {
                 var roleName = res.data.data.roles[0].roleName;
@@ -117,8 +103,11 @@
                     add: false
                   }
                 }
+
               }
+
               vueThis.$store.commit('permission/' + 'changeDBgroup', permissData)
+
             } else {
               vueThis.$message.error('登陆失败：' + res.data.msg);
               vueThis.loginState = '登录';
@@ -131,14 +120,17 @@
             vueThis.loading = false;
             return;
           });
+
+
         }
       });
     },
     checkSubmit(event) {
       if (event.keyCode == 13){
-        this.login();
+        // this.login();
       }
     }
+
   }
 }
 </script>
@@ -160,7 +152,7 @@
     background-position: center;
   }
   .login-center{
-    width: 330px!important;
+    width: 600px;
     margin: 160px auto 0;
     /*border: 1px solid #ccc;*/
     padding: 51px 50px 20px;
@@ -169,8 +161,8 @@
   }
   .logo{
     width:100px;
-    margin:0 auto;
     height:100px;
+    margin:0 auto;
   }
   .logo img{
     width:100%;

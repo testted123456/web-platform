@@ -23,6 +23,7 @@
                 //设置风格和语言
                 var theme = "clouds"
                 var language = "text"
+
                 editor.setTheme("ace/theme/" + theme);
                 editor.session.setMode("ace/mode/" + language);
 

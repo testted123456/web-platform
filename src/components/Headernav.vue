@@ -1,7 +1,9 @@
 <template>
   <el-header class="qcHeader">
-    <div class="header-logo"><img src="../assets/logo3.png" alt="element-logo" ></div>
-    <div class="user">欢迎，{{$store.state.permission.userInfo.nickname}}</div>
+    <!--<div class="header-logo"><img src="../assets/logo3.png" alt="element-logo" ></div>-->
+    <!--<div class="header-logo"><img src="../assets/logo_2.png" alt="element-logo" ></div>-->
+    <div class="header-logo">欣象信息欢迎您！</div>
+    <div class="user">{{$store.state.permission.userInfo.nickname}}</div>
 
     <el-menu :default-active="portalActiveIndex" class="el-menu-demo header-operations" mode="horizontal"
              @select="handleSelect"
@@ -87,8 +89,11 @@
   .user{
     float: left;
     color: white;
-    font-size: 18px;
+    font-size: 24px;
+    /*font-size: 150%;*/
     padding-top: 14px;
+    font-family: STXingkai	;
+    font-style: italic;
   }
     .qcHeader{
         width:100%;
@@ -98,10 +103,15 @@
     }
   .header-logo {
       display: inline-block;
-      vertical-align: middle;
-      width: 190px;
+      /*vertical-align: middle;*/
+      width: 230px;
       float: left;
-      padding-top: 6px;
+      padding-top: 14px;
+      font-size: 24px;
+      color:white;
+      /*font-family: Hiragino Sans GB;*/
+    font-family: STXingkai;
+
   }
   .header-logo img{
       width:100%;

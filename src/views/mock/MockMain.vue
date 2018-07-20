@@ -1,323 +1,120 @@
 <template>
   <el-container>
-    <el-aside width="240px"  class="leftAside">
-      <div class="leftNavTree">
-        <div class="menu">
-          <el-input
-            placeholder="输入名称进行过滤"
-            round
-          >
-          </el-input>
-          <vue-content-menu :contextMenuData="contextMenuData"
-                            @addDir="addDir"
-                            @addItem="addGroup"
-                            @delItem="showDelDialog"
-                            @refreshApi="refreshApi"
-          ></vue-content-menu>
-          <el-tree
-            :props="props"
-            :load="loadNode"
-            ref="tree"
-            :expand-on-click-node=false
-            lazy
-            node-key="id"
-            @node-click="handleNodeClick" @node-right-click="handleRightClick"
-          >
-          </el-tree>
-        </div>
-        <el-dialog
-          :visible.sync="delDialogVisible"
-          width="20%"
-        >
-          <span>确认删除？</span>
-          <span slot="footer" class="dialog-footer">
-                    <el-button @click="delDialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="delGroup">确 定</el-button>
-                  </span>
-        </el-dialog>
-      </div>
+    <el-aside width="240px" style="border-right:1px solid #e6e6e6">
+      <el-menu
+        default-active="2"
+        class="el-menu-vertical-demo"
+        @open="handleOpen"
+        @close="handleClose"
+        @select="select"
+        style="border-right:0px solid #e6e6e6">
+        <el-submenu index="1">
+          <template slot="title">
+            <i class="el-icon-setting"></i>
+            <span>快捷支付</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="1-1">认证绑卡BK001</el-menu-item>
+            <el-menu-item index="1-2">认证短信校验BK003</el-menu-item>
+            <el-menu-item index="1-3">解绑卡BK004</el-menu-item>
+            <el-menu-item index="1-4">快捷支付订单生成ZF001</el-menu-item>
+            <el-menu-item index="1-5">快捷支付确认支付ZF003</el-menu-item>
+            <el-menu-item index="1-6">支付查询CX002</el-menu-item>
+            <el-menu-item index="1-7">支付清算TX8020</el-menu-item>
+            <el-menu-item index="1-8">清算查询CX004</el-menu-item>
+            <el-menu-item index="1-9">支付回调</el-menu-item>
+            <el-menu-item index="1-10">解绑通知回调</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+      </el-menu>
     </el-aside>
     <router-view></router-view>
   </el-container>
 </template>
 
 <script>
-
-  import VueContentMenu from '@/components/common/VueContentMenu.vue';
-  import ElTree from '@/components/common/tree/src/tree.vue';
+  import ElAside from "../../../node_modules/element-ui/packages/aside/src/main";
 
   export default {
-    components: { VueContentMenu,ElTree},
+    components: {ElAside},
     name: 'MockMain',
     data () {
       return {
-        props: {
-          label: 'name',
-          isLeaf: 'type',
-          children: 'children'
-        },
-        contextMenuData: {
-          isDisplay: 'none',
-          axios: {
-            x: null,
-            y: null
-          },
-          showAddDir: false,
-          showAddItem: false,
-          showDel: false
-        },
-        delDialogVisible: false
-      }
-    },
-    computed: {
-      isNewMockSaved() {
-        return this.$store.state.mock.isNewMockSaved;
-      }
-    },
-    mounted(){
-    },
-    watch: {
-      'isNewMockSaved': function (val, oldVal) { //新增mock
-        var node = this.$refs.tree.currentNode.node;
 
-        if (val == 1) {
-
-          if (!node.data.children) {
-            this.$set(node.data, 'children', []);
-            node.childNodes.forEach(function (vaule, index, array) {
-              node.data.children.push(vaule.data);
-            })
-          }
-
-          var newChild = this.$store.state.mock.newMock;
-
-          if(newChild.type === "undefined"){
-            return;
-          }else if(newChild.type === false){
-            newChild.children = [];
-          }
-
-          node.data.children.push(newChild);
-          this.$store.commit('changeMockStatus', 0);
-
-          node.updateChildren()
-
-          if (!node.expanded) {
-            node.expand();
-          }
-        }else if(val == 2){
-          var updatedMock = this.$store.state.mock.newMock;
-
-          if(updatedMock.id === node.data.id){
-            node.data.name = updatedMock.name;
-          }else{
-            let children = node.childNodes;
-
-            children.forEach(function (e, index) {
-              if(e.data.id === updatedMock.id){
-                e.data.name = updatedMock.name;
-                return;
-              }
-            });
-          }
-
-          this.$store.commit( 'changeMockStatus', 0);
-        }
       }
     },
     methods: {
-
-      handleNodeClick(data, node, instance){
-        if (node.data.type) {
-          this.$router.push({name: 'Mock', query: {id: node.data.id}});
-        } else {
-          this.$router.push({name: 'MockDir', query: {id: node.data.id}});
-        }
+      handleOpen(key, keyPath) {
+        console.log(key, keyPath);
       },
-      loadNode(node, resolve) { //渲染树节点
-        if (node.level === 0) {
-          return resolve([{
-            name: 'Mock',
-            id: 0,
-            type: false
-          }]);
-        } else if (node.isLeaf === true) {
-          return;
-        } else {
-          var vueThis = this;
-          vueThis.mockAxios({
-            method: 'get',
-            url: 'web-mock/mock/getNodeList?id='+node.data.id
-          })
-            .then(function(res){
-              if (res.data.code === 10000 ) {
-                var tempApi = res.data.data;
-                return resolve(res.data.data);
-              }else{
-                vueThis.$message.error('抱歉，获取信息失败：' + err.data.msg);
-              }
-            })
-            .catch(function (err) {
-              vueThis.$message.error(err);
-            });
-
-
-        }
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
       },
-      handleRightClick(data, node, instance, x, y){ //右键接口树
-        if (node.data.type) {
-          this.contextMenuData.showAddDir = false;
-          this.contextMenuData.showAddItem = false;
-          this.contextMenuData.showDel = true;
-        } else {
-          this.contextMenuData.showAddDir = true;
-          this.contextMenuData.showAddItem = true;
-          this.contextMenuData.showDel = true;
-        }
-
-        this.contextMenuData.axios.x = x;
-        this.contextMenuData.axios.y = y;
-        this.contextMenuData.isDisplay = 'block';
-        this.currentTreeNode = node;
-      },
-      closeMenu(){ //关闭右键菜单
-        this.contextMenuData.isDisplay = 'none';
-      },
-      addDir(){ //新增接口树目录节点
-        var node = this.$refs.tree.currentNode.node;
-
-        if (!node.expanded) {
-          node.expand();
-        }
-
-        var pId = node.data.id;
-        this.$router.push({name: 'MockDir', query: {id: 0,pId: node.data.id}});
-        this.closeMenu();
-      },
-      addGroup(){ //右键新增接口树节点
-        var node = this.$refs.tree.currentNode.node;
-
-        if (!node.expanded) {
-          node.expand();
-        }
-        var pId = node.data.id;
-        this.$router.push({name: 'Mock', query: {id: 0,pId: node.data.id}});
-        this.closeMenu();
-      },
-      showDelDialog(){
-        this.closeMenu();
-        // this.delDialogVisible = true;
-        this.$confirm('此操作将永久删除该接口, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.delGroup();
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
-      },
-
-      delGroup(){ //右键删除group
-        this.delDialogVisible = false;
-        const node = this.$refs.tree.currentNode.node;
-        const nodeId = node.data.id;
-        var vueThis = this;
-        if(node.isLeaf === false){//删除case目录
-          vueThis.mockAxios({
-            method: 'get',
-            url: "deleteGroup?id=" + nodeId
-          })
-            .then(function (res) {
-              if(res.data.code == '10000'){
-                vueThis.delItemNode(node);
-                vueThis.$message({
-                  message: '恭喜你，删除测试集目录成功！',
-                  type: 'success'
-                });
-              }else{
-                vueThis.$message.error('抱歉，删除测试集目录失败：' + res.data.msg);
-              }
-            })
-            .catch(function (err) {
-              vueThis.$message.error(err);
-            });
-
-        }else{ //删除某个case
-          vueThis.mockAxios({
-            method: 'get',
-            url: "deleteGroup?id=" + nodeId
-          })
-            .then(function (res) {
-              if(res.data.code == '10000'){
-                vueThis.delItemNode(node);
-                vueThis.$message({
-                  message: '恭喜你，删除测试集成功！',
-                  type: 'success'
-                });
-              }else{
-                vueThis.$message.error('抱歉，删除测试集失败：' + res.data.msg);
-              }
-            })
-            .catch(function (err) {
-              vueThis.$message.error(err);
-            });
-
-        }
-      },
-      delItemNode(node){
-        const data = node.data;
-        const parent = node.parent;
-        const children = parent.childNodes;
-        let i;
-        children.forEach(function (e, index) {
-          if(e.data.id === node.data.id){
-            i = index;
-            return;
+      select(index, indexPath){
+        switch (index){
+          case '1-1':{
+            this.$router.push({name: 'Mock', query: {name: "认证绑卡",code: "BK001"}});
           }
-        });
-        children.splice(i, 1);
-        this.$router.push({name: 'MockMain'});
-      },
-      refreshApi(){
-        var node = this.$refs.tree.currentNode.node;
-        node.expand();
-        this.closeMenu();
+          break;
+          case '1-2':{
+            this.$router.push({name: 'Mock', query: {name: "认证短信校验",code: "BK003"}});
+          }
+          break;
+          case '1-3':{
+            this.$router.push({name: 'Mock', query: {name: "解绑卡",code: "BK004"}});
+          }
+          break;
+          case '1-4':{
+            this.$router.push({name: 'Mock', query: {name: "快捷支付订单生成",code: "ZF001"}});
+          }
+          break;
+          case '1-5':{
+            this.$router.push({name: 'Mock', query: {name: "快捷支付确认支付",code: "ZF003"}});
+          }
+          break;
+          case '1-6':{
+            this.$router.push({name: 'Mock', query: {name: "支付查询",code: "CX002"}});
+          }
+          break;
+          case '1-7':{
+            this.$router.push({name: 'Mock', query: {name: "支付清算",code: "TX8020"}});
+          }
+          break;
+          case '1-8':{
+            this.$router.push({name: 'Mock', query: {name: "清算查询",code: "CX004"}});
+          }
+          break;
+          case '1-9':{
+            this.$router.push({name: 'CallBack', query: {name: "fastPayCallBack"}});
+          }
+          break;
+          case '1-10':{
+            this.$router.push({name: 'UnBindCallBack', query: {name: "unBindCallBack"}});
+          }
+          break;
+        }
       }
     }
   }
 </script>
 
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  @import "../../assets/css/common.css";
-  h1, h2 {
-    font-weight: normal;
+
+  .el-menu-item{
+    text-align: left;
   }
 
-  ul {
-    list-style-type: none;
-    padding: 0;
+  .el-submenu{
+    text-align: left;
   }
 
-  li {
-    display: inline-block;
-    margin: 0 10px;
+  .el-submenu__title{
+    text-align: left;
   }
 
-  a {
-    color: #42b983;
-  }
-  .el-aside{
-    -webkit-box-sizing: border-box;
-  }
-  aside {
-    padding-left: 20px;
-    padding-top: 20px;
-    padding-right: 20px;
-    width: 100%;
+  .el-icon-setting{
+    text-align: left;
   }
 
 </style>

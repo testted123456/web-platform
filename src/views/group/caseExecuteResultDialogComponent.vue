@@ -280,7 +280,6 @@
           assertions:[],
           actualResponseBody:''
         }
-
       }
     },
     created(){

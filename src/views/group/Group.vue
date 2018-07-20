@@ -56,6 +56,7 @@
                     style="width: 100%"
                     @selection-change="handleSelectionChange"
                     @select="selectOne"
+                    @select-all="selectAll"
                     ref="multipleTable">
 
             <el-table-column
@@ -221,6 +222,17 @@
     methods: {
       moveup,
       movedown,
+      selectAll(selection){
+        if(selection.length > 0){
+          selection.forEach(function(val,index,arr){
+              val.checked = true;
+          })
+        }else{
+          this.group.testCaseList.forEach(function(val,index,arr){
+            val.checked = false;
+          })
+        }
+      },
       selectOne(selection, row){
         if(row.checked){
           row.checked = false;

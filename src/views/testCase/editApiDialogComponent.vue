@@ -725,6 +725,7 @@
           meta: value,
           type: '',
           score: 1000 + this.aceManager.completions.length
+
         }
         this.aceManager.getCompletions(1).push(keyWord)
       },

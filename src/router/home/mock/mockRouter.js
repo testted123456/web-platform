@@ -1,6 +1,8 @@
 import MockMain from  '@/views/mock/MockMain'
 import Mock from '@/views/mock/Mock'
 import MockDir from '@/views/mock/MockDir'
+import CallBack from '@/views/mock/CallBack'
+import UnBindCallBack from '@/views/mock/UnBindCallBack'
 
 export default {
   path: 'mock',
@@ -16,6 +18,16 @@ export default {
       path: 'mockDir',
       name: 'MockDir',
       component: MockDir
+    },
+    {
+      path: 'CallBack',
+      name: 'CallBack',
+      component: CallBack
+    },
+    {
+      path: 'UnBindCallBack',
+      name: 'UnBindCallBack',
+      component: UnBindCallBack
     }
   ]
 }

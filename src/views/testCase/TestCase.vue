@@ -25,7 +25,7 @@
             <el-form-item label="创建人" prop="createdBy" :rules="[{ required: true, trigger: 'blur',message: '创建人不能为空'} ]" v-if="executeBtnShow">
               <el-col :span="9">
                 <!--<el-input v-model="testCase.createdBy" placeholder="请输入创建人"></el-input>-->
-                <p>{{testCase.createdBy}}</p>
+                <label>{{testCase.createdBy}}</label>
               </el-col>
             </el-form-item>
             <el-form-item label="系统:" prop="system" :rules="[{ required: true, trigger: 'blur',message: '接口系统不能为空'} ]">

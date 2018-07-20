@@ -27,6 +27,7 @@
               username:res.data.data.username,
               nickname:res.data.data.nickname
             }
+
             vueThis.$store.commit( 'permission/' + 'changeUserInfo', userInfo)
 
             //修改用户权限

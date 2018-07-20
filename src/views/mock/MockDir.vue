@@ -2,7 +2,7 @@
   <el-container  style="font-size: 0.875em;">
     <el-main>
       <el-form   ref="mockDir"  :label-position="labelPosition"  label-width="150px" :model="mockDirInfo" style="width:78%;">
-        <el-form-item label="用例目录名称" prop="pathName" :rules="[{ required: true, trigger: 'blur',message: '用例目录名称不能为空'} ]">
+        <el-form-item label="MOCK分类" prop="pathName" :rules="[{ required: true, trigger: 'blur',message: '用例目录名称不能为空'} ]">
           <el-input v-model="mockDirInfo.pathName" placeholder="请输入用例目录名称"></el-input>
         </el-form-item>
         <el-form-item label="用例目录描述" prop="description" :rules="[{ required: false, trigger: 'blur',message: '用例目录描述不能为空'} ]">

@@ -5,6 +5,14 @@
         <el-table
           :data="appearDBCfg" style="width: 100%"
         >
+          <el-table-column
+            label="名称"
+          >
+            <template slot-scope="scope">
+              <el-input v-model="appearDBCfg[scope.$index].name"></el-input>
+            </template>
+          </el-table-column>
+
            <el-table-column
             label="数据库分组"
            >
@@ -19,12 +27,22 @@
               </el-select>
             </template>
           </el-table-column>
+
           <el-table-column
-            label="名称"
+            label="数据库类型"
             >
             <template slot-scope="scope">
-              <el-input v-model="appearDBCfg[scope.$index].name"></el-input>
+              <!--<el-input v-model="appearDBCfg[scope.$index].name"></el-input>-->
+              <el-select v-model="appearDBCfg[scope.$index].type" placeholder="请选择">
+                <el-option
+                  v-for="item in dbTypes"
+                  :key="item"
+                  :label="item"
+                  :value="item">
+                </el-option>
+              </el-select>
             </template>
+
           </el-table-column>
 
           <el-table-column
@@ -103,6 +121,7 @@
           return {
               dbCfg:[],
               dbGroups:[],
+              dbTypes:['Oracle', 'Mysql'],
               currentPage: 1,
               pageSize: 10
           }

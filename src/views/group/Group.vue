@@ -490,7 +490,7 @@
       /*执行结果*/
       caseExecuteResult(){
         this.dialog = {
-          title: '',
+          title: '测试集：' + this.group.name,
           visible: true,   //整个弹窗显示与否
           footerVisible: false,
           contentType: 4,  //弹窗内容显示什么

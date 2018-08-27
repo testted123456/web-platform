@@ -6,7 +6,7 @@ import CaseQuote from  '@/views/report/caseQuote'
 import GroupSum from  '@/views/report/groupSum'
 import GroupRate from  '@/views/report/groupRate'
 import gantetu from  '@/views/report/gantetu'
-
+import GroupDetail from '@/views/report/groupDetail'
 
 export default {
   path: 'report',
@@ -37,15 +37,21 @@ export default {
       path: 'groupSum',
       name: 'GroupSum',
       component: GroupSum
-    },{
+    },
+    {
       path: 'groupRate',
       name: 'GroupRate',
       component: GroupRate
-    },{
+    },
+    {
+      path: 'groupDetail',
+      name: 'GroupDetail',
+      component: GroupDetail
+    },
+    {
       path: 'gantetu',
       name: 'gantetu',
       component: gantetu
     }
-
   ]
 }

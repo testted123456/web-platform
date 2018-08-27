@@ -30,31 +30,32 @@ String.prototype.trim = function () {
   return this.replace(/(^\s*)|(\s*$)/g, "");
 }
 
-let  env = 'prod'
-if(env === 'dev') {
-  var customIp = '192.168.1.121';
+let env = 'dev'
 
-  Vue.prototype.wsServer = customIp+':8083';
-  Vue.prototype.apiServer = 'http://' +  '192.168.1.120' + ':9090/inter/';
-  Vue.prototype.testCaseServer = 'http://' + '192.168.1.121' + ':9200/case/';
-  Vue.prototype.groupServer = 'http://' + '192.168.1.120' + ':9300/group/';
+if(env === 'dev') {
+  var customIp = '127.0.0.1';
+
+  Vue.prototype.wsServer = customIp+':9200';
+  Vue.prototype.apiServer = 'http://' +  customIp + ':9090/inter/';
+  Vue.prototype.testCaseServer = 'http://' + customIp + ':9200/case/';
+  Vue.prototype.groupServer = 'http://' + customIp + ':9300/group/';
 
   Vue.prototype.testCaseAxios = axios.create({
-    baseURL: 'http://'+ '192.168.1.121' +':9200/case/'
+    baseURL: 'http://'+ customIp +':9200/case/'
   });
 
   Vue.prototype.apiAxios = axios.create({
-    baseURL: 'http://'+ '192.168.1.120' + ':9100/inter/',
+    baseURL: 'http://'+ customIp + ':9100/inter/',
     withCredentials: true
   });
 
   Vue.prototype.groupAxios = axios.create({
-    baseURL: 'http://' + '192.168.1.120' + ':9300/group/',
+    baseURL: 'http://' + customIp + ':9300/group/',
     withCredentials: true
   });
 
   Vue.prototype.usrAxios = axios.create({
-    baseURL: 'http://'+ '192.168.18.126' + ':9090'
+    baseURL: 'http://'+ customIp + ':9090'
   });
 
   Vue.prototype.mockAxios = axios.create({
@@ -68,12 +69,10 @@ if(env === 'dev') {
   Vue.prototype.requireAxios = axios.create({
     baseURL: 'http://'+ customIp +':8089/'
   });
-
 }else{
-
   var customIp2 = '192.168.1.121';
 
-  Vue.prototype.wsServer = '192.168.1.121:9200';
+  Vue.prototype.wsServer = '192.168.1.122:9200';
   Vue.prototype.apiServer = 'http://'+ customIp2 +':8080/inter/';
   Vue.prototype.testCaseServer = 'http://'+ customIp2 +':8080/case/';
   Vue.prototype.groupServer = 'http://'+ customIp2 +':8080/group/';

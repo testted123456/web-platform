@@ -36,7 +36,8 @@
           <el-menu-item-group>
             <el-menu-item index="3-1">数量</el-menu-item>
             <el-menu-item index="3-2">成功率</el-menu-item>
-            <el-menu-item index="3-3">甘特图</el-menu-item>
+            <!--<el-menu-item index="3-3">甘特图</el-menu-item>-->
+            <el-menu-item index="3-4">详情</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
       </el-menu>
@@ -46,10 +47,6 @@
 </template>
 
 <script>
-
-
-
-
   export default {
     components: { },
     name: 'reportMain',
@@ -79,32 +76,35 @@
           case '1-1':{
             this.$router.push({name: 'ApiSystem'});
           }
-            break;
+          break;
           case '1-2':{
             this.$router.push({name: 'ApiQuote'});
           }
-            break;
+          break;
           case '2-1':{
             this.$router.push({name: 'CaseSystem'});
           }
-            break;
+          break;
           case '2-2':{
             this.$router.push({name: 'CaseQuote'});
           }
-            break;
+          break;
           case '3-1':{
             this.$router.push({name: 'GroupSum'});
           }
-            break;
+          break;
           case '3-2':{
             this.$router.push({name: 'GroupRate'});
           }
-            break;
+          break;
           case '3-3':{
             this.$router.push({name: 'gantetu'});
           }
-            break;
-
+          break;
+          case '3-4':{
+            this.$router.push({name: 'GroupDetail'});
+          }
+          break;
         }
       }
     }
@@ -127,5 +127,4 @@
   .el-icon-setting{
     text-align: left;
   }
-
 </style>

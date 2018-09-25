@@ -3,6 +3,7 @@ import Mock from '@/views/mock/Mock'
 import MockDir from '@/views/mock/MockDir'
 import CallBack from '@/views/mock/CallBack'
 import UnBindCallBack from '@/views/mock/UnBindCallBack'
+import CallBackSMZF008 from '@/views/mock/CallBackSMZF008.vue'
 
 export default {
   path: 'mock',
@@ -28,6 +29,11 @@ export default {
       path: 'UnBindCallBack',
       name: 'UnBindCallBack',
       component: UnBindCallBack
+    },
+    {
+      path: 'CallBackSMZF008',
+      name: 'CallBackSMZF008',
+      component: CallBackSMZF008
     }
   ]
 }

@@ -32,7 +32,7 @@ String.prototype.trim = function () {
 
 let env = 'dev'
 
-if(env === 'dev') {
+if(env === 'prod') {
   var customIp = '127.0.0.1';
 
   Vue.prototype.wsServer = customIp+':9200';
@@ -59,7 +59,7 @@ if(env === 'dev') {
   });
 
   Vue.prototype.mockAxios = axios.create({
-    baseURL: 'http://'+ customIp +':8080'
+    baseURL: 'http://'+ customIp +':9500/mock/'
   });
 
   Vue.prototype.toolAxios = axios.create({

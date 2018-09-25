@@ -26,6 +26,17 @@
             <el-menu-item index="1-10">解绑通知回调</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
+        <el-submenu index="2">
+          <template slot="title">
+            <i class="el-icon-setting"></i>
+            <span>银联扫码支付</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="2-1">扫码支付SMZF002</el-menu-item>
+            <el-menu-item index="2-2">回调SMZF008</el-menu-item>
+            <el-menu-item index="2-3">交易查询SMZF006</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
       </el-menu>
     </el-aside>
     <router-view></router-view>
@@ -45,43 +56,43 @@
     },
     methods: {
       handleOpen(key, keyPath) {
-        console.log(key, keyPath);
+        // console.log(key, keyPath);
       },
       handleClose(key, keyPath) {
-        console.log(key, keyPath);
+        // console.log(key, keyPath);
       },
       select(index, indexPath){
         switch (index){
           case '1-1':{
-            this.$router.push({name: 'Mock', query: {name: "认证绑卡",code: "BK001"}});
+            this.$router.push({name: 'Mock', query: {name: "认证绑卡",code: "BK001", ctrl: "fastPay"}});
           }
           break;
           case '1-2':{
-            this.$router.push({name: 'Mock', query: {name: "认证短信校验",code: "BK003"}});
+            this.$router.push({name: 'Mock', query: {name: "认证短信校验",code: "BK003", ctrl: "fastPay"}});
           }
           break;
           case '1-3':{
-            this.$router.push({name: 'Mock', query: {name: "解绑卡",code: "BK004"}});
+            this.$router.push({name: 'Mock', query: {name: "解绑卡",code: "BK004", ctrl: "fastPay"}});
           }
           break;
           case '1-4':{
-            this.$router.push({name: 'Mock', query: {name: "快捷支付订单生成",code: "ZF001"}});
+            this.$router.push({name: 'Mock', query: {name: "快捷支付订单生成",code: "ZF001", ctrl: "fastPay"}});
           }
           break;
           case '1-5':{
-            this.$router.push({name: 'Mock', query: {name: "快捷支付确认支付",code: "ZF003"}});
+            this.$router.push({name: 'Mock', query: {name: "快捷支付确认支付",code: "ZF003", ctrl: "fastPay"}});
           }
           break;
           case '1-6':{
-            this.$router.push({name: 'Mock', query: {name: "支付查询",code: "CX002"}});
+            this.$router.push({name: 'Mock', query: {name: "支付查询",code: "CX002", ctrl: "fastPay"}});
           }
           break;
           case '1-7':{
-            this.$router.push({name: 'Mock', query: {name: "支付清算",code: "TX8020"}});
+            this.$router.push({name: 'Mock', query: {name: "支付清算",code: "TX8020", ctrl: "fastPay"}});
           }
           break;
           case '1-8':{
-            this.$router.push({name: 'Mock', query: {name: "清算查询",code: "CX004"}});
+            this.$router.push({name: 'Mock', query: {name: "清算查询",code: "CX004", ctrl: "fastPay"}});
           }
           break;
           case '1-9':{
@@ -92,6 +103,17 @@
             this.$router.push({name: 'UnBindCallBack', query: {name: "unBindCallBack"}});
           }
           break;
+          case '2-1':{
+            this.$router.push({name: 'Mock', query: {name: "扫码支付",code: "SMZF002", ctrl: "ydzf"}});
+          }
+          break;
+          case '2-2':{
+            this.$router.push({name: 'CallBackSMZF008', query: {name: "CallBackSMZF008"}});
+          }
+          break;
+          case '2-3':{
+            this.$router.push({name: 'Mock', query: {name: "交易查询",code: "SMZF006", ctrl: "ydzf"}});
+          }
         }
       }
     }

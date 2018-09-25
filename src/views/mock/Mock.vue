@@ -100,10 +100,12 @@
         var vueThis = this;
         var code = this.$route.query.code;
         var name = this.$route.query.name;
+        var ctrl = this.$route.query.ctrl;
+        var ctrlUrl = ctrl + "/getInfos?name=";
 
         this.mockAxios({
           method: 'get',
-          url: 'fastPay/getInfos?name=' + code
+          url: ctrlUrl + code
         }).then(function (res) {
           if (res.data.code === 10000) {
             vueThis.mockInfo.name = name;

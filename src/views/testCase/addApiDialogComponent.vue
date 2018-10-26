@@ -236,17 +236,14 @@
 
       //过滤搜索树的内容
       filterTreeData(){
-
-
-        if(this.searchInfo.name == '' && this.searchInfo.urlAddress == '' && this.searchInfo.branch == '' && this.searchInfo.module == '' && this.searchInfo.system == ''){
-          this.$message.error('请输入要筛选的条件！' );
-        }else{
-
-          if(this.searchInfo.system == ''){
-            this.$message.error('api系统必填！' );
-          }else if(this.searchInfo.name == '' && this.searchInfo.urlAddress == ''){
-            this.$message.error('api名称或则api url需要选填一项！' );
-          }else{
+        // if(this.searchInfo.name == '' && this.searchInfo.urlAddress == '' && this.searchInfo.branch == '' && this.searchInfo.module == '' && this.searchInfo.system == ''){
+        //   this.$message.error('请输入要筛选的条件！' );
+        // }else{
+        //   if(this.searchInfo.system == ''){
+        //     this.$message.error('api系统必填！' );
+        //   }else if(this.searchInfo.name == '' && this.searchInfo.urlAddress == ''){
+        //     this.$message.error('api名称或则api url需要选填一项！' );
+        //   }else{
             var vueThis = this;
             vueThis.apiAxios({
               method: 'get',
@@ -273,9 +270,9 @@
               .catch(function (err) {
                 vueThis.$message.error(err);
               });
-          }
+          // }
 
-        }
+        // }
       },
       // 懒加载树内容
       loadNode(node, resolve) { //渲染树节点

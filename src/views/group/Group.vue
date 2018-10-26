@@ -292,7 +292,7 @@
             method: 'get',
             data: {
             },
-            url: 'env/getAllEnvs'
+            url: 'envs/getAllEnvs'
           })
           .then(function(res){
             if (res.data.code === 10000 ) {

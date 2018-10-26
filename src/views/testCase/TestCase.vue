@@ -320,7 +320,7 @@
           }
       },
       handleSelectionChange(val) {
-        console.log("选择发生改变")
+        // console.log("选择发生改变")
         this.multipleSelection = val;
         if(this.changeState){
           this.reCheck();
@@ -336,7 +336,7 @@
         this.multipleSelection.forEach(function(val,index,arr){
           tempArr.push(val.id);
           if(val.id === '' || val.id === null){
-            console.log('某个选择的id为空或者null');
+            // console.log('某个选择的id为空或者null');
             tempThis.checkboxExecutable = false;
           }
         })
@@ -346,7 +346,7 @@
       },
       //因存储地址变了  复选之前已经选中的复选框
       reCheck(){
-        console.log('multipleSelection='+this.multipleSelection.length);
+        // console.log('multipleSelection='+this.multipleSelection.length);
         var that = this;
         this.testCase.testCaseInterfaces.forEach(function(e,index){
           if(e.checked){
@@ -396,7 +396,7 @@
             //获取环境列表select
             vueThis.testCaseAxios({
               method: 'get',
-              url: "env/getAllEnvs"
+              url: "envs/getAllEnvs"
             })
               .then(function (res) {
                 if(res.data.code === 10000){
@@ -846,7 +846,7 @@
             this.socketArrLength = 0;
 
             if ("WebSocket" in window) {
-              this.ws = new WebSocket("ws://"+ this.wsServer +"/case/webSocket/"+ this.$route.query.id + textArea_this.$store.state.permission.userInfo.username + '1');
+              this.ws = new WebSocket("ws://"+ this.wsServer +"/webSocket/"+ this.$route.query.id + textArea_this.$store.state.permission.userInfo.username + '1');
               //this.ws = new Object();
 
 
@@ -871,8 +871,7 @@
               // 接收数据
               this.ws.onmessage = function (evt) {
                 // 注意evt的数据类型
-                console.log('接收到的数据：', evt)
-
+                // console.log('接收到的数据：', evt)
 
                 if(evt.data === 'end'){
                   textArea_this.ws.onclose();
@@ -881,7 +880,7 @@
 
                   if(textArea_this.msgLock >= 1){
                     textArea_this.checkMsg();
-                    console.log(11111111111111)
+                    // console.log(11111111111111)
                   }
 
                 }
@@ -912,7 +911,6 @@
         }
       },
 
-
        checkMsg() {
 
          var vue_this = this;
@@ -928,12 +926,12 @@
                this.shortMessage += this.msgQueue[i] + '\n';
              }
              this.excResult = this.shortMessage;
-             console.log(this.excResult);
+             // console.log(this.excResult);
 
              this.$nextTick(function () {
                var markdown = document.getElementsByClassName('markDown')[0]
                markdown.scrollTop = markdown.scrollHeight -  markdown.offsetHeight + ((markdown.scrollHeight> markdown.offsetHeight)?24:0)
-               console.log( markdown.scrollHeight)
+               // console.log( markdown.scrollHeight)
              })
 
              this.shortMessage = '';
@@ -949,8 +947,6 @@
 
 
        },
-
-
 
     // 关闭webscoket
       closeWebSocket(){

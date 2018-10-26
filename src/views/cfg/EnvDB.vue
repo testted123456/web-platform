@@ -105,7 +105,7 @@
 
           this.testCaseAxios({
             method: 'get',
-            url: 'env/getAllEnvs'
+            url: 'envs/getAllEnvs'
           }).then(function (res) {
               if(res.data.code === 10000){
                 vueThis.envs = res.data.data;
@@ -142,7 +142,7 @@
           this.testCaseAxios({
             method: 'post',
             data: rows[index],
-            url: 'env/add'
+            url: 'envs/add'
           }).then(function (res) {
             if(res.data.code === 10000){
               vueThis.$message({
@@ -202,7 +202,7 @@
             this.testCaseAxios({
               method: 'post',
               data: rows[index],
-              url: 'env/delete'
+              url: 'envs/delete'
             }).then(function (res) {
               if(res.data.code === 10000){
 

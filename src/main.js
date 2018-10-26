@@ -11,7 +11,6 @@ import axios from 'axios'
 import drag from "@/assets/js/drag"
 import emailManager from '@/assets/js/emailName'
 
-
 axios.defaults.withCredentials=true;
 Vue.config.productionTip = false
 Vue.use(ElementUI)
@@ -21,7 +20,6 @@ Vue.prototype.axios = axios
 Vue.prototype.cookieManager = Cookie
 Vue.prototype.ApiCopyId = 0;
 Vue.prototype.ApiCopyData = {};
-
 Vue.prototype.apisInfoCheckaddress = 'http://192.168.33.72:8080/#/';
 Vue.prototype.aceManager = aceManager
 Vue.prototype.emailManager = emailManager
@@ -30,73 +28,77 @@ String.prototype.trim = function () {
   return this.replace(/(^\s*)|(\s*$)/g, "");
 }
 
-let env = 'dev'
+let env = 'prod'
 
-if(env === 'prod') {
-  var customIp = '127.0.0.1';
+var customIp = '192.168.7.172';
+var mockIp = '192.168.7.172';
+// var testCaseIp = '192.168.1.122';
+var testCaseIp = '192.168.1.172';
 
-  Vue.prototype.wsServer = customIp+':9200';
-  Vue.prototype.apiServer = 'http://' +  customIp + ':9090/inter/';
-  Vue.prototype.testCaseServer = 'http://' + customIp + ':9200/case/';
-  Vue.prototype.groupServer = 'http://' + customIp + ':9300/group/';
+if(env === 'prod'){
+  customIp = '192.168.1.121';
+  mockIp = '192.168.1.120';
+}
+
+// if(env === 'dev') {
+
+  Vue.prototype.wsServer = testCaseIp+':9200';
+  Vue.prototype.testCaseServer = testCaseIp+':9200';
 
   Vue.prototype.testCaseAxios = axios.create({
-    baseURL: 'http://'+ customIp +':9200/case/'
+    baseURL: 'http://'+ customIp +':9700/platform-testcase/'
   });
 
   Vue.prototype.apiAxios = axios.create({
-    baseURL: 'http://'+ customIp + ':9100/inter/',
+    baseURL: 'http://'+ customIp + ':9700/platform-interface/',
     withCredentials: true
   });
 
   Vue.prototype.groupAxios = axios.create({
-    baseURL: 'http://' + customIp + ':9300/group/',
+    baseURL: 'http://' + customIp + ':9700/platform-testgroup/',
     withCredentials: true
   });
 
   Vue.prototype.usrAxios = axios.create({
-    baseURL: 'http://'+ customIp + ':9090'
+    baseURL: 'http://'+ customIp + ':9700/platform-user/'
   });
 
   Vue.prototype.mockAxios = axios.create({
-    baseURL: 'http://'+ customIp +':9500/mock/'
+    baseURL: 'http://'+ mockIp +':9600/mock/'
   });
 
   Vue.prototype.toolAxios = axios.create({
-    baseURL: 'http://'+ customIp +':8083/case/'
+    baseURL: 'http://'+ customIp +':9700/platform-testcase/'
   });
 
   Vue.prototype.requireAxios = axios.create({
     baseURL: 'http://'+ customIp +':8089/'
   });
-}else{
-  var customIp2 = '192.168.1.121';
-
-  Vue.prototype.wsServer = '192.168.1.122:9200';
-  Vue.prototype.apiServer = 'http://'+ customIp2 +':8080/inter/';
-  Vue.prototype.testCaseServer = 'http://'+ customIp2 +':8080/case/';
-  Vue.prototype.groupServer = 'http://'+ customIp2 +':8080/group/';
-
-  Vue.prototype.testCaseAxios = axios.create({
-    baseURL: 'http://'+ customIp2 +':8080/case/'
-  });
-
-  Vue.prototype.apiAxios = axios.create({
-    baseURL: 'http://'+ customIp2 +':8080/inter/'
-  });
-
-  Vue.prototype.groupAxios = axios.create({
-    baseURL: 'http://'+ customIp2 +':8080/group/'
-  });
-
-  Vue.prototype.usrAxios = axios.create({
-    baseURL: 'http://'+ customIp2 +':8080'
-  });
-
-  Vue.prototype.mockAxios = axios.create({
-    baseURL: 'http://'+ customIp2 + ':8080/mock/'
-  });
-}
+// }else{
+//   var customIp2 = '192.168.1.121';
+//
+//   Vue.prototype.wsServer = '192.168.1.122:9200';
+//
+//   Vue.prototype.testCaseAxios = axios.create({
+//     baseURL: 'http://'+ customIp2 +':8080/case/'
+//   });
+//
+//   Vue.prototype.apiAxios = axios.create({
+//     baseURL: 'http://'+ customIp2 +':8080/inter/'
+//   });
+//
+//   Vue.prototype.groupAxios = axios.create({
+//     baseURL: 'http://'+ customIp2 +':8080/group/'
+//   });
+//
+//   Vue.prototype.usrAxios = axios.create({
+//     baseURL: 'http://'+ customIp2 +':8080'
+//   });
+//
+//   Vue.prototype.mockAxios = axios.create({
+//     baseURL: 'http://'+ customIp2 + ':8080/mock/'
+//   });
+// }
 
 Vue.prototype.apiAxios.interceptors.response.use(data => {
     return data
@@ -115,7 +117,7 @@ Vue.prototype.apiAxios.interceptors.response.use(data => {
         break;
     }
   }
-  console.log('main.js')
+  // console.log('main.js')
   return Promise.reject("请重新登陆！");
   return;
 })

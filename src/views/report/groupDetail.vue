@@ -8,10 +8,11 @@
           prop="name"
           label="测试集"
           align="left"
-
           width="180"
-
         >
+          <template slot-scope="scope">
+            <el-button type="text" @click="transToCase(scope.row.id)">{{ scope.row.name }}</el-button>
+          </template>
         </el-table-column>
         <el-table-column
           prop="createdBy"
@@ -111,6 +112,11 @@ export default {
 
     setDefaultPage(){
       this.currentPage = 1;
+    },
+
+    // 跳转到case页面
+    transToCase(id){
+      this.$router.push({name: 'Group', query: {id: id}});
     }
   }
 

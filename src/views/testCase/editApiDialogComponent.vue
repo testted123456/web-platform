@@ -406,7 +406,7 @@
       isJson,
       //动态库查询 点击跳转新页面
       intellCheck(){
-        window.open(this.testCaseServer +'func/index.html')
+        window.open('http://'+this.testCaseServer +'/func/index.html')
       },
       // tempApiDetailInfo 页面赋值
       updateTempApiDetailInfo(obj){

@@ -252,7 +252,6 @@
         var vueThis = this;
         var caseID = this.$route.query.id;
 
-
         // 获取表格内容
        vueThis.testCaseAxios({
          method: 'get',
@@ -277,15 +276,13 @@
 
           //详情数据对象
           this.apiDetail = this.apiResult[index]
-          console.log(JSON.stringify(this.apiDetail))
+          // console.log(JSON.stringify(this.apiDetail))
           // 显示详情页面
           this.detailInfoShow = true;
           var separate = this.$refs.separate;
           separate.scrollIntoView();
 
         try {
-
-
             // *请求参数
             this.requestBodyResult = this.apiDetail.requestBody
 
@@ -294,12 +291,7 @@
               this.requestBodyResult = JSON.parse(this.requestBodyResult)
               this.requestBodyResult = formatJson(this.requestBodyResult)
             }
-            console.log(this.requestBodyResult)
-
-
-
-
-
+            // console.log(this.requestBodyResult)
 
             //*实际响应
             this.actualResponseBodyResult = this.apiDetail.actualResponseBody
@@ -309,14 +301,7 @@
               this.actualResponseBodyResult = JSON.parse(this.actualResponseBodyResult)
               this.actualResponseBodyResult = formatJson(this.actualResponseBodyResult)
             }
-            console.log(this.actualResponseBodyResult)
-
-
-
-
-
-
-
+            // console.log(this.actualResponseBodyResult)
 
             //*异常
             this.exceptionResult = this.apiDetail.exception
@@ -326,13 +311,7 @@
               this.exceptionResult = JSON.parse(this.exceptionResult)
               this.exceptionResult = formatJson(this.exceptionResult)
             }
-            console.log(this.exceptionResult)
-
-
-
-
-
-
+            // console.log(this.exceptionResult)
 
             // *预期结果
             if(typeof(this.apiDetail.responseBody) === "object" && this.apiDetail.responseBody !== null){
@@ -345,13 +324,7 @@
             }else{
               this.responseBodyResult = null;
             }
-
-            console.log(this.responseBodyResult)
-
-
-
-
-
+            // console.log(this.responseBodyResult)
         } catch(err) {
         }
       }

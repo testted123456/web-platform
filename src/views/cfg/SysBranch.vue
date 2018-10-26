@@ -137,7 +137,7 @@
 
           this.testCaseAxios({
             method: 'get',
-            url: 'sysBranch/getAll'
+            url: 'sysBranch/getByBranch?branch=master'
           }).then(function (res) {
             if(res.data.code === 10000){
               vueThis.sysBranch = res.data.data;

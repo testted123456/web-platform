@@ -22,10 +22,10 @@
                 </el-select>
               </el-form-item>
 
-              <el-form-item label="请求消息：" prop="request" >
+              <el-form-item label="请求消息：" prop="response" >
                 <el-row>
                   <el-col>
-                    <div id="request" style="min-height: 280px" ></div>
+                    <div id="response" style="min-height: 280px" ></div>
                   </el-col>
                 </el-row>
               </el-form-item>
@@ -52,11 +52,13 @@
       return {
         name: '',
         request: '',
+        response: '',
         reqMsgIds: [],
         reqMsgId: '',
         mockInfo: {
           name: '',
-          request: ''
+          request: '',
+          response: ''
         }
       }
     },
@@ -68,11 +70,11 @@
     methods: {
       getData(){
         ace.require("ace/ext/language_tools");
-        this.reqEditor = ace.edit("request");
-        this.reqEditor.setOptions({
+        this.resEditor = ace.edit("response");
+        this.resEditor.setOptions({
           enableLiveAutocompletion: true,//只能补全
         });
-        this.reqEditor.getSession().setMode("ace/mode/xml");
+        this.resEditor.getSession().setMode("ace/mode/xml");
 
         let vueThis = this;
 
@@ -82,11 +84,11 @@
         }).then(function (res) {
           if (res.data.code === 10000) {
             // vueThis.mockInfo.name = name;
-            vueThis.mockInfo.request = res.data.data.request;
+            vueThis.mockInfo.response = res.data.data.response;
           } else {
             vueThis.$message.error('抱歉，获取Mock信息失败：' + res.data.msg);
           }
-          vueThis.reqEditor.setValue(vueThis.mockInfo.request);
+          vueThis.resEditor.setValue(vueThis.mockInfo.response);
         }).catch(function (err) {
           vueThis.$message.error('抱歉，服务器异常！');
           console.log(err)
@@ -110,6 +112,45 @@
       save(){
         if(this.reqMsgId === ''){
           this.$message.error('请选择未处理号！');
+        }else{
+          let vueThis = this;
+          let response = this.resEditor.getValue();
+          this.mockAxios({
+            method: 'post',
+            url: 'ydzf/setResponse/SMZF008',
+            data: {
+              "response": response
+            }
+          }).then(function (res) {
+            if (res.data.code === 10000) {
+              vueThis.$message({
+                message: '恭喜你，更新Mock接口成功',
+                type: 'success'
+              });
+            } else {
+              vueThis.$message.error('抱歉，获取Mock信息失败：' + res.data.msg);
+            }
+          }).catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！');
+            console.log(err)
+          });
+
+          this.mockAxios({
+            method: 'get',
+            url: 'ydzf/callback/SMZF008/' +  vueThis.reqMsgId
+          }).then(function (res) {
+            if (res.data.code === 10000) {
+              vueThis.$message({
+                message: '恭喜你，回调成功',
+                type: 'success'
+              });
+            } else {
+              vueThis.$message.error('抱歉，回调失败：' + res.data.msg);
+            }
+          }).catch(function (err) {
+            vueThis.$message.error('抱歉，服务器异常！');
+            console.log(err)
+          });
         }
       }
     }

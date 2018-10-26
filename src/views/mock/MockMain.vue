@@ -33,8 +33,39 @@
           </template>
           <el-menu-item-group>
             <el-menu-item index="2-1">扫码支付SMZF002</el-menu-item>
-            <el-menu-item index="2-2">回调SMZF008</el-menu-item>
-            <el-menu-item index="2-3">交易查询SMZF006</el-menu-item>
+            <el-menu-item index="2-2">条码支付SMZF002</el-menu-item>
+            <el-menu-item index="2-3">回调SMZF008</el-menu-item>
+            <el-menu-item index="2-4">交易查询SMZF006</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-submenu index="3">
+          <template slot="title">
+            <i class="el-icon-setting"></i>
+            <span>银行卡鉴权</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="3-1">瑞银信绑卡鉴权</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-submenu index="4">
+          <template slot="title">
+            <i class="el-icon-setting"></i>
+            <span>身份证人工认证</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="4-1">敬众身份认证</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-submenu index="5">
+          <template slot="title">
+            <i class="el-icon-setting"></i>
+            <span>活体识别</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="5-1">身份证正面照认证</el-menu-item>
+            <el-menu-item index="5-2">身份证反面照认证</el-menu-item>
+            <el-menu-item index="5-3">第一次身份信息核实</el-menu-item>
+            <el-menu-item index="5-4">第二次身份信息核实</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
       </el-menu>
@@ -108,12 +139,41 @@
           }
           break;
           case '2-2':{
-            this.$router.push({name: 'CallBackSMZF008', query: {name: "CallBackSMZF008"}});
+            this.$router.push({name: 'Mock', query: {name: "条码支付",code: "SMZF003", ctrl: "ydzf"}});
           }
           break;
           case '2-3':{
+            this.$router.push({name: 'CallBackSMZF008', query: {name: "CallBackSMZF008"}});
+          }
+          break;
+          case '2-4':{
             this.$router.push({name: 'Mock', query: {name: "交易查询",code: "SMZF006", ctrl: "ydzf"}});
           }
+          break;
+          case '3-1':{
+            this.$router.push({name: 'Mock', query: {name: "瑞银信绑卡鉴权",code: "CardAuth", ctrl: "authencrypt"}});
+          }
+          break;
+          case '4-1':{
+            this.$router.push({name: 'Mock', query: {name: "敬众身份认证",code: "JZIDAuth", ctrl: "jz"}});
+          }
+          break;
+          case '5-1':{
+            this.$router.push({name: 'Mock', query: {name: "身份证正面照认证",code: "FaceFront", ctrl: "faceid"}});
+          }
+          break;
+          case '5-2':{
+            this.$router.push({name: 'Mock', query: {name: "身份证反面照认证",code: "FaceBack", ctrl: "faceid"}});
+          }
+          break;
+          case '5-3':{
+            this.$router.push({name: 'Mock', query: {name: "第一次身份信息核实",code: "FaceVerify1", ctrl: "faceid"}});
+          }
+          break;
+          case '5-4':{
+            this.$router.push({name: 'Mock', query: {name: "第二次身份信息核实",code: "FaceVerify2", ctrl: "faceid"}});
+          }
+          break;
         }
       }
     }

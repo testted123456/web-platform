@@ -97,7 +97,7 @@
         var vueThis = this;
         this.testCaseAxios({
           method: 'get',
-          url: "env/getAllEnvs"
+          url: "envs/getAllEnvs"
         })
           .then(function (res) {
             if(res.data.code === 10000){

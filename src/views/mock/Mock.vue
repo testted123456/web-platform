@@ -51,7 +51,7 @@
     data () {
       return {
         mockInfo: {
-          name: 'xx',
+          name: '',
           request: '',
           response: '',
           defaultResponse:''
@@ -128,10 +128,79 @@
       save() {
         let response = this.resEditor.getValue();
         let code = this.$route.query.code;
+        let saveUrl = '';
+
+        switch (code){
+          case 'BK001':{
+            saveUrl = 'fastPay/setResponse/' + code
+          }
+          break;
+          case 'BK003':{
+            saveUrl = 'fastPay/setResponse/' + code
+          }
+          break;
+          case 'BK004':{
+            saveUrl = 'fastPay/setResponse/' + code
+          }
+          break;
+          case 'ZF001':{
+            saveUrl = 'fastPay/setResponse/' + code
+          }
+          break;
+          case 'ZF003':{
+            saveUrl = 'fastPay/setResponse/' + code
+          }
+          break;
+          case 'CX002':{
+            saveUrl = 'fastPay/setResponse/' + code
+          }
+          break;
+          case 'TX8020':{
+            saveUrl = 'fastPay/setResponse/' + code
+          }
+          break;
+          case 'CX004':{
+            saveUrl = 'fastPay/setResponse/' + code
+          }
+          break;
+          case 'SMZF002':{
+            saveUrl = 'ydzf/setResponse/' + code
+          }
+          break;
+          case 'SMZF006':{
+            saveUrl = 'ydzf/setResponse/' + code
+          }
+          break;
+          case 'JZIDAuth':{
+            saveUrl = 'jz/setResponse/' + code;
+          }
+          break;
+          case 'CardAuth':{
+            saveUrl = 'authencrypt/setResponse/' + code;
+          }
+          break;
+          case 'FaceFront':{
+            saveUrl = 'faceid/setResponse/' + code;
+          }
+          break;
+          case 'FaceBack':{
+            saveUrl = 'faceid/setResponse/' + code;
+          }
+          break;
+          case 'FaceVerify1':{
+            saveUrl = 'faceid/setResponse/' + code;
+          }
+          break;
+          case 'FaceVerify2':{
+            saveUrl = 'faceid/setResponse/' + code;
+          }
+          break;
+        }
+
         let vueThis = this;
         this.mockAxios({
           method: 'post',
-          url: 'fastPay/setResponse/' + code,
+          url: saveUrl,
           data: {
             "response": response
           }
@@ -155,10 +224,79 @@
         this.resEditor.setValue(this.mockInfo.defaultResponse);
 
         let code = this.$route.query.code;
+        let saveUrl = '';
+
+        switch (code){
+          case 'BK001':{
+            saveUrl = 'fastPay/resetResponse/' + code
+          }
+            break;
+          case 'BK003':{
+            saveUrl = 'fastPay/resetResponse/' + code
+          }
+            break;
+          case 'BK004':{
+            saveUrl = 'fastPay/resetResponse/' + code
+          }
+            break;
+          case 'ZF001':{
+            saveUrl = 'fastPay/resetResponse/' + code
+          }
+            break;
+          case 'ZF003':{
+            saveUrl = 'fastPay/resetResponse/' + code
+          }
+            break;
+          case 'CX002':{
+            saveUrl = 'fastPay/resetResponse/' + code
+          }
+            break;
+          case 'TX8020':{
+            saveUrl = 'fastPay/resetResponse/' + code
+          }
+            break;
+          case 'CX004':{
+            saveUrl = 'fastPay/resetResponse/' + code
+          }
+            break;
+          case 'SMZF002':{
+            saveUrl = 'ydzf/resetResponse/' + code
+          }
+            break;
+          case 'SMZF006':{
+            saveUrl = 'ydzf/resetResponse/' + code
+          }
+          break;
+          case 'JZIDAuth':{
+            saveUrl = 'jz/resetResponse/' + code;
+          }
+          break;
+          case 'CardAuth':{
+            saveUrl = 'authencrypt/resetResponse/' + code;
+          }
+          break;
+          case 'FaceFront':{
+            saveUrl = 'faceid/resetResponse/' + code;
+          }
+            break;
+          case 'FaceBack':{
+            saveUrl = 'faceid/resetResponse/' + code;
+          }
+            break;
+          case 'FaceVerify1':{
+            saveUrl = 'faceid/resetResponse/' + code;
+          }
+            break;
+          case 'FaceVerify2':{
+            saveUrl = 'faceid/resetResponse/' + code;
+          }
+            break;
+        }
+
         let vueThis = this;
         this.mockAxios({
           method: 'get',
-          url: 'fastPay/resetResponse/?name=' + code
+          url: saveUrl
         }).then(function (res) {
           if (res.data.code === 10000) {
             vueThis.$message({
@@ -173,7 +311,6 @@
           console.log(err)
         });
       }
-
     }
   }
 </script>

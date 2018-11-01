@@ -47,7 +47,7 @@
           </el-col>
 
           <el-col :span="2" style="text-align: left" v-show="ifIdShow">
-            <p style="font-size: 14px;line-height: 12px;">银行卡信息:</p>
+            <p style="font-size: 14px;line-height: 12px;"></p>
           </el-col>
           <el-col :span="8" style="text-align: left" v-show="ifIdShow">
             <el-input v-model="idCardInfo" placeholder="生成的银行卡信息"></el-input>

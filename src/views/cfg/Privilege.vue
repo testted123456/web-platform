@@ -139,7 +139,7 @@
                 }
               }else{
                 vueThis.$message({
-                  message: '抱歉，获取环境失败' + res.data.msg,
+                  message: '抱歉，获取权限失败' + res.data.msg,
                   type: 'error'
                 });
               }
@@ -151,19 +151,19 @@
         save(index, rows){
           let vueThis = this;
 
-          this.testCaseAxios({
+          this.usrAxios({
             method: 'post',
             data: rows[index],
-            url: 'envs/add'
+            url: 'user/addRoleUrlPath'
           }).then(function (res) {
             if(res.data.code === 10000){
               vueThis.$message({
-                message: '恭喜你，保存环境成功',
+                message: '恭喜你，保存权限成功',
                 type: 'success'
               });
             }else{
               vueThis.$message({
-                message: '抱歉，保存环境失败:' + res.data.msg,
+                message: '抱歉，保存权限失败:' + res.data.msg,
                 type: 'error'
               });
             }

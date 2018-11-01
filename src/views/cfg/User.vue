@@ -166,6 +166,7 @@
           let vueThis = this;
 //          let roleId = rows[index].roles;
           let username = rows[index].username;
+          let nickname = rows[index].nickname;
           let rolename = rows[index].role;
 
 //          this.roles.every(function (e, index) {
@@ -181,6 +182,7 @@
             method: 'post',
             data: {
                 "username" : username,
+                "nickname" : nickname,
                 "role": rolename
             },
             url: 'user/grantRole'

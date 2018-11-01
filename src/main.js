@@ -38,6 +38,7 @@ var testCaseIp = '192.168.1.172';
 if(env === 'prod'){
   customIp = '192.168.1.121';
   mockIp = '192.168.1.120';
+  testCaseIp = '192.168.1.122';
 }
 
 // if(env === 'dev') {

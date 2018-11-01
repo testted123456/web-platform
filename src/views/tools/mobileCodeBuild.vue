@@ -31,10 +31,10 @@
           </el-col>
 
           <el-col :span="2" style="text-align: left" v-show="ifIdShow">
-            <p style="font-size: 14px;line-height: 12px;">手机号信息:</p>
+            <p style="font-size: 14px;line-height: 12px;"></p>
           </el-col>
           <el-col :span="8" style="text-align: left" v-show="ifIdShow">
-            <el-input v-model="idCardInfo" placeholder="生成的手机号信息"></el-input>
+            <el-input v-model="idCardInfo" placeholder="生成的手机号"></el-input>
           </el-col>
 
         </el-row>

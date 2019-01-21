@@ -10,6 +10,7 @@ import aceManager from '@/assets/js/hd-ace'
 import axios from 'axios'
 import drag from "@/assets/js/drag"
 import emailManager from '@/assets/js/emailName'
+import('babel-polyfill')
 
 axios.defaults.withCredentials=true;
 Vue.config.productionTip = false
@@ -34,17 +35,20 @@ var customIp = '192.168.7.172';
 var mockIp = '192.168.7.172';
 // var testCaseIp = '192.168.1.122';
 var testCaseIp = '192.168.1.172';
+var apiIp = '192.168.1.172';
 
 if(env === 'prod'){
   customIp = '192.168.1.121';
   mockIp = '192.168.1.120';
   testCaseIp = '192.168.1.122';
+  apiIp = '192.168.1.121';
 }
 
 // if(env === 'dev') {
 
   Vue.prototype.wsServer = testCaseIp+':9200';
   Vue.prototype.testCaseServer = testCaseIp+':9200';
+  Vue.prototype.apiServer = apiIp + ':9100';
 
   Vue.prototype.testCaseAxios = axios.create({
     baseURL: 'http://'+ customIp +':9700/platform-testcase/'
@@ -71,6 +75,11 @@ if(env === 'prod'){
   Vue.prototype.toolAxios = axios.create({
     baseURL: 'http://'+ customIp +':9700/platform-testcase/'
   });
+
+Vue.prototype.appMockAxios = axios.create({
+  baseURL: 'http://'+ customIp +':9700/platform-appmock/',
+  withCredentials: true
+});
 
   Vue.prototype.requireAxios = axios.create({
     baseURL: 'http://'+ customIp +':8089/'

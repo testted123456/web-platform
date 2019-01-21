@@ -32,6 +32,9 @@
             label="结果"
             align="left"
           >
+            <template slot-scope="scope">
+              <el-button type="text" v-bind:class="{ fontRed: !scope.row.result }">{{scope.row.result}}</el-button>
+            </template>
           </el-table-column>
 
 
@@ -78,8 +81,9 @@
             align="left"
           >
             <template slot-scope="scope">
-              <el-button type="text" v-bind:class="{ fontRed: !scope.row.result }">{{ scope.row.result?"true":"false" }}</el-button>
+              <el-button type="text" v-bind:class="{ fontRed: !scope.row.result }">{{ scope.row.result}}</el-button>
             </template>
+
           </el-table-column>
         </el-table>
       </el-row>
@@ -281,12 +285,16 @@
       }
     },
     created(){
+
+    },
+    beforeMount(){
+      this.getData()
     },
     watch:{
 
     },
     mounted() {
-      this.getData()
+      // this.getData()
     },
     methods: {
       formatJson,
@@ -344,9 +352,9 @@
 
                       vueThis.groupList.forEach(function(val,index,arr){
                         if(val.result){
-                          val.result = 'true'
+                          val.result = true
                         }else{
-                          val.result = 'false'
+                          val.result = false
                         }
                       })
 

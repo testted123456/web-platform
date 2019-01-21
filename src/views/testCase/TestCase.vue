@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-main>
+    <el-main v-loading="loading">
       <div style="padding-bottom: 60px;">
         <div style="width:80%;text-align: left">
           <el-form   ref="testCase"  :label-position="labelPosition"  label-width="100px" :model="testCase">
@@ -288,7 +288,8 @@
           extend:{}   // 扩展字段
         },
         removeApiIndex:0,
-        ws: null // websocket
+        ws: null, // websocket
+        loading: true
       }
     },
 
@@ -384,8 +385,7 @@
         vueThis.testCaseAxios({
           method: 'get',
           url: "sysCfg/getAllAlias"
-        })
-        .then(function (res) {
+        }).then(function (res) {
           if(res.data.code === 10000){
             var tempEnviornment = [];
             res.data.data.forEach(function (e, index) {
@@ -397,8 +397,7 @@
             vueThis.testCaseAxios({
               method: 'get',
               url: "envs/getAllEnvs"
-            })
-              .then(function (res) {
+            }).then(function (res) {
                 if(res.data.code === 10000){
                   var tempEnviornment = [];
                   res.data.data.forEach(function (e, index) {
@@ -457,21 +456,18 @@
               .catch(function (err) {
                 vueThis.$message.error(err);
               });
-
           }else{
             vueThis.$message.error(res.data.msg);
           }
-        })
-        .catch(function (err) {
+          vueThis.loading=false;
+        }).catch(function (err) {
           vueThis.$message.error(err);
+          vueThis.loading=false;
         });
-
-
-
       },
+
       //新增，编辑 确认按钮事件
       saveCase() {
-
         var caseID = this.$route.query.id;
         var vueThis = this;
         this.$refs['testCase'].validate((valid) => {

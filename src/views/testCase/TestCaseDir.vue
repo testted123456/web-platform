@@ -1,6 +1,6 @@
 <template>
   <el-container  style="font-size: 0.875em;">
-      <el-main>
+      <el-main v-loading="loading">
         <el-form   ref="testCaseDir"  :label-position="labelPosition"  label-width="150px" :model="testCaseDirInfo" style="width:78%;">
           <el-form-item label="用例目录名称" prop="name" :rules="[{ required: true, trigger: 'blur',message: '用例目录名称不能为空'} ]">
             <el-input v-model="testCaseDirInfo.name" placeholder="请输入用例目录名称"></el-input>
@@ -33,7 +33,8 @@
           description: '',
           pId: '',
           type:false
-        }
+        },
+        loading: true
       }
     },
     watch:{
@@ -55,6 +56,7 @@
                 pId: '',
                 type:false
             }
+            this.loading=false;
         }else{
           var vueThis = this;
           vueThis.testCaseAxios({
@@ -62,8 +64,7 @@
             data: {
             },
             url: "testCase/getCaseById?id="+ caseDirID
-          })
-          .then(function (res) {
+          }).then(function (res) {
             if(res.data.code === 10000){
               vueThis.testCaseDirInfo= {
                 id: res.data.data.id,
@@ -75,9 +76,10 @@
             }else{
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
-          })
-          .catch(function (err) {
+            vueThis.loading=false;
+          }).catch(function (err) {
             vueThis.$message.error(err);
+            vueThis.loading=false;
           });
         }
       },

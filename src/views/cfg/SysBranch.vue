@@ -1,21 +1,23 @@
 <template>
   <el-container id="sysBranch">
-    <el-main>
+    <el-main v-loading="loading">
       <el-row style="text-align: left;padding-left: 7px">
         <el-button type="text" @click="search">按系统查询</el-button>
         <!--<el-button type="text" @click="refresh">刷新</el-button>-->
         <el-button type="text" @click="sync">按系统同步</el-button>
+        <el-button type="text" @click="genDoc">生成接口文档</el-button>
+        <el-button type="text" @click="viewDoc">查看接口文档</el-button>
       </el-row>
       <el-row>
         <el-table
-          :data="appearSysBranch" style="width: 100%" :filter-changer="change"
+          :data="sysBranch" style="width: 100%" :filter-changer="change"
         >
           <el-table-column
             label="系统名称"
             prop="system" align="left"
             >
             <!--<template slot-scope="scope">-->
-              <!--<el-input v-model="appearSysBranch[scope.$index].system"></el-input>-->
+              <!--<el-input v-model="sysBranch[scope.$index].system"></el-input>-->
             <!--</template>-->
           </el-table-column>
 
@@ -24,7 +26,7 @@
           prop="branch" align="left"
           >
           <!--<template slot-scope="scope">-->
-            <!--<el-input v-model="appearSysBranch[scope.$index].branch"></el-input>-->
+            <!--<el-input v-model="sysBranch[scope.$index].branch"></el-input>-->
           <!--</template>-->
          </el-table-column>
 
@@ -32,8 +34,8 @@
             label="状态" align="left"
             >
             <template slot-scope="scope">
-              <!--<el-input v-model="showStatus(appearSysBranch[scope.$index].optstatus)"></el-input>-->
-              <label >{{showStatus(appearSysBranch[scope.$index].optstatus)}}</label>
+              <!--<el-input v-model="showStatus(sysBranch[scope.$index].optstatus)"></el-input>-->
+              <label >{{showStatus(sysBranch[scope.$index].optstatus)}}</label>
             </template>
           </el-table-column>
 
@@ -41,7 +43,7 @@
             label="最新？" align="left"
           >
             <template slot-scope="scope">
-              <el-checkbox v-model="appearSysBranch[scope.$index].last"></el-checkbox>
+              <el-checkbox v-model="sysBranch[scope.$index].last"></el-checkbox>
             </template>
           </el-table-column>
 
@@ -49,14 +51,14 @@
             label="操作" align="left">
             <template slot-scope="scope">
               <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="导入" placement="top">-->
-                <el-button @click.native.prevent="syncGit(scope.$index, appearSysBranch)" type="text" size="small">导入</el-button>
+                <el-button @click.native.prevent="syncGit(scope.$index, sysBranch)" type="text" size="small">导入</el-button>
               <!--</el-tooltip>-->
               <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="查看HTML" placement="top" >-->
-                <el-button @click.native.prevent="viewHTML(scope.$index, appearSysBranch)"  type="text" size="small">查看HTML</el-button>
+                <el-button @click.native.prevent="viewHTML(scope.$index, sysBranch)"  type="text" size="small">查看HTML</el-button>
               <!--</el-tooltip>-->
 
               <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="保存" placement="top">-->
-                <el-button @click.native.prevent="save(scope.$index, appearSysBranch)" type="text" size="small" :disabled='!$store.state.permission.dbgroup.save'>保存</el-button>
+                <!--<el-button @click.native.prevent="save(scope.$index, sysBranch)" type="text" size="small" :disabled='!$store.state.permission.dbgroup.save'>保存</el-button>-->
               <!--</el-tooltip>-->
 
             </template>
@@ -69,19 +71,9 @@
           :current-page.sync="currentPage"
           :page-size="pageSize"
           layout="prev, pager, next, jumper"
-          :total="sysBranch.length">
+          :total="totalSize">
         </el-pagination>
       </el-row>
-      <el-dialog
-        :visible.sync="delDialogVisible"
-        width="25%"
-      >
-        <span>确认删除？</span>
-        <span slot="footer" class="dialog-footer">
-                    <el-button @click="delDialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="del">确 定</el-button>
-                  </span>
-      </el-dialog>
     </el-main>
   </el-container>
 </template>
@@ -94,27 +86,24 @@
             sysBranch:[],
             currentPage: 1,
             pageSize: 10,
+            totalSize: 0,
             delIndex: '',
             delSysBranch: {},
-            delDialogVisible: false,
-            systems:[]
+            systems:[],
+            loading: false
           }
       },
 
       computed:{
-        appearSysBranch(){
-          var maxIndex = Math.min(this.pageSize *this.currentPage, this.sysBranch.length);
-          var arr = this.sysBranch.slice(this.pageSize *(this.currentPage - 1), maxIndex)
-          return arr;
-        }
       },
 
       created(){
-        this.init();
+        this.initSystem();
+        this.init(0, this.pageSize);
       },
 
       methods: {
-        init(){
+        initSystem(){
           var vueThis = this;
 
           this.testCaseAxios({
@@ -122,9 +111,9 @@
             url: 'sysCfg/getAll'
           }).then(function (res) {
             if(res.data.code === 10000){
-                res.data.data.forEach(function (e, index) {
-                  vueThis.systems.push({value: e.system, text: e.system})
-                });
+              res.data.data.forEach(function (e, index) {
+                vueThis.systems.push({value: e.system, text: e.system})
+              });
             }else{
               vueThis.$message({
                 message: '抱歉，获取系统失败' + res.data.msg,
@@ -134,13 +123,18 @@
           }).catch(function (err) {
             vueThis.$message.error('服务器请求失败！');
           });
+        },
+
+        init(pageIndex, pageSize){
+          var vueThis = this;
 
           this.testCaseAxios({
             method: 'get',
-            url: 'sysBranch/getByBranch?branch=master'
+            url: 'sysBranch/getPageByBranch?branch=master&pageIndex=' + pageIndex + '&pageSize=' + pageSize
           }).then(function (res) {
             if(res.data.code === 10000){
-              vueThis.sysBranch = res.data.data;
+              vueThis.sysBranch = res.data.data.list;
+              vueThis.totalSize = res.data.data.count;
 
               if(vueThis.sysBranch === null || vueThis.sysBranch.length === 0){
                 vueThis.sysBranch =[{
@@ -183,7 +177,6 @@
               break;
             default:
               return '未同步'
-
           }
         },
 
@@ -191,7 +184,7 @@
         viewHTML(index, rows){
             let system = rows[index].system;
             let branch = rows[index].branch;
-            window.open(this.apiServer +'apidocs/' + system + '/' + branch + '/index.html')
+            window.open('http://'+this.apiServer +'/apidocs/' + system + '/' + branch + '/index.html')
         },
 
         //删除消息头中的一行
@@ -243,62 +236,9 @@
           }).catch(function (err) {
             vueThis.$message.error('服务器请求失败！');
           })
-
-
         },
 
-        del(){
-          this.delDialogVisible = false;
-          let index = this.delIndex;
-          let rows = this.delSysBranch;
-
-          if(typeof(rows[index].id) != 'undefined' ){
-            let vueThis = this;
-
-            this.testCaseAxios({
-              method: 'post',
-              data: rows[index],
-              url: 'sysBranch/delete'
-            }).then(function (res) {
-              if(res.data.code === 10000){
-
-                if(index == 0 && rows.length == 1 && vueThis.currentPage === 1 && vueThis.sysBranch.length <= vueThis.pageSize){
-                  rows[index].system = '';
-                  rows[index].branch = '';
-                  rows[index].version = '';
-                  rows[index].last = '';
-                }else {
-                  let totalIndex = vueThis.pageSize *(vueThis.currentPage - 1) + index;
-                  vueThis.sysBranch.splice(totalIndex, 1);
-                }
-
-                vueThis.$message({
-                  message: '恭喜你，删除系统分支成功',
-                  type: 'success'
-                });
-              }else{
-                vueThis.$message({
-                  message: '抱歉，删除系统分支失败' + res.data.msg,
-                  type: 'error'
-                });
-              }
-            }).catch(function (err) {
-              vueThis.$message.error('服务器请求失败！'+ err.message);
-            })
-          }else{
-            if(index == 0 && rows.length == 1 && this.currentPage === 1 && this.sysBranch.length <= this.pageSize){
-              rows[index].system = '';
-              rows[index].branch = '';
-              rows[index].version = '';
-              rows[index].last = '';
-            }else {
-              let totalIndex = this.pageSize *(this.currentPage - 1) + index;
-              this.sysBranch.splice(totalIndex, 1);
-            }
-          }
-        },
-
-        save(index, rows){
+       /* save(index, rows){
           let vueThis = this;
 
           this.testCaseAxios({
@@ -320,7 +260,7 @@
           }).catch(function (err) {
             vueThis.$message.error('服务器请求失败！');
           })
-        },
+        },*/
 
         handleSizeChange(val) {
           console.log(`每页 ${val} 条`);
@@ -329,6 +269,8 @@
         handleCurrentChange(val) {
           console.log(`当前页: ${val}`);
           this.currentPage = val;
+          this.tempCurrentPage = this.currentPage-1;
+          this.init(this.tempCurrentPage, this.pageSize);
         },
 
         setDefaultPage(){
@@ -344,7 +286,6 @@
             confirmButtonText: '确定',
             cancelButtonText: '取消'
           }).then(({ value }) => {
-
             let vueThis = this;
 
             this.testCaseAxios({
@@ -406,10 +347,38 @@
             }).catch(function (err) {
               vueThis.$message.error('服务器请求失败！');
             });
-
           })
-        }
+        },
 
+        genDoc(){//生成汇总接口文档
+          let vueThis = this;
+          this.loading=true;
+          this.apiAxios({
+            method: 'get',
+            url: 'api/genDoc'
+          }).then(function (res) {
+            if(res.data.code === 10000){
+              vueThis.loading=false;
+              vueThis.$message({
+                message: '恭喜，生成接口文档成功！' ,
+                type: 'success'
+              });
+            }else{
+              vueThis.loading=false;
+              vueThis.$message({
+                message: '抱歉，生成接口文档失败，' + res.data.msg,
+                type: 'error'
+              });
+            }
+          }).catch(function (err) {
+            vueThis.loading=false;
+            vueThis.$message.error('服务器请求失败！');
+          })
+        },
+
+        viewDoc(){//查看汇总接口文档
+          window.open('http://'+this.apiServer +'/apidocs/Doc' + '/index.html')
+        }
       }
   }
 </script>

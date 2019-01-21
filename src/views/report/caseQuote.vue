@@ -19,7 +19,7 @@
       return {
         sysBar:{
           title : {
-            text: '系统-用例被引用',
+            text: '用例-测试集引用次数',
             subtext: ''
           },
           color: ['#3398DB'],
@@ -59,7 +59,7 @@
             {   // 这个dataZoom组件，默认控制x轴。
               type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
               start: 0,      // 左边在 10% 的位置。
-              end: 60         // 右边在 60% 的位置。
+              end: 80         // 右边在 60% 的位置。
             }
           ],
           series : [

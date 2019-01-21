@@ -1,6 +1,6 @@
 <template>
   <el-container  style="font-size: 0.875em;">
-      <el-main>
+      <el-main v-loading="loading">
         <el-form   ref="groupDir"  :label-position="labelPosition"  label-width="150px" :model="groupDirInfo" style="width:78%;">
           <el-form-item label="测试集目录名称" prop="name" :rules="[{ required: true, trigger: 'blur',message: '测试集目录名称不能为空'} ]">
             <el-input v-model="groupDirInfo.name" placeholder="请输入测试集目录名称"></el-input>
@@ -19,8 +19,6 @@
 </template>
 
 <script>
-
-
   export default {
     components: {},
     name: 'GroupDir',
@@ -33,7 +31,8 @@
           description: '',
           pId: '',
           type:0
-        }
+        },
+        loading: true
       }
     },
     watch:{
@@ -56,12 +55,12 @@
                 pId: '',
                 type:0
             }
+            this.loading=false;
         }else{
           vueThis.groupAxios({
             method: 'get',
             url: 'getById?id='+ groupDirID
-          })
-          .then(function (res) {
+          }).then(function (res) {
             if(res.data.code === 10000){
               vueThis.groupDirInfo= {
                 id: res.data.data.id,
@@ -73,9 +72,10 @@
             }else{
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
-          })
-          .catch(function (err) {
+            vueThis.loading=false
+          }).catch(function (err) {
             vueThis.$message.error(err);
+            vueThis.loading=false
           });
         }
       },

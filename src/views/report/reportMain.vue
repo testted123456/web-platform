@@ -24,7 +24,7 @@
             <span>用例统计</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="2-1">按系统统计</el-menu-item>
+            <!--<el-menu-item index="2-1">按系统统计</el-menu-item>-->
             <el-menu-item index="2-2">按引用统计</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
@@ -38,6 +38,16 @@
             <el-menu-item index="3-2">成功率</el-menu-item>
             <!--<el-menu-item index="3-3">甘特图</el-menu-item>-->
             <el-menu-item index="3-4">详情</el-menu-item>
+          </el-menu-item-group>
+
+        </el-submenu>
+        <el-submenu index="4">
+        <template slot="title">
+          <i class="el-icon-menu"></i>
+          <span>Jenkins</span>
+        </template>
+          <el-menu-item-group>
+            <el-menu-item index="4-1">打包结果</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
       </el-menu>
@@ -105,6 +115,9 @@
             this.$router.push({name: 'GroupDetail'});
           }
           break;
+          case '4-1':{
+            this.$router.push({name: 'JenkinsResult'});
+          }
         }
       }
     }

@@ -7,6 +7,7 @@ import GroupSum from  '@/views/report/groupSum'
 import GroupRate from  '@/views/report/groupRate'
 import gantetu from  '@/views/report/gantetu'
 import GroupDetail from '@/views/report/groupDetail'
+import JenkinsResult from '@/views/report/jenkinsResult'
 
 export default {
   path: 'report',
@@ -52,6 +53,11 @@ export default {
       path: 'gantetu',
       name: 'gantetu',
       component: gantetu
+    },
+    {
+      path: 'jenkinsResult',
+      name: 'JenkinsResult',
+      component: JenkinsResult
     }
   ]
 }

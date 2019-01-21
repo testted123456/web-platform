@@ -4,13 +4,13 @@
 
       <el-row>
         <el-table
-          :data="appearSysGit" style="width: 100%"
+          :data="sysGit" style="width: 100%"
         >
           <el-table-column
             label="系统名称"
             >
             <template slot-scope="scope">
-              <el-input v-model="appearSysGit[scope.$index].system"></el-input>
+              <el-input v-model="sysGit[scope.$index].system"></el-input>
             </template>
           </el-table-column>
 
@@ -18,7 +18,7 @@
           label="git地址"
           >
           <template slot-scope="scope">
-            <el-input v-model="appearSysGit[scope.$index].gitAddress"></el-input>
+            <el-input v-model="sysGit[scope.$index].gitAddress"></el-input>
           </template>
          </el-table-column>
 
@@ -26,7 +26,7 @@
             label="系统别名"
             >
             <template slot-scope="scope">
-              <el-input v-model="appearSysGit[scope.$index].alias"></el-input>
+              <el-input v-model="sysGit[scope.$index].alias"></el-input>
             </template>
           </el-table-column>
 
@@ -34,13 +34,13 @@
             label="" >
             <template slot-scope="scope">
               <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="删除" placement="top">-->
-                <el-button @click.native.prevent="del(scope.$index, appearSysGit)" type="text" size="small" :disabled='!$store.state.permission.dbgroup.del'>删除</el-button>
+                <el-button @click.native.prevent="del(scope.$index, sysGit)" type="text" size="small" :disabled='!$store.state.permission.dbgroup.del'>删除</el-button>
               <!--</el-tooltip>-->
-              <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAdd(scope.$index, appearSysGit)">-->
-                <el-button @click.native.prevent="addRow(scope.$index, appearSysGit)"  type="text" size="small" v-if="showAdd(scope.$index, appearSysGit)" :disabled='!$store.state.permission.dbgroup.add'>增加</el-button>
+              <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="增加" placement="top" v-if="showAdd(scope.$index, sysGit)">-->
+                <el-button @click.native.prevent="addRow(scope.$index, sysGit)"  type="text" size="small" v-if="showAdd(scope.$index, sysGit)" :disabled='!$store.state.permission.dbgroup.add'>增加</el-button>
               <!--</el-tooltip>-->
               <!--<el-tooltip class="item" effect="dark" :enterable="false" :hide-after="500" content="保存" placement="top">-->
-                <el-button @click.native.prevent="save(scope.$index, appearSysGit)" type="text" size="small" :disabled='!$store.state.permission.dbgroup.save'>保存</el-button>
+                <el-button @click.native.prevent="save(scope.$index, sysGit)" type="text" size="small" :disabled='!$store.state.permission.dbgroup.save'>保存</el-button>
               <!--</el-tooltip>-->
             </template>
           </el-table-column>
@@ -52,7 +52,7 @@
           :current-page.sync="currentPage"
           :page-size="pageSize"
           layout="prev, pager, next, jumper"
-          :total="sysGit.length">
+          :total="totalSize">
         </el-pagination>
       </el-row>
       <el-dialog
@@ -77,6 +77,7 @@
             sysGit:[],
               currentPage: 1,
               pageSize: 10,
+              totalSize: 12,
               delIndex: '',
               delSysGit: {},
               delDialogVisible: false
@@ -84,27 +85,24 @@
       },
 
       computed:{
-        appearSysGit(){
-          var maxIndex = Math.min(this.pageSize *this.currentPage, this.sysGit.length);
-          var arr = this.sysGit.slice(this.pageSize *(this.currentPage - 1), maxIndex)
-          return arr;
-        }
       },
 
       created(){
-        this.init();
+        this.init(0, this.pageSize);
       },
 
       methods: {
-        init(){
+
+        init(pageIndex, pageSize){
           var vueThis = this;
 
           this.testCaseAxios({
-            method: 'get',
-            url: 'sysCfg/getAll'
+            method: 'post',
+            url: 'sysCfg/getPage?pageIndex=' + pageIndex + '&pageSize=' + pageSize
           }).then(function (res) {
             if(res.data.code === 10000){
-              vueThis.sysGit = res.data.data;
+              vueThis.sysGit = res.data.data.list;
+              vueThis.totalSize = res.data.data.count;
 
               if(vueThis.sysGit === null || vueThis.sysGit.length === 0){
                 vueThis.sysGit =[{
@@ -115,7 +113,7 @@
               }
             }else{
               vueThis.$message({
-                message: '抱歉，获取环境失败' + res.data.msg,
+                message: '抱歉，获取git配置失败：' + res.data.msg,
                 type: 'error'
               });
             }
@@ -139,7 +137,7 @@
             gitAddress: '',
             alias: ''
           })
-          this.sysGit.push(rows[index+1])
+          // this.sysGit.push(rows[index+1])
         },
 
         del(index, rows){
@@ -233,7 +231,11 @@
 
         handleCurrentChange(val) {
           console.log(`当前页: ${val}`);
+          var vueThis = this;
           this.currentPage = val;
+          vueThis.tempCurrentPage = this.currentPage-1;
+
+          this.init(vueThis.tempCurrentPage, vueThis.pageSize);
         },
 
         setDefaultPage(){

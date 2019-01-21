@@ -10,7 +10,12 @@
             <div style="display: flex; margin-top: 20px; height: 1px;width:100%;background-color: #fff;">
               <el-collapse-transition name="el-fade-in-linear">
                 <div v-show="show" class="transition-box" style="z-index: 99">
-
+                  <el-row style="padding:4px 0">
+                    <el-col :span="4" style="padding-top:8px;color:#999;font-size: 12px; ">App字段</el-col>
+                    <el-col :span="20">
+                      <el-input v-model.trim="searchInfo.app" placeholder="请输入App字段"></el-input>
+                    </el-col>
+                  </el-row>
                   <el-row style="padding:4px 0">
                     <el-col :span="4" style="padding-top:8px;color:#999;font-size: 12px; ">API名称</el-col>
                     <el-col :span="20">
@@ -158,6 +163,7 @@
         filterData:[],
         show:true,
         searchInfo:{
+          app:'',
           name:'',
           urlAddress:'',
           branch:'',
@@ -248,6 +254,7 @@
             vueThis.apiAxios({
               method: 'get',
               url: "api/searchApi?name="+ vueThis.searchInfo.name +"&urlAddress="+ vueThis.searchInfo.urlAddress +"&branch="+ vueThis.searchInfo.branch +"&module="+ vueThis.searchInfo.module +"&system="+ vueThis.searchInfo.system
+              +"&app="+vueThis.searchInfo.app
             })
               .then(function (res) {
 

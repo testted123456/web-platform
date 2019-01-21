@@ -19,7 +19,8 @@
       <el-menu-item index="6">报表</el-menu-item>
       <el-menu-item index="7">工具</el-menu-item>
       <el-menu-item index="8">Mock</el-menu-item>
-      <el-menu-item index="9">质量管理</el-menu-item>
+      <!--<el-menu-item index="9">质量管理</el-menu-item>-->
+      <el-menu-item index="9">App测试桩</el-menu-item>-
       <el-menu-item index="10" @click="loginOut">注销</el-menu-item>
 
     </el-menu>
@@ -42,7 +43,7 @@
             '/home/report',
             '/home/tools',
             '/home/mock',
-            '/home/require'
+            '/home/appMock'
         ]
     };
   },
@@ -58,7 +59,7 @@
         this.$router.push(routerName);
     },
     loginOut(){
-      console.log('out')
+      // console.log('out')
       var vueThis = this;
       vueThis.usrAxios({
         method: 'get',

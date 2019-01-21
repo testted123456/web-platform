@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-main>
+    <el-main v-loading="loading">
       <div style="padding-bottom: 60px;">
         <div style="width:80%;text-align: left">
           <el-form   ref="group"  :label-position="labelPosition"  label-width="100px" :model="group">
@@ -169,6 +169,7 @@
     name: 'Group',
     data () {
       return {
+        loading: true,
         copyGroupShow:false,
         changeState:false,
         serverSendMsg:null,
@@ -293,8 +294,7 @@
             data: {
             },
             url: 'envs/getAllEnvs'
-          })
-          .then(function(res){
+          }).then(function(res){
             if (res.data.code === 10000 ) {
               var tempEnviornment = [];
               res.data.data.forEach(function (e, index) {
@@ -319,7 +319,7 @@
                   testCaseList:[]
                 }
                 vueThis.copyGroupShow = true;
-                console.log(vueThis.group.env)
+                vueThis.loading = false;
               }else{ // group编辑页面
                 // 获取group详情信息内容
                 vueThis.executeBtnShow = true;//执行按钮显示
@@ -328,8 +328,7 @@
                     data: {
                     },
                     url:'getById?id='+groupID
-                  })
-                  .then(function(res){
+                  }).then(function(res){
                     if (res.data.code === 10000 ) {
                       vueThis.group = res.data.data;
                       vueThis.$nextTick(()=>{
@@ -346,19 +345,21 @@
                     }else{
                       vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
                     }
-                  })
-                  .catch(function (err) {
+                    vueThis.loading=false;
+                  }).catch(function (err) {
                     vueThis.$message.error(err);
+                    vueThis.loading=false;
                   });
               }
             }else{
               vueThis.$message.error('抱歉，获取信息失败：' + res.data.msg);
             }
-          })
-//          .catch(function (err) {
-//            vueThis.$message.error('抱歉，服务器异常！' );
-//          });
+          }).catch(function () {
+           vueThis.$message.error('抱歉，服务器异常！' );
+           vueThis.loading=false;
+         });
       },
+
       //check 定时任务
       checkTask(){
         var vueThis = this;

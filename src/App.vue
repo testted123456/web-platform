@@ -54,10 +54,12 @@
                   add:false
                 }
               }
-
             }
 
             vueThis.$store.commit( 'permission/' + 'changeDBgroup', permissData)
+          }else{//根据session获取用户失败，提示用户重新登陆
+            vueThis.$message.warn('请重新登陆' );
+            vueThis.$router.push({name:'Login'});
           }
         })
         .catch(function (err) {

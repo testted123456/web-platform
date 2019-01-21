@@ -6,13 +6,12 @@ import group from './modules/group.js'
 import flowCase from './modules/flowCase.js'
 import permission from './modules/permissionStore.js'
 import mock from './modules/mock.js'
-
-
+import appMock from './modules/appMock'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-    api, testCase, group ,flowCase ,permission ,mock
+    api, testCase, group ,flowCase ,permission ,mock, appMock
   }
 })

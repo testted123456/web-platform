@@ -108,7 +108,7 @@
 
           this.testCaseAxios({
             method: 'get',
-            url: 'sysBranch/getAll'
+            url: 'sysBranch/getByBranch?branch=master'
           }).then(function (res) {
             if(res.data.code === 10000){
               vueThis.sysBranch = res.data.data;
@@ -134,7 +134,7 @@
         },
 
         showStatus(codeChecked){
-            console.log(codeChecked)
+            // console.log(codeChecked)
           switch (codeChecked){
             case null:
                 return '未检测';
@@ -185,7 +185,7 @@
           }else{
             let system = rows[index].system;
             let branch = rows[index].branch;
-            window.open(this.apiServer +'checkReport/' + system + '/' + branch + '/testReport.html')
+            window.open('http://' + this.apiServer +'/checkReport/' + system + '/' + branch + '/testReport.html')
           }
 
         },
